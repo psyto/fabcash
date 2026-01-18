@@ -1,8 +1,10 @@
 # Fabcash
 
-### Offline P2P Payments on Solana
+### True Burner Wallet for Solana
 
-**Bluetooth / QR × Solana × Zero-Knowledge Privacy**
+**Offline P2P Payments × No Seed Phrase × Zero-Knowledge Privacy**
+
+> *"A wallet you can lose. A wallet you can deny. A wallet that works like cash."*
 
 <p align="center">
   <strong>Built with</strong><br/>
@@ -15,15 +17,48 @@
 
 ## 1. Core Concept
 
-**Feels like handing over cash — settles on Solana later.**
+**A true burner wallet. No seed phrase. No recovery. Just cash.**
 
-Fabcash enables in-person, mobile, peer-to-peer payments using Bluetooth or QR codes, even when the internet is unavailable or unstable.
+Fabcash is digital cash for Solana — designed to be lost, denied, and discarded.
 
-* **At the moment of exchange:** Devices communicate directly via Bluetooth or QR.
-* **Behind the scenes:** A signed Solana transaction is broadcast later when connectivity is restored.
-* **Privacy by design:** ZK compression, shielded pools, and ephemeral keys ensure minimal on-chain linkage.
+* **No seed phrase:** Nothing to reveal under coercion. Nothing to recover.
+* **Offline payments:** Bluetooth/QR work without internet. Settlement happens later.
+* **Privacy by default:** ZK compression, shielded pools, and ephemeral keys.
+* **Expendable by design:** Keep only what you're willing to lose.
 
-From the user's perspective, the payment is completed on the spot.
+From the user's perspective, Fabcash is a physical wallet that happens to be on your phone.
+
+### True Burner Wallet Philosophy
+
+Most crypto wallets are designed to be permanent. Seed phrases, hardware backups, recovery mechanisms — all assume you want to keep your wallet forever.
+
+**Fabcash assumes the opposite.**
+
+| Traditional Wallet | Fabcash |
+|-------------------|---------|
+| "Never lose your seed phrase" | There is no seed phrase |
+| "Back up your keys" | Keys cannot be backed up |
+| "Recover from any device" | Cannot be recovered |
+| "Store your life savings" | Store daily spending only |
+| "Prove ownership" | Plausible deniability |
+
+**Why this matters:**
+
+```
+At a border checkpoint:
+
+  Traditional wallet:
+    Officer: "Unlock your crypto wallet"
+    You: Must comply (seed phrase exists)
+    Result: Full transaction history exposed
+
+  Fabcash:
+    Officer: "Unlock your crypto wallet"
+    You: "There's nothing to unlock. It's just a payment app."
+    Result: At most, current balance visible. No history. No recovery.
+```
+
+This is not a limitation — it's the core feature.
 
 ### Inspiration
 
@@ -191,12 +226,13 @@ This is intentional. For larger amounts, sweep to a backed-up cold wallet.
 
 ## 4. Design Principles
 
-* **Local-First:** Bluetooth/QR (and eventually NFC) as the primary transport. The internet is optional and can be used later. Blockchain stays in the background.
-* **Ephemeral Addresses by Default:** New keypair per transaction. In-person payments ≠ persistent identity. Addresses are closer to banknotes than business cards.
-* **ZK-Enhanced Privacy:** Light Protocol compression and Privacy Cash shielding provide cryptographic privacy guarantees.
-* **Trustless by Construction:** Do not trust the counterparty or the device; trust only cryptographic signatures and verification.
-* **Deterministic Outcomes:** No "maybe it fails later" UX. The transaction is either formed correctly or rejected on the spot.
-* **Burner Wallet by Design:** No seed phrase backup. Like a physical wallet — lose it, lose the cash. This is intentional for hostile environments (see [Why No Seed Phrase?](#why-no-seed-phrase)).
+* **True Burner Wallet:** No seed phrase. No backup. No recovery. Lose the phone, lose the funds. This is the point. (See [Why No Seed Phrase?](#why-no-seed-phrase))
+* **Expendable by Design:** Keep only what you're willing to lose. Fabcash is a spending wallet, not a savings account.
+* **Plausible Deniability:** Nothing to prove you own crypto. No hardware wallet signatures. No seed phrases to coerce.
+* **Local-First:** Bluetooth/QR as primary transport. Internet is optional. Blockchain stays in the background.
+* **Ephemeral Addresses:** New keypair per transaction. Addresses are banknotes, not identity.
+* **ZK-Enhanced Privacy:** Light Protocol compression + Privacy Cash shielding for cryptographic privacy.
+* **Trustless:** Trust only cryptographic signatures, not counterparties or devices.
 
 ---
 
@@ -393,10 +429,11 @@ Best suited for small, in-person, instant payments with strong privacy.
 
 This is:
 
-* **Digital cash** with cryptographic privacy.
+* A **true burner wallet** — designed to be lost, denied, discarded.
+* **Digital cash** with cryptographic privacy and no recovery mechanism.
 * A **ZK-enhanced** private value-transfer protocol.
 * Web3 that does not feel like Web3.
-* *"Payments more flexible than cash, private by default, without thinking about blockchains."*
+* *"The only wallet where 'I forgot my seed phrase' is the intended behavior."*
 
 ---
 
@@ -552,10 +589,10 @@ Key storage: expo-secure-store (intentionally software-only)
 - [ ] Mainnet deployment
 
 ### Solana Mobile Integration
-- [ ] Solana Mobile Seed Vault integration (hardware-secured keys)
 - [ ] NFC tap-to-pay (Seeker has NFC)
 - [ ] Solana dApp Store submission
 - [ ] Android-native BLE optimizations
+- [x] Decided: No Seed Vault (intentional for burner wallet philosophy)
 
 ### Future
 - [ ] Multi-token support

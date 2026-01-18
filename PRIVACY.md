@@ -2,6 +2,60 @@
 
 This document details the privacy technologies integrated into Fabcash and how they work together to provide strong privacy guarantees for P2P payments.
 
+> *"The best privacy is having nothing to reveal."*
+
+---
+
+## True Burner Wallet
+
+**Fabcash is a true burner wallet.** This is the foundation of its privacy model.
+
+### What "Burner Wallet" Means
+
+| Property | Traditional Wallet | Fabcash |
+|----------|-------------------|---------|
+| Seed phrase | Required | **None** |
+| Private key backup | Encouraged | **Impossible** |
+| Recovery | From any device | **Never** |
+| Longevity | Permanent | **Expendable** |
+| Coercion resistance | Weak | **Strong** |
+
+### Why This Matters for Privacy
+
+```
+Privacy ≠ Encryption alone
+
+The strongest encryption is useless if you can be coerced to decrypt it.
+
+Fabcash approach:
+  → No seed phrase = nothing to reveal
+  → No backup = nothing to recover
+  → No history = nothing to analyze
+  → No hardware binding = nothing to prove
+```
+
+### The Burner Wallet Threat Model
+
+```
+Scenario: Device seizure
+
+Traditional wallet:
+  1. Device seized
+  2. Forced to unlock phone
+  3. Forced to reveal seed phrase or hardware PIN
+  4. Adversary recovers ENTIRE wallet history
+  5. All transactions, all contacts, all balances exposed
+
+Fabcash:
+  1. Device seized
+  2. Forced to unlock phone
+  3. "Where is your seed phrase?" → "There isn't one"
+  4. Adversary sees current balance only (if any)
+  5. No recovery possible, even under torture
+```
+
+**This is not a missing feature. This is the privacy feature.**
+
 ---
 
 ## Privacy Goals
@@ -317,11 +371,11 @@ Fabcash supports different privacy levels. All modes support **offline payment**
 | Voluntary disclosure | User sharing their own data |
 | Backend compromise | If Privacy Cash backend is compromised (mitigate with self-hosting) |
 
-### No Seed Phrase by Design
+### No Seed Phrase by Design (True Burner Wallet)
 
-**Fabcash does not support seed phrase backup.** This is intentional.
+**Fabcash does not support seed phrase backup.** This is the core privacy feature.
 
-In authoritarian contexts, a seed phrase is a liability:
+In authoritarian contexts, a seed phrase is a liability — it can be coerced, stolen, or used as evidence:
 
 | Scenario | With Seed Phrase | Without Seed Phrase |
 |----------|-----------------|---------------------|
@@ -483,15 +537,60 @@ After the crisis, use the **Private Withdraw** feature to move funds from the pr
 
 ---
 
+## Burner Wallet vs Main Wallet
+
+Fabcash is designed for a different use case than traditional wallets. Understanding when to use each is key:
+
+| Aspect | Fabcash (Burner) | Main Wallet |
+|--------|------------------|-------------|
+| **Purpose** | Daily spending | Long-term storage |
+| **Amount** | What you'd carry in cash | Life savings |
+| **Seed phrase** | None | Backed up securely |
+| **If lost** | Funds gone forever | Recoverable |
+| **Coercion** | "Nothing to reveal" | Must protect seed |
+| **Evidence** | Minimal trace | Full history |
+| **Device binding** | None | Often hardware-bound |
+
+### Best Practice: Separation of Wallets
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                     WALLET SEPARATION                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   FABCASH (Daily Carry)                                     │
+│   ├─ $50-200 equivalent                                     │
+│   ├─ No seed phrase                                         │
+│   ├─ Used for payments                                      │
+│   └─ Expendable if seized                                   │
+│                           │                                 │
+│                           │ Privacy Cash                    │
+│                           │ (shielded sweep)                │
+│                           ▼                                 │
+│   COLD WALLET (Savings)                                     │
+│   ├─ Main holdings                                          │
+│   ├─ Seed phrase backed up                                  │
+│   ├─ Never on mobile device                                 │
+│   └─ Protected separately                                   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**The key insight:** Larger amounts should be swept from Fabcash to a cold wallet via Privacy Cash. This breaks the on-chain link while moving funds to recoverable storage.
+
+---
+
 ## Comparison with Other Solutions
 
 | Feature | Fabcash | Traditional Wallet | CEX | Cash |
 |---------|---------|-------------------|-----|------|
+| Seed phrase | **None** | Required | N/A | N/A |
 | Address reuse | Never | Common | N/A | N/A |
 | On-chain linkability | Low (shielded) | High | N/A | None |
 | Works offline | Yes | No | No | Yes |
 | KYC required | No | No | Yes | No |
-| Seizure resistant | High | Medium | Low | Medium |
+| Seizure resistant | **High** | Medium | Low | Medium |
+| Coercion resistant | **High** | Low | Low | Medium |
 | Digital | Yes | Yes | Yes | No |
 
 ---
@@ -582,5 +681,9 @@ Shielded settlement:
 
 <p align="center">
   <em>Privacy is not about having something to hide.<br/>
-  Privacy is about having the freedom to choose what to share.</em>
+  Privacy is about having nothing to reveal.</em>
+</p>
+
+<p align="center">
+  <strong>Fabcash: The wallet you can lose. The wallet you can deny. The wallet that works like cash.</strong>
 </p>

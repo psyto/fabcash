@@ -1,17 +1,12 @@
 import * as SecureStore from 'expo-secure-store';
-import {
-  generateKeyPairSigner,
-  createKeyPairSignerFromBytes,
-  KeyPairSigner,
-  Address,
-} from '@solana/kit';
+import { Keypair, PublicKey } from '@solana/web3.js';
 
 const EPHEMERAL_KEYS_PREFIX = 'fabcash_ephemeral_';
 
 export interface EphemeralKey {
   id: string;
-  publicKey: Address;
-  signer: KeyPairSigner;
+  publicKey: PublicKey;
+  keypair: Keypair;
   createdAt: number;
   expiresAt: number;
   used: boolean;
@@ -22,30 +17,19 @@ const ephemeralKeysCache = new Map<string, EphemeralKey>();
 
 /**
  * Generate a new ephemeral keypair for receiving payments
+ * Uses @solana/web3.js Keypair which is React Native compatible
  */
 export async function generateEphemeralKey(
   expirationMinutes = 15
 ): Promise<EphemeralKey> {
-  const signer = await generateKeyPairSigner();
+  const keypair = Keypair.generate();
   const id = generateKeyId();
   const now = Date.now();
 
-  // Export keypair bytes
-  const privateKeyBytes = new Uint8Array(
-    await crypto.subtle.exportKey('raw', signer.keyPair.privateKey)
-  );
-  const publicKeyBytes = new Uint8Array(
-    await crypto.subtle.exportKey('raw', signer.keyPair.publicKey)
-  );
-
-  const keypairBytes = new Uint8Array(64);
-  keypairBytes.set(privateKeyBytes.slice(0, 32), 0);
-  keypairBytes.set(publicKeyBytes, 32);
-
   const ephemeralKey: EphemeralKey = {
     id,
-    publicKey: signer.address,
-    signer,
+    publicKey: keypair.publicKey,
+    keypair,
     createdAt: now,
     expiresAt: now + expirationMinutes * 60 * 1000,
     used: false,
@@ -54,8 +38,8 @@ export async function generateEphemeralKey(
   // Store in secure storage
   const storageData = {
     id,
-    publicKey: signer.address.toString(),
-    keypairBytes: Buffer.from(keypairBytes).toString('base64'),
+    publicKey: keypair.publicKey.toBase58(),
+    secretKey: bytesToBase64(keypair.secretKey),
     createdAt: now,
     expiresAt: ephemeralKey.expiresAt,
     used: false,
@@ -89,13 +73,13 @@ export async function getEphemeralKey(id: string): Promise<EphemeralKey | null> 
 
   try {
     const data = JSON.parse(stored);
-    const keypairBytes = new Uint8Array(Buffer.from(data.keypairBytes, 'base64'));
-    const signer = await createKeyPairSignerFromBytes(keypairBytes);
+    const secretKey = base64ToBytes(data.secretKey);
+    const keypair = Keypair.fromSecretKey(secretKey);
 
     const ephemeralKey: EphemeralKey = {
       id: data.id,
-      publicKey: signer.address,
-      signer,
+      publicKey: keypair.publicKey,
+      keypair,
       createdAt: data.createdAt,
       expiresAt: data.expiresAt,
       used: data.used,
@@ -193,4 +177,22 @@ function generateKeyId(): string {
  */
 export function getActiveKeyCount(): number {
   return ephemeralKeysCache.size;
+}
+
+// Helper functions for base64 encoding
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+function base64ToBytes(base64: string): Uint8Array {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
 }

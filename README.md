@@ -29,6 +29,29 @@ From the user's perspective, the payment is completed on the spot.
 
 This project was inspired by [how Ugandans and Iranians turned to offline-capable tools during internet crackdowns](https://www.reuters.com/business/media-telecom/ugandans-iranians-turn-dorseys-messaging-app-bitchat-web-crackdowns-2026-01-14/). When governments restrict internet access, people need payment systems that work without constant connectivity. Fabcash brings that resilience to digital payments.
 
+### Why Privacy Matters in Crackdowns
+
+In authoritarian contexts, the threat model extends beyond the moment of payment:
+
+```
+During crackdown (offline):
+  Alice ─── Bluetooth ───> Bob's ephemeral address
+
+When internet returns (government monitoring network):
+
+  Without shielded settlement:
+    Bob's ephemeral ──> Bob's main wallet  ← Government sees link
+
+  With Privacy Cash shielded settlement:
+    Bob's ephemeral ──> Privacy Pool ──> Bob's main wallet  ← Link broken
+```
+
+**Ephemeral addresses** protect privacy at the moment of payment — the sender doesn't learn the receiver's main wallet.
+
+**Privacy Cash** protects privacy at settlement — when users eventually go online, government surveillance cannot link their offline payments to their identity through chain analysis.
+
+This layered approach ensures that even post-crackdown forensic analysis cannot reconstruct payment relationships.
+
 ---
 
 ## 2. Privacy Technology
@@ -59,22 +82,38 @@ await LightSystemProgram.compress({
 
 [Privacy Cash](https://github.com/Privacy-Cash/privacy-cash) enables shielded transactions where deposits and withdrawals are cryptographically unlinkable.
 
+**Why it matters for crackdown scenarios:**
+- During offline payments, funds accumulate in ephemeral addresses
+- When connectivity returns, users must sweep funds to their main wallet
+- Without shielding, this sweep creates an on-chain link that surveillance can trace
+- Privacy Cash breaks this link through a shielded pool
+
+**Architecture:**
+```
+Mobile App ──> Backend API ──> Privacy Cash SDK ──> Solana
+                   │
+                   └── ZK proof generation requires Node.js runtime
+```
+
+The Privacy Cash SDK requires server-side execution for ZK proof generation. The mobile app communicates with a backend service that handles shielding and unshielding operations.
+
 **How we use it:**
-- Sender shields SOL/USDC into a privacy pool
-- ZK proof generated for withdrawal
-- Withdrawal to recipient's ephemeral address
-- On-chain: deposit and withdrawal cannot be linked
+- Receiver sweeps ephemeral funds through privacy pool (not directly to main wallet)
+- ZK proof generated server-side for withdrawal
+- On-chain: ephemeral address and main wallet cannot be linked
+- Even post-crackdown chain analysis cannot reconstruct payment relationships
 
 ```typescript
-import { PrivacyCash } from 'privacycash';
+// Backend API handles Privacy Cash operations
+// Mobile app sends sweep request to backend
 
-// Shield funds into privacy pool
+// Backend: Shield funds from ephemeral into privacy pool
 await privacyCash.deposit({ lamports: amount });
 
-// Private withdrawal - unlinkable to deposit
+// Backend: Private withdrawal to main wallet - unlinkable
 await privacyCash.withdraw({
   lamports: amount,
-  recipientAddress: ephemeralAddress,
+  recipientAddress: mainWallet,
 });
 ```
 
@@ -194,7 +233,35 @@ The ideal flow: **Meet → Bring phones close → Confirm amount → Send → Do
 
 ## 7. Security & Privacy
 
-### 7.1 On-Chain Privacy
+### 7.1 Threat Model
+
+Fabcash is designed for users in hostile environments where:
+
+| Threat | Description | Mitigation |
+|--------|-------------|------------|
+| **Sender surveillance** | Sender tries to track receiver's wallet | Ephemeral addresses |
+| **Chain analysis** | Third party analyzes on-chain patterns | ZK compression reduces footprint |
+| **Post-crackdown forensics** | Government analyzes chain after connectivity returns | Privacy Cash shielded settlement |
+| **Network monitoring** | ISP/government monitors RPC calls | Deferred settlement, Tor-compatible |
+
+### 7.2 Layered Privacy Architecture
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│                    PRIVACY LAYERS                               │
+├────────────────────────────────────────────────────────────────┤
+│  Layer 1: Payment Privacy (Ephemeral Addresses)                │
+│  └─ Sender cannot learn receiver's main wallet                 │
+├────────────────────────────────────────────────────────────────┤
+│  Layer 2: Footprint Privacy (Light Protocol ZK Compression)    │
+│  └─ Compressed accounts = harder to analyze patterns           │
+├────────────────────────────────────────────────────────────────┤
+│  Layer 3: Settlement Privacy (Privacy Cash Shielded Pool)      │
+│  └─ Sweep transactions unlinkable to main wallet               │
+└────────────────────────────────────────────────────────────────┘
+```
+
+### 7.3 On-Chain Privacy
 
 | Layer | Technology | Benefit |
 |-------|------------|---------|
@@ -202,13 +269,13 @@ The ideal flow: **Meet → Bring phones close → Confirm amount → Send → Do
 | Compression | Light Protocol | 99% smaller footprint |
 | Shielding | Privacy Cash | Unlinkable transactions |
 
-### 7.2 Network-Layer Privacy
+### 7.5 Network-Layer Privacy
 
 * Bluetooth MAC randomization
 * Session keys per connection
 * No fixed device identifiers
 
-### 7.3 Double-Spend Considerations
+### 7.6 Double-Spend Considerations
 
 Offline double-spend prevention is impossible in a decentralized manner.
 
@@ -340,7 +407,7 @@ components/
 * **[Light Protocol](https://www.zkcompression.com)** - ZK Compression for Solana
 * **[Privacy Cash](https://github.com/Privacy-Cash/privacy-cash)** - Shielded transaction protocol
 * **[Expo](https://expo.dev)** - React Native framework
-* **[@solana/kit](https://github.com/solana-labs/solana-web3.js)** - Solana JavaScript SDK
+* **[@solana/web3.js](https://github.com/solana-labs/solana-web3.js)** - Solana JavaScript SDK
 
 ---
 
@@ -348,12 +415,14 @@ components/
 
 - [x] Core offline payment flow (BLE + QR)
 - [x] Light Protocol ZK Compression integration
-- [x] Privacy Cash shielded payments integration
-- [ ] UI for privacy mode selection
+- [x] Privacy Cash shielded payments integration (mock for demo)
+- [x] UI for privacy mode selection
+- [ ] Privacy Cash backend service (production)
 - [ ] NFC support for tap-to-pay
 - [ ] Mainnet deployment
 - [ ] Multi-token support
 - [ ] Mesh network broadcasting (device-to-device relay)
+- [ ] Tor integration for RPC calls
 
 ---
 

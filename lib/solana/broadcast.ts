@@ -1,8 +1,4 @@
-import {
-  createSolanaRpc,
-  signature,
-  type Base64EncodedWireTransaction,
-} from '@solana/kit';
+import { Connection } from '@solana/web3.js';
 import { SignedTransaction } from './transactions';
 
 const RPC_URL = 'https://api.devnet.solana.com';
@@ -26,12 +22,19 @@ const MAX_RETRIES = 3;
 const INITIAL_RETRY_DELAY = 1000;
 
 /**
+ * Create connection for devnet
+ */
+function createConnection(): Connection {
+  return new Connection(RPC_URL, 'confirmed');
+}
+
+/**
  * Broadcast a signed transaction to the network
  */
 export async function broadcastTransaction(
   tx: SignedTransaction
 ): Promise<BroadcastResult> {
-  const rpc = createSolanaRpc(RPC_URL);
+  const connection = createConnection();
 
   // Check if transaction has expired
   if (Date.now() > tx.expiresAt) {
@@ -46,19 +49,17 @@ export async function broadcastTransaction(
 
   for (let attempt = 0; attempt < MAX_RETRIES; attempt++) {
     try {
-      // The tx.base64 is already a Base64EncodedWireTransaction
-      const base64Tx = tx.base64 as Base64EncodedWireTransaction;
+      // Decode base64 transaction to raw bytes
+      const rawTransaction = base64ToBytes(tx.base64);
 
-      // Send the transaction
-      const sig = await rpc
-        .sendTransaction(base64Tx, {
-          skipPreflight: false,
-          preflightCommitment: 'confirmed',
-        })
-        .send();
+      // Send the raw transaction
+      const sig = await connection.sendRawTransaction(rawTransaction, {
+        skipPreflight: false,
+        preflightCommitment: 'confirmed',
+      });
 
       // Wait for confirmation
-      const confirmed = await waitForConfirmation(sig);
+      const confirmed = await waitForConfirmation(connection, sig);
 
       if (confirmed) {
         return {
@@ -89,17 +90,15 @@ export async function broadcastTransaction(
  * Wait for transaction confirmation
  */
 async function waitForConfirmation(
+  connection: Connection,
   sig: string,
   timeout = 30000
 ): Promise<boolean> {
-  const rpc = createSolanaRpc(RPC_URL);
   const startTime = Date.now();
 
   while (Date.now() - startTime < timeout) {
     try {
-      const { value } = await rpc
-        .getSignatureStatuses([signature(sig)])
-        .send();
+      const { value } = await connection.getSignatureStatuses([sig]);
 
       const status = value[0];
       if (status) {
@@ -128,8 +127,8 @@ async function waitForConfirmation(
  */
 export async function checkNetworkConnectivity(): Promise<boolean> {
   try {
-    const rpc = createSolanaRpc(RPC_URL);
-    await rpc.getHealth().send();
+    const connection = createConnection();
+    await connection.getVersion();
     return true;
   } catch {
     return false;
@@ -143,10 +142,8 @@ export async function getTransactionStatus(
   sig: string
 ): Promise<TransactionStatus | null> {
   try {
-    const rpc = createSolanaRpc(RPC_URL);
-    const { value } = await rpc
-      .getSignatureStatuses([signature(sig)])
-      .send();
+    const connection = createConnection();
+    const { value } = await connection.getSignatureStatuses([sig]);
 
     const status = value[0];
     if (!status) {
@@ -182,5 +179,17 @@ function delay(ms: number): Promise<void> {
  * Parse transaction from base64
  */
 export function parseTransactionFromBase64(base64: string): Uint8Array {
-  return new Uint8Array(Buffer.from(base64, 'base64'));
+  return base64ToBytes(base64);
+}
+
+/**
+ * Helper function for base64 decoding (React Native compatible)
+ */
+function base64ToBytes(base64: string): Uint8Array {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
 }

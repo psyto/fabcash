@@ -16,7 +16,7 @@ import {
 import { getOrCreateWallet } from '../solana/wallet';
 import { buildTransfer, TokenType, SignedTransaction, toSmallestUnit } from '../solana/transactions';
 import { addPendingTransaction } from '../store/pending-txs';
-import { address } from '@solana/kit';
+import { PublicKey } from '@solana/web3.js';
 
 export type CentralState =
   | 'idle'
@@ -214,8 +214,8 @@ export async function sendPayment(params: {
 
     // Build the transaction
     const signedTx = await buildTransfer({
-      sender: wallet.signer,
-      recipient: address(params.recipientPubkey),
+      sender: wallet.keypair,
+      recipient: new PublicKey(params.recipientPubkey),
       amount: toSmallestUnit(params.amount, params.token),
       token: params.token,
     });
@@ -272,8 +272,8 @@ export async function sendPaymentDirect(params: {
 
   // Build the transaction
   const signedTx = await buildTransfer({
-    sender: wallet.signer,
-    recipient: address(params.recipientPubkey),
+    sender: wallet.keypair,
+    recipient: new PublicKey(params.recipientPubkey),
     amount: toSmallestUnit(params.amount, params.token),
     token: params.token,
     useCompression: params.useCompression,

@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 import { TokenType, formatAmount, toSmallestUnit } from '@/lib/solana/transactions';
 import { shortenAddress } from '@/lib/solana/wallet';
-import { Address } from '@solana/kit';
 import { PrivacyMode } from './PrivacyModeSelector';
 
 const PRIVACY_MODE_LABELS: Record<PrivacyMode, { label: string; color: string }> = {
@@ -53,7 +52,7 @@ export function ConfirmPayment({
       <View style={styles.details}>
         <View style={styles.row}>
           <Text style={styles.label}>To</Text>
-          <Text style={styles.value}>{shortenAddress(recipient as Address, 6)}</Text>
+          <Text style={styles.value}>{shortenAddress(recipient, 6)}</Text>
         </View>
 
         <View style={styles.divider} />

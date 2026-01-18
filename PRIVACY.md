@@ -11,6 +11,37 @@ This document details the privacy technologies integrated into Fabcash and how t
 3. **Amount Privacy**: Transaction amounts are not easily analyzable
 4. **Relationship Privacy**: Cannot link sender and receiver on-chain
 5. **Pattern Privacy**: Cannot build behavioral profiles from payment history
+6. **Settlement Privacy**: Sweeping funds to main wallet doesn't expose payment history
+
+---
+
+## Designed for Hostile Environments
+
+Fabcash is built for users in regions with internet crackdowns and government surveillance. The privacy architecture addresses a specific threat model:
+
+```
+┌────────────────────────────────────────────────────────────────┐
+│                     INTERNET CRACKDOWN                         │
+├────────────────────────────────────────────────────────────────┤
+│  During crackdown (offline):                                   │
+│    Alice ─── Bluetooth ───> Bob's ephemeral address            │
+│    (No network trace, no server logs)                          │
+├────────────────────────────────────────────────────────────────┤
+│  When connectivity returns (government monitoring):            │
+│                                                                │
+│    Without Privacy Cash:                                       │
+│      Bob's ephemeral ──> Bob's main wallet                     │
+│      └─ Government chain analysis sees this link               │
+│      └─ All Bob's payments now exposed                         │
+│                                                                │
+│    With Privacy Cash shielded settlement:                      │
+│      Bob's ephemeral ──> Privacy Pool ──> Bob's main wallet    │
+│      └─ Link cryptographically broken                          │
+│      └─ Post-crackdown forensics cannot trace                  │
+└────────────────────────────────────────────────────────────────┘
+```
+
+**Key insight**: Ephemeral addresses protect privacy at payment time. Privacy Cash protects privacy at settlement time
 
 ---
 
@@ -60,19 +91,23 @@ Fabcash uses a layered privacy approach:
 **How:**
 ```typescript
 // lib/solana/ephemeral.ts
+import { Keypair } from '@solana/web3.js';
+
 export async function generateEphemeralKey(): Promise<EphemeralKey> {
-  const signer = await generateKeyPairSigner();
+  const keypair = Keypair.generate();
   // Store temporarily, sweep to main wallet later
   return {
     id: generateKeyId(),
-    publicKey: signer.address,
-    signer,
+    publicKey: keypair.publicKey,
+    keypair,
     expiresAt: Date.now() + 15 * 60 * 1000,
   };
 }
 ```
 
 **Privacy benefit:** Each payment goes to a unique address. Without additional context, an observer cannot link multiple payments to the same person.
+
+**Limitation:** When funds are swept from ephemeral to main wallet, this creates an on-chain link. Over time, all ephemeral addresses can be traced to the same main wallet. This is where Privacy Cash becomes essential.
 
 ---
 
@@ -114,28 +149,48 @@ export async function compressSol(payer: Keypair, lamports: number) {
 
 **What:** A mixing pool using zero-knowledge proofs to break the link between deposits and withdrawals.
 
-**Why:** Even with ephemeral addresses, the flow of funds from sender's known address to receiver can be traced. Shielding breaks this link.
+**Why:** Ephemeral addresses protect you at payment time, but not at settlement time. When you sweep funds from ephemeral addresses to your main wallet, that creates traceable links. In surveillance scenarios (post-crackdown forensics), this exposes all your payment history.
+
+**Architecture:**
+```
+┌─────────────────┐      ┌─────────────────┐      ┌─────────────────┐
+│   Mobile App    │ ───> │  Backend API    │ ───> │     Solana      │
+│  (React Native) │      │   (Node.js)     │      │                 │
+└─────────────────┘      └─────────────────┘      └─────────────────┘
+                               │
+                               │ Privacy Cash SDK
+                               │ (ZK proof generation)
+                               v
+                         ┌─────────────────┐
+                         │  Shielded Pool  │
+                         └─────────────────┘
+```
+
+The Privacy Cash SDK requires Node.js runtime for ZK proof generation and cannot run directly in React Native. The mobile app communicates with a backend service.
 
 **How:**
 ```typescript
-// lib/solana/privacy-cash.ts
-import { PrivacyCash } from 'privacycash';
+// Backend API handles Privacy Cash operations
 
-// Step 1: Shield funds (can be done in advance)
+// When user wants to sweep ephemeral funds privately:
+// 1. Mobile app sends request to backend
+// 2. Backend deposits ephemeral funds into pool
 await privacyCash.deposit({ lamports: amount });
 
-// Step 2: When paying, withdraw to receiver's ephemeral address
+// 3. Backend withdraws to user's main wallet
 await privacyCash.withdraw({
   lamports: amount,
-  recipientAddress: ephemeralAddress,
+  recipientAddress: mainWallet,
 });
+// 4. On-chain: ephemeral address and main wallet are unlinkable
 ```
 
 **Privacy benefit:**
 - Deposits go into a shared pool
 - Withdrawals are proven via ZK proof
 - Proof shows "I deposited enough" without revealing which deposit
-- On-chain: deposit tx and withdrawal tx are unlinkable
+- On-chain: ephemeral address and main wallet are cryptographically unlinkable
+- **Post-crackdown forensics cannot reconstruct payment relationships**
 
 ---
 
@@ -182,7 +237,16 @@ Fabcash supports different privacy levels:
 
 ## Threat Model
 
-### What we protect against:
+### Primary Threats (Authoritarian Contexts)
+
+| Threat | Scenario | Protection |
+|--------|----------|------------|
+| **Post-crackdown chain analysis** | Government analyzes blockchain after restoring internet | Privacy Cash shielded settlement |
+| **Payment relationship mapping** | Identify who paid whom | Ephemeral addresses + shielding |
+| **ISP/RPC monitoring** | Track which wallets are active | Deferred settlement, Tor-compatible |
+| **Wallet balance surveillance** | Track wealth accumulation | Funds dispersed across ephemeral keys |
+
+### Secondary Threats (General Privacy)
 
 | Threat | Protection |
 |--------|------------|
@@ -190,7 +254,7 @@ Fabcash supports different privacy levels:
 | Transaction graph analysis | Privacy Cash shielding |
 | Amount pattern analysis | Variable denominations |
 | Network surveillance | Bluetooth (no internet at payment time) |
-| Server data collection | No server (P2P only) |
+| Server data collection | No server for payments (P2P only) |
 | On-chain data mining | ZK Compression |
 
 ### What we don't protect against:
@@ -202,6 +266,7 @@ Fabcash supports different privacy levels:
 | Timing analysis | Deposit/withdrawal timing correlation |
 | Large amount analysis | Very large amounts may stand out in pool |
 | Voluntary disclosure | User sharing their own data |
+| Backend compromise | If Privacy Cash backend is compromised (mitigate with self-hosting) |
 
 ---
 
@@ -229,6 +294,59 @@ Fabcash supports different privacy levels:
 | KYC required | No | No | Yes | No |
 | Seizure resistant | High | Medium | Low | Medium |
 | Digital | Yes | Yes | Yes | No |
+
+---
+
+## Ephemeral Addresses vs. Shielded Settlement
+
+A common question: "If we use ephemeral addresses, why do we need Privacy Cash?"
+
+### What Ephemeral Addresses Provide
+
+```
+Payment time:
+  Sender ──> Ephemeral Address (fresh)
+
+  ✓ Sender doesn't learn receiver's main wallet
+  ✓ Each payment uses different address
+  ✓ Casual observers can't link payments
+```
+
+### What Ephemeral Addresses Don't Provide
+
+```
+Settlement time (when receiver sweeps funds):
+  Ephemeral1 ──> Main Wallet
+  Ephemeral2 ──> Main Wallet
+  Ephemeral3 ──> Main Wallet
+
+  ✗ Chain analyst can link all ephemeral addresses
+  ✗ Entire payment history exposed
+  ✗ In crackdown scenario: government sees everything
+```
+
+### What Privacy Cash Adds
+
+```
+Shielded settlement:
+  Ephemeral1 ──> Privacy Pool ──> Main Wallet
+  Ephemeral2 ──> Privacy Pool ──> Main Wallet
+  Ephemeral3 ──> Privacy Pool ──> Main Wallet
+
+  ✓ Each sweep is unlinkable
+  ✓ Chain analysis cannot connect ephemeral to main wallet
+  ✓ Post-crackdown forensics blocked
+```
+
+### When Each is Sufficient
+
+| Use Case | Ephemeral Only | + Privacy Cash |
+|----------|---------------|----------------|
+| Friends splitting dinner | Sufficient | Overkill |
+| Flea market purchase | Sufficient | Optional |
+| **Activist receiving donations** | Insufficient | **Required** |
+| **Journalist protecting sources** | Insufficient | **Required** |
+| **Citizen in authoritarian regime** | Insufficient | **Required** |
 
 ---
 

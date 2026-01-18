@@ -1,41 +1,29 @@
 import * as SecureStore from 'expo-secure-store';
-import {
-  generateKeyPairSigner,
-  createKeyPairSignerFromBytes,
-  KeyPairSigner,
-  address,
-  Address,
-} from '@solana/kit';
+import { Keypair, PublicKey } from '@solana/web3.js';
 
 const WALLET_KEY = 'fabcash_wallet_keypair';
 
 export interface WalletState {
-  publicKey: Address;
-  signer: KeyPairSigner;
+  publicKey: PublicKey;
+  keypair: Keypair;
 }
 
 let cachedWallet: WalletState | null = null;
 
 /**
  * Generate a new Ed25519 keypair for the wallet
+ * Uses @solana/web3.js Keypair which is React Native compatible
  */
 export async function generateWallet(): Promise<WalletState> {
-  const signer = await generateKeyPairSigner();
+  // Generate Ed25519 keypair
+  const keypair = Keypair.generate();
 
-  // Store the private key bytes securely
-  const privateKeyBytes = new Uint8Array(await crypto.subtle.exportKey('raw', signer.keyPair.privateKey));
-  const publicKeyBytes = new Uint8Array(await crypto.subtle.exportKey('raw', signer.keyPair.publicKey));
-
-  // Combine into 64-byte keypair (32 private + 32 public)
-  const keypairBytes = new Uint8Array(64);
-  keypairBytes.set(privateKeyBytes.slice(0, 32), 0);
-  keypairBytes.set(publicKeyBytes, 32);
-
-  await SecureStore.setItemAsync(WALLET_KEY, Buffer.from(keypairBytes).toString('base64'));
+  // Store the secret key (64 bytes) securely
+  await SecureStore.setItemAsync(WALLET_KEY, bytesToBase64(keypair.secretKey));
 
   cachedWallet = {
-    publicKey: signer.address,
-    signer,
+    publicKey: keypair.publicKey,
+    keypair,
   };
 
   return cachedWallet;
@@ -55,12 +43,12 @@ export async function loadWallet(): Promise<WalletState | null> {
   }
 
   try {
-    const keypairBytes = new Uint8Array(Buffer.from(stored, 'base64'));
-    const signer = await createKeyPairSignerFromBytes(keypairBytes);
+    const secretKey = base64ToBytes(stored);
+    const keypair = Keypair.fromSecretKey(secretKey);
 
     cachedWallet = {
-      publicKey: signer.address,
-      signer,
+      publicKey: keypair.publicKey,
+      keypair,
     };
 
     return cachedWallet;
@@ -97,20 +85,20 @@ export async function exportWalletBytes(): Promise<Uint8Array | null> {
   if (!stored) {
     return null;
   }
-  return new Uint8Array(Buffer.from(stored, 'base64'));
+  return base64ToBytes(stored);
 }
 
 /**
  * Import wallet from private key bytes
  */
-export async function importWallet(keypairBytes: Uint8Array): Promise<WalletState> {
-  const signer = await createKeyPairSignerFromBytes(keypairBytes);
+export async function importWallet(secretKey: Uint8Array): Promise<WalletState> {
+  const keypair = Keypair.fromSecretKey(secretKey);
 
-  await SecureStore.setItemAsync(WALLET_KEY, Buffer.from(keypairBytes).toString('base64'));
+  await SecureStore.setItemAsync(WALLET_KEY, bytesToBase64(secretKey));
 
   cachedWallet = {
-    publicKey: signer.address,
-    signer,
+    publicKey: keypair.publicKey,
+    keypair,
   };
 
   return cachedWallet;
@@ -127,7 +115,25 @@ export async function deleteWallet(): Promise<void> {
 /**
  * Get shortened address for display
  */
-export function shortenAddress(addr: Address, chars = 4): string {
-  const str = addr.toString();
+export function shortenAddress(addr: PublicKey | string, chars = 4): string {
+  const str = typeof addr === 'string' ? addr : addr.toBase58();
   return `${str.slice(0, chars)}...${str.slice(-chars)}`;
+}
+
+// Helper functions for base64 encoding (React Native compatible)
+function bytesToBase64(bytes: Uint8Array): string {
+  let binary = '';
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i]);
+  }
+  return btoa(binary);
+}
+
+function base64ToBytes(base64: string): Uint8Array {
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+  return bytes;
 }

@@ -178,7 +178,7 @@ export async function handleIncomingTransaction(
       id: `rx_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 8)}`,
       base64: payload.txBase64,
       sender: payload.senderPubkey as any,
-      recipient: currentEphemeralKey.publicKey,
+      recipient: currentEphemeralKey.publicKey.toBase58(),
       amount: payload.amount,
       token: payload.token,
       createdAt: Date.now(),

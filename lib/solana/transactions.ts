@@ -38,6 +38,7 @@ export interface TransferParams {
   amount: bigint; // In smallest units (lamports for SOL, micro-USDC for USDC)
   token: TokenType;
   memo?: string;
+  useCompression?: boolean; // Use Light Protocol ZK compression
 }
 
 export interface SignedTransaction {

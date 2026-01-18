@@ -9,11 +9,20 @@ import {
 import { TokenType, formatAmount, toSmallestUnit } from '@/lib/solana/transactions';
 import { shortenAddress } from '@/lib/solana/wallet';
 import { Address } from '@solana/kit';
+import { PrivacyMode } from './PrivacyModeSelector';
+
+const PRIVACY_MODE_LABELS: Record<PrivacyMode, { label: string; color: string }> = {
+  standard: { label: 'Standard', color: '#666' },
+  compressed: { label: 'ZK Compressed', color: '#14F195' },
+  shielded: { label: 'Shielded', color: '#9945FF' },
+  maximum: { label: 'Max Privacy', color: '#00B4D8' },
+};
 
 interface ConfirmPaymentProps {
   recipient: string;
   amount: string;
   token: TokenType;
+  privacyMode?: PrivacyMode;
   onConfirm: () => void;
   onCancel: () => void;
   isLoading?: boolean;
@@ -23,6 +32,7 @@ export function ConfirmPayment({
   recipient,
   amount,
   token,
+  privacyMode = 'standard',
   onConfirm,
   onCancel,
   isLoading = false,
@@ -32,6 +42,7 @@ export function ConfirmPayment({
     toSmallestUnit(amountValue, token),
     token
   );
+  const privacyInfo = PRIVACY_MODE_LABELS[privacyMode];
 
   return (
     <View style={styles.container}>
@@ -43,6 +54,15 @@ export function ConfirmPayment({
         <View style={styles.row}>
           <Text style={styles.label}>To</Text>
           <Text style={styles.value}>{shortenAddress(recipient as Address, 6)}</Text>
+        </View>
+
+        <View style={styles.divider} />
+
+        <View style={styles.row}>
+          <Text style={styles.label}>Privacy</Text>
+          <Text style={[styles.privacyValue, { color: privacyInfo.color }]}>
+            {privacyInfo.label}
+          </Text>
         </View>
 
         <View style={styles.divider} />
@@ -112,6 +132,10 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#fff',
     fontFamily: 'monospace',
+  },
+  privacyValue: {
+    fontSize: 14,
+    fontWeight: '600',
   },
   divider: {
     height: 1,

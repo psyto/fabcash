@@ -266,6 +266,7 @@ export async function sendPaymentDirect(params: {
   amount: number;
   token: TokenType;
   recipientPubkey: string;
+  useCompression?: boolean;
 }): Promise<SignedTransaction> {
   const wallet = await getOrCreateWallet();
 
@@ -275,6 +276,7 @@ export async function sendPaymentDirect(params: {
     recipient: address(params.recipientPubkey),
     amount: toSmallestUnit(params.amount, params.token),
     token: params.token,
+    useCompression: params.useCompression,
   });
 
   // Add to pending transactions

@@ -6,6 +6,24 @@ This document details the privacy technologies integrated into Fabcash and how t
 
 ---
 
+## The Third Era of Crypto
+
+[Balaji Srinivasan](https://www.youtube.com/watch?v=u3B8xqsf66w) argues that crypto is entering its third era:
+
+| Era | Focus | Example |
+|-----|-------|---------|
+| Era 1 | Decentralized money | Bitcoin |
+| Era 2 | Decentralized compute | Ethereum |
+| **Era 3** | **Decentralized privacy** | **Fabcash** |
+
+Fabcash is built for Era 3.
+
+Previous eras treated privacy as an optional feature — something bolted on top. Era 3 makes privacy the foundation. Not "add encryption" but "design so there's nothing to encrypt."
+
+**True burner wallet = nothing to reveal = privacy by architecture.**
+
+---
+
 ## True Burner Wallet
 
 **Fabcash is a true burner wallet.** This is the foundation of its privacy model.
@@ -76,6 +94,37 @@ Fabcash's privacy model requires many small transactions:
 On Bitcoin or Ethereum, Fabcash's privacy model would cost users hundreds of dollars per month in fees alone. The concept is economically impossible.
 
 **Solana's negligible fees made Fabcash possible.**
+
+---
+
+## Lightning Network Inspiration
+
+Bitcoin's Lightning Network pioneered a key insight: **payments don't need to settle immediately**.
+
+Fabcash applies this insight to privacy:
+
+| Aspect | Lightning | Fabcash |
+|--------|-----------|---------|
+| Core idea | Deferred settlement | Deferred settlement |
+| Privacy benefit | Off-chain = less visible | Offline = no network trace |
+| Complexity | Channels, routing, watchtowers | Simple signed transactions |
+| Settlement | Close channel | Broadcast when online |
+
+**Privacy advantage of deferred settlement:**
+
+```
+Immediate settlement (traditional wallet):
+  Payment → Internet → RPC → Blockchain
+  └─ ISP sees RPC calls
+  └─ Government can monitor in real-time
+
+Deferred settlement (Fabcash):
+  Payment → Bluetooth (offline) → [wait] → Broadcast later
+  └─ No network activity at payment time
+  └─ Cannot correlate payment moment with network traffic
+```
+
+Lightning proved that instant settlement isn't necessary. Solana made the simpler version economically viable.
 
 ---
 

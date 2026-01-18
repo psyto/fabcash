@@ -30,18 +30,21 @@ export interface CompressedTransferResult {
   error?: string;
 }
 
+// Helius API key for compression RPC (required for ZK Compression)
+// In production, this should come from environment variables
+const HELIUS_API_KEY = process.env.EXPO_PUBLIC_HELIUS_API_KEY || 'd50758a3-e3f3-4885-a213-36e48541c2c4';
+
 /**
  * Initialize ZK Compression RPC
- * Note: Requires a Helius API key for full compression RPC support
+ * Uses Helius RPC which supports Light Protocol compression
  */
 export function initCompressionRpc(heliusApiKey?: string): Rpc {
   if (rpcInstance) {
     return rpcInstance;
   }
 
-  const rpcUrl = heliusApiKey
-    ? `https://devnet.helius-rpc.com?api-key=${heliusApiKey}`
-    : 'https://api.devnet.solana.com';
+  const apiKey = heliusApiKey || HELIUS_API_KEY;
+  const rpcUrl = `https://devnet.helius-rpc.com?api-key=${apiKey}`;
 
   rpcInstance = createRpc(rpcUrl, rpcUrl);
   return rpcInstance;

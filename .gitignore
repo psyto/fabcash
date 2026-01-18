@@ -33,6 +33,10 @@ error/
 
 # local env files
 .env*.local
+.env
+
+# test wallets
+scripts/.test-wallet.json
 
 # typescript
 *.tsbuildinfo

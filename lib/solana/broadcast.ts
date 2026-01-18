@@ -70,6 +70,19 @@ export async function broadcastTransaction(
       }
     } catch (error) {
       lastError = error as Error;
+      const errorMessage = lastError.message || '';
+
+      // "Already processed" means the transaction succeeded
+      if (errorMessage.includes('already been processed') ||
+          errorMessage.includes('AlreadyProcessed')) {
+        console.log('Transaction already processed - treating as success');
+        return {
+          success: true,
+          signature: tx.id,
+          status: 'confirmed',
+        };
+      }
+
       console.warn(`Broadcast attempt ${attempt + 1} failed:`, error);
 
       // Exponential backoff

@@ -7,11 +7,25 @@ import { StatusBar } from 'expo-status-bar';
 import { View, StyleSheet } from 'react-native';
 import * as Font from 'expo-font';
 import { initPendingTxStore, processPendingTransactions } from '@/lib/store/pending-txs';
+import { getOrCreateWallet } from '@/lib/solana/wallet';
+import { initPrivacyCash } from '@/lib/solana/privacy-cash';
 
 export default function RootLayout() {
   useEffect(() => {
     // Initialize pending transaction store
     initPendingTxStore();
+
+    // Initialize Privacy Cash
+    const initPrivacy = async () => {
+      try {
+        const wallet = await getOrCreateWallet();
+        await initPrivacyCash(wallet.keypair.secretKey);
+        console.log('[App] Privacy Cash initialized');
+      } catch (error) {
+        console.error('[App] Failed to init Privacy Cash:', error);
+      }
+    };
+    initPrivacy();
 
     // Process pending transactions when app loads
     processPendingTransactions().catch(console.error);

@@ -31,6 +31,7 @@ import { broadcastTransaction } from '@/lib/solana/broadcast';
 import { parseQRCode, isValidSolanaAddress } from '@/lib/qr/scan';
 import {
   isPrivacyCashInitialized,
+  initPrivacyCash,
   getPrivateBalance,
   privateWithdrawSol,
 } from '@/lib/solana/privacy-cash';
@@ -51,16 +52,22 @@ export default function SendScreen() {
 
   // Load max balance
   useEffect(() => {
+    let cancelled = false;
     const loadBalance = async () => {
       try {
         const wallet = await getOrCreateWallet();
         const balance = token === 'SOL'
           ? await getSolBalance(wallet.publicKey)
           : await getUsdcBalance(wallet.publicKey);
-        setMaxAmount(fromSmallestUnit(balance, token));
+
+        if (!cancelled) {
+          const formatted = fromSmallestUnit(balance, token);
+          console.log('[Send] Balance loaded:', formatted, token);
+          setMaxAmount(formatted);
+        }
 
         // Load private balance if Privacy Cash is initialized
-        if (isPrivacyCashInitialized()) {
+        if (!cancelled && isPrivacyCashInitialized()) {
           const privBalance = await getPrivateBalance();
           setPrivateBalance(fromSmallestUnit(
             BigInt(token === 'SOL' ? privBalance.sol : privBalance.usdc),
@@ -68,10 +75,18 @@ export default function SendScreen() {
           ));
         }
       } catch (error) {
-        console.error('Failed to load balance:', error);
+        console.error('[Send] Failed to load balance:', error);
+        if (!cancelled) {
+          setMaxAmount(0);
+        }
       }
     };
+
+    // Reset and reload
+    setMaxAmount(undefined);
     loadBalance();
+
+    return () => { cancelled = true; };
   }, [token]);
 
   const handleScan = useCallback(async () => {
@@ -144,6 +159,12 @@ export default function SendScreen() {
 
       // Handle shielded/maximum privacy modes with Privacy Cash
       if (privacyDetails.useShielding && token === 'SOL') {
+        // Ensure Privacy Cash is initialized
+        if (!isPrivacyCashInitialized()) {
+          const wallet = await getOrCreateWallet();
+          await initPrivacyCash(wallet.keypair.secretKey);
+        }
+
         const lamportsValue = Number(toSmallestUnit(amountValue, 'SOL'));
         const withdrawResult = await privateWithdrawSol(lamportsValue, recipient);
 

@@ -317,6 +317,42 @@ Fabcash supports different privacy levels. All modes support **offline payment**
 | Voluntary disclosure | User sharing their own data |
 | Backend compromise | If Privacy Cash backend is compromised (mitigate with self-hosting) |
 
+### No Seed Phrase by Design
+
+**Fabcash does not support seed phrase backup.** This is intentional.
+
+In authoritarian contexts, a seed phrase is a liability:
+
+| Scenario | With Seed Phrase | Without Seed Phrase |
+|----------|-----------------|---------------------|
+| Detention/interrogation | Can be coerced to reveal | Nothing to reveal |
+| Device seizure | Funds recoverable by adversary | Funds inaccessible |
+| Border crossing | Must hide or memorize seed | Plausible deniability |
+
+**Coercion resistance:**
+
+```
+Traditional Wallet:
+  "Give us your seed phrase or face consequences"
+  → User must comply or resist
+  → Adversary gains full access to funds AND transaction history
+
+Fabcash:
+  "Give us your seed phrase"
+  → "There is no seed phrase"
+  → Adversary sees only current balance (if any)
+  → No recovery possible, even under coercion
+```
+
+**Best practice for high-value amounts:**
+1. Keep daily spending money in Fabcash
+2. Regularly sweep larger amounts through Privacy Cash to a cold wallet
+3. Cold wallet can have seed phrase backup (stored securely, not on device)
+
+This separation ensures:
+- Daily wallet: Maximum privacy, coercion-resistant, expendable
+- Cold storage: Backed up, recoverable, but not carried daily
+
 ---
 
 ## Privacy Visualization

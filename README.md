@@ -170,7 +170,22 @@ The ideal flow: **Meet → Bring phones close → Confirm amount → Send → Do
 
 * No login.
 * No accounts.
+* No seed phrase to write down.
 * Transaction history is optional, not mandatory.
+
+### 3.4 The Cash Metaphor
+
+Fabcash is designed to behave like physical cash:
+
+| Physical Cash | Fabcash |
+|--------------|---------|
+| Lose wallet → lose money | Lose phone → lose funds |
+| No transaction history | History is optional |
+| Instant transfer | Instant (settlement later) |
+| Anonymous by default | Privacy by default |
+| Carry spending money, not savings | Keep small amounts |
+
+This is intentional. For larger amounts, sweep to a backed-up cold wallet.
 
 ---
 
@@ -181,6 +196,7 @@ The ideal flow: **Meet → Bring phones close → Confirm amount → Send → Do
 * **ZK-Enhanced Privacy:** Light Protocol compression and Privacy Cash shielding provide cryptographic privacy guarantees.
 * **Trustless by Construction:** Do not trust the counterparty or the device; trust only cryptographic signatures and verification.
 * **Deterministic Outcomes:** No "maybe it fails later" UX. The transaction is either formed correctly or rejected on the spot.
+* **Burner Wallet by Design:** No seed phrase backup. Like a physical wallet — lose it, lose the cash. This is intentional for hostile environments (see [Why No Seed Phrase?](#why-no-seed-phrase)).
 
 ---
 
@@ -298,6 +314,42 @@ Offline double-spend prevention is impossible in a decentralized manner.
 * Offline payments are marked "pending"
 * Finality exists only after on-chain confirmation
 * This mirrors physical cash — suitable for small amounts
+
+### 7.7 Why No Seed Phrase?
+
+**Fabcash intentionally does not support seed phrase backup.** This is a security feature, not a missing feature.
+
+| Traditional Wallet | Fabcash |
+|-------------------|---------|
+| Seed phrase = can recover funds | No seed phrase = nothing to reveal |
+| Seed phrase = can be coerced | No backup = plausible deniability |
+| Long-term storage | Burner wallet for daily spending |
+
+**In hostile environments:**
+
+```
+Scenario: Border crossing or detention
+
+Traditional wallet:
+  Authority: "Give us your seed phrase"
+  User: Has to comply or face consequences
+  Result: All funds and transaction history exposed
+
+Fabcash:
+  Authority: "Give us your seed phrase"
+  User: "There is no seed phrase. It's a burner wallet."
+  Result: Only current balance visible, no history, no recovery possible
+```
+
+**The cash metaphor:**
+- Physical wallet: Lose it → lose the cash inside
+- Fabcash: Lose phone → lose the funds
+- Both: Keep only what you're willing to lose
+
+**Best practice:**
+1. Keep small amounts in Fabcash (daily spending money)
+2. Use Privacy Cash to sweep larger amounts to a backed-up cold wallet
+3. Treat Fabcash like a physical wallet, not a savings account
 
 ---
 

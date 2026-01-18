@@ -1,28 +1,24 @@
 /**
- * Privacy Cash SDK Integration (React Native Compatible)
+ * Privacy Cash Client
  *
- * Enables shielded payments where deposits and withdrawals
- * are cryptographically unlinkable using zero-knowledge proofs.
+ * Communicates with the Fabcash Privacy Backend (Vercel)
+ * which runs the Privacy Cash SDK for shielded transactions.
  *
- * Note: The actual Privacy Cash SDK requires Node.js runtime.
- * This implementation provides a React Native compatible interface
- * that simulates the shielded payment flow for demonstration.
- * In production, this would connect to a backend service that
- * runs the actual Privacy Cash SDK.
+ * Architecture:
+ *   Mobile App ──> Privacy Backend ──> Privacy Cash SDK ──> Solana
  *
- * Flow:
- * 1. Sender deposits SOL/USDC into privacy pool
- * 2. Sender generates ZK proof for withdrawal
- * 3. Withdrawal goes to recipient's ephemeral address
- * 4. On-chain: deposit and withdrawal cannot be linked
+ * The backend handles ZK proof generation which requires Node.js runtime.
  */
 
 import * as SecureStore from 'expo-secure-store';
 
-const PRIVACY_BALANCE_KEY = 'fabcash_privacy_balance';
+// Backend URL for Privacy Cash API
+const PRIVACY_BACKEND_URL = process.env.EXPO_PUBLIC_PRIVACY_BACKEND_URL || 'https://backend-fabrknt.vercel.app';
 
-// Flag to indicate this is a demo/mock implementation
-export const IS_PRIVACY_CASH_MOCK = true;
+// Flag to indicate if using real backend or fallback mock
+export let IS_PRIVACY_CASH_MOCK = false;
+
+const PRIVACY_BALANCE_CACHE_KEY = 'fabcash_privacy_balance_cache';
 
 export interface PrivacyBalance {
   sol: number;      // In lamports
@@ -46,24 +42,51 @@ export interface WithdrawResult {
 }
 
 let initialized = false;
-let mockBalance: PrivacyBalance = { sol: 0, usdc: 0 };
+let cachedBalance: PrivacyBalance = { sol: 0, usdc: 0 };
+
+/**
+ * Check if the privacy backend is available
+ */
+async function checkBackendHealth(): Promise<boolean> {
+  try {
+    const response = await fetch(`${PRIVACY_BACKEND_URL}/api/health`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+    return response.ok;
+  } catch {
+    return false;
+  }
+}
 
 /**
  * Initialize Privacy Cash client
- * In React Native, this loads the mock balance from secure storage
+ * Checks backend availability and falls back to mock if unavailable
  */
 export async function initPrivacyCash(
   _keypairBytes: Uint8Array
 ): Promise<void> {
   if (initialized) return;
 
-  try {
-    const stored = await SecureStore.getItemAsync(PRIVACY_BALANCE_KEY);
-    if (stored) {
-      mockBalance = JSON.parse(stored);
+  // Check if backend is available
+  const backendAvailable = await checkBackendHealth();
+
+  if (backendAvailable) {
+    IS_PRIVACY_CASH_MOCK = false;
+    console.log('[Privacy Cash] Connected to backend:', PRIVACY_BACKEND_URL);
+  } else {
+    IS_PRIVACY_CASH_MOCK = true;
+    console.log('[Privacy Cash] Backend unavailable, using local mock');
+
+    // Load cached balance for mock mode
+    try {
+      const stored = await SecureStore.getItemAsync(PRIVACY_BALANCE_CACHE_KEY);
+      if (stored) {
+        cachedBalance = JSON.parse(stored);
+      }
+    } catch (error) {
+      console.warn('Failed to load cached balance:', error);
     }
-  } catch (error) {
-    console.warn('Failed to load privacy balance:', error);
   }
 
   initialized = true;
@@ -75,36 +98,49 @@ export async function initPrivacyCash(
 async function saveMockBalance(): Promise<void> {
   try {
     await SecureStore.setItemAsync(
-      PRIVACY_BALANCE_KEY,
-      JSON.stringify(mockBalance)
+      PRIVACY_BALANCE_CACHE_KEY,
+      JSON.stringify(cachedBalance)
     );
   } catch (error) {
-    console.warn('Failed to save privacy balance:', error);
+    console.warn('Failed to save cached balance:', error);
   }
 }
 
 /**
  * Shield SOL - deposit into privacy pool
- * DEMO: This simulates adding to shielded balance
  */
 export async function shieldSol(lamports: number): Promise<ShieldResult> {
+  if (!initialized) {
+    throw new Error('Privacy Cash not initialized');
+  }
+
+  if (IS_PRIVACY_CASH_MOCK) {
+    // Mock mode
+    cachedBalance.sol += lamports;
+    await saveMockBalance();
+    const mockTxSig = `mock_shield_${Date.now().toString(36)}`;
+    console.log(`[MOCK] Shielded ${lamports} lamports`);
+    return { success: true, txSignature: mockTxSig };
+  }
+
   try {
-    if (!initialized) {
-      throw new Error('Privacy Cash not initialized');
+    const response = await fetch(`${PRIVACY_BACKEND_URL}/api/shield`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lamports }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'Shield failed');
     }
 
-    // Simulate shielding (in production, this calls Privacy Cash SDK via backend)
-    mockBalance.sol += lamports;
-    await saveMockBalance();
-
-    // Generate mock transaction signature
-    const mockTxSig = `shield_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
-
-    console.log(`[DEMO] Shielded ${lamports} lamports. New balance: ${mockBalance.sol}`);
+    console.log(`[Privacy Cash] Shielded ${lamports} lamports:`, data.signature);
 
     return {
       success: true,
-      txSignature: mockTxSig,
+      txSignature: data.signature,
     };
   } catch (error) {
     console.error('Shield SOL failed:', error);
@@ -117,74 +153,82 @@ export async function shieldSol(lamports: number): Promise<ShieldResult> {
 
 /**
  * Shield USDC - deposit into privacy pool
- * DEMO: This simulates adding to shielded balance
  */
 export async function shieldUsdc(baseUnits: number): Promise<ShieldResult> {
-  try {
-    if (!initialized) {
-      throw new Error('Privacy Cash not initialized');
-    }
-
-    mockBalance.usdc += baseUnits;
-    await saveMockBalance();
-
-    const mockTxSig = `shield_usdc_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
-
-    console.log(`[DEMO] Shielded ${baseUnits} USDC base units. New balance: ${mockBalance.usdc}`);
-
-    return {
-      success: true,
-      txSignature: mockTxSig,
-    };
-  } catch (error) {
-    console.error('Shield USDC failed:', error);
-    return {
-      success: false,
-      error: (error as Error).message,
-    };
+  // USDC shielding not yet implemented in backend
+  if (!initialized) {
+    throw new Error('Privacy Cash not initialized');
   }
+
+  if (IS_PRIVACY_CASH_MOCK) {
+    cachedBalance.usdc += baseUnits;
+    await saveMockBalance();
+    const mockTxSig = `mock_shield_usdc_${Date.now().toString(36)}`;
+    return { success: true, txSignature: mockTxSig };
+  }
+
+  return {
+    success: false,
+    error: 'USDC shielding not yet implemented',
+  };
 }
 
 /**
  * Private withdraw SOL to any address
- * DEMO: This simulates a shielded withdrawal
  */
 export async function privateWithdrawSol(
   lamports: number,
   recipientAddress: string
 ): Promise<WithdrawResult> {
-  try {
-    if (!initialized) {
-      throw new Error('Privacy Cash not initialized');
-    }
+  if (!initialized) {
+    throw new Error('Privacy Cash not initialized');
+  }
 
-    // Check sufficient balance
-    if (mockBalance.sol < lamports) {
+  if (IS_PRIVACY_CASH_MOCK) {
+    // Mock mode
+    if (cachedBalance.sol < lamports) {
       return {
         success: false,
-        error: `Insufficient shielded balance. Have: ${mockBalance.sol}, need: ${lamports}`,
+        error: `Insufficient shielded balance. Have: ${cachedBalance.sol}, need: ${lamports}`,
       };
     }
 
-    // Simulate withdrawal (in production, this generates ZK proof via backend)
-    mockBalance.sol -= lamports;
+    cachedBalance.sol -= lamports;
     await saveMockBalance();
 
-    // Simulate fee (0.1% for demo)
     const fee = Math.floor(lamports * 0.001);
-    const actualAmount = lamports - fee;
-
-    const mockTxSig = `withdraw_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
-
-    console.log(`[DEMO] Withdrew ${actualAmount} lamports to ${recipientAddress}. Fee: ${fee}`);
+    const mockTxSig = `mock_withdraw_${Date.now().toString(36)}`;
+    console.log(`[MOCK] Withdrew ${lamports - fee} lamports to ${recipientAddress}`);
 
     return {
       success: true,
       txSignature: mockTxSig,
       recipient: recipientAddress,
-      amount: actualAmount,
-      fee: fee,
-      isPartial: false,
+      amount: lamports - fee,
+      fee,
+    };
+  }
+
+  try {
+    const response = await fetch(`${PRIVACY_BACKEND_URL}/api/withdraw`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ lamports, recipientAddress }),
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'Withdraw failed');
+    }
+
+    console.log(`[Privacy Cash] Withdrew ${lamports} lamports to ${recipientAddress}:`, data.signature);
+
+    return {
+      success: true,
+      txSignature: data.signature,
+      recipient: data.recipient,
+      amount: data.amount,
     };
   } catch (error) {
     console.error('Private withdraw SOL failed:', error);
@@ -197,49 +241,39 @@ export async function privateWithdrawSol(
 
 /**
  * Private withdraw USDC to any address
- * DEMO: This simulates a shielded withdrawal
  */
 export async function privateWithdrawUsdc(
   baseUnits: number,
   recipientAddress: string
 ): Promise<WithdrawResult> {
-  try {
-    if (!initialized) {
-      throw new Error('Privacy Cash not initialized');
-    }
+  if (!initialized) {
+    throw new Error('Privacy Cash not initialized');
+  }
 
-    if (mockBalance.usdc < baseUnits) {
+  if (IS_PRIVACY_CASH_MOCK) {
+    if (cachedBalance.usdc < baseUnits) {
       return {
         success: false,
-        error: `Insufficient shielded USDC balance. Have: ${mockBalance.usdc}, need: ${baseUnits}`,
+        error: `Insufficient shielded USDC balance`,
       };
     }
 
-    mockBalance.usdc -= baseUnits;
+    cachedBalance.usdc -= baseUnits;
     await saveMockBalance();
 
-    const fee = Math.floor(baseUnits * 0.001);
-    const actualAmount = baseUnits - fee;
-
-    const mockTxSig = `withdraw_usdc_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 10)}`;
-
-    console.log(`[DEMO] Withdrew ${actualAmount} USDC to ${recipientAddress}. Fee: ${fee}`);
-
+    const mockTxSig = `mock_withdraw_usdc_${Date.now().toString(36)}`;
     return {
       success: true,
       txSignature: mockTxSig,
       recipient: recipientAddress,
-      amount: actualAmount,
-      fee: fee,
-      isPartial: false,
-    };
-  } catch (error) {
-    console.error('Private withdraw USDC failed:', error);
-    return {
-      success: false,
-      error: (error as Error).message,
+      amount: baseUnits,
     };
   }
+
+  return {
+    success: false,
+    error: 'USDC withdrawal not yet implemented',
+  };
 }
 
 /**
@@ -249,14 +283,38 @@ export async function getPrivateBalance(): Promise<PrivacyBalance> {
   if (!initialized) {
     return { sol: 0, usdc: 0 };
   }
-  return { ...mockBalance };
+
+  if (IS_PRIVACY_CASH_MOCK) {
+    return { ...cachedBalance };
+  }
+
+  try {
+    const response = await fetch(`${PRIVACY_BACKEND_URL}/api/balance`, {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json' },
+    });
+
+    const data = await response.json();
+
+    if (!response.ok || !data.success) {
+      throw new Error(data.error || 'Failed to get balance');
+    }
+
+    return {
+      sol: data.balance.lamports || 0,
+      usdc: 0, // USDC not yet supported
+    };
+  } catch (error) {
+    console.error('Get private balance failed:', error);
+    return { sol: 0, usdc: 0 };
+  }
 }
 
 /**
  * Clear local cache
  */
 export async function clearPrivacyCache(): Promise<void> {
-  mockBalance = { sol: 0, usdc: 0 };
+  cachedBalance = { sol: 0, usdc: 0 };
   await saveMockBalance();
 }
 
@@ -272,18 +330,19 @@ export function isPrivacyCashInitialized(): boolean {
  */
 export function destroyPrivacyCash(): void {
   initialized = false;
-  mockBalance = { sol: 0, usdc: 0 };
+  cachedBalance = { sol: 0, usdc: 0 };
 }
 
 /**
- * Add demo balance for testing
- * Only available in development
+ * Get backend URL (for debugging)
  */
-export async function addDemoBalance(sol: number, usdc: number = 0): Promise<void> {
-  if (__DEV__) {
-    mockBalance.sol += sol;
-    mockBalance.usdc += usdc;
-    await saveMockBalance();
-    console.log(`[DEMO] Added demo balance. SOL: ${mockBalance.sol}, USDC: ${mockBalance.usdc}`);
-  }
+export function getPrivacyBackendUrl(): string {
+  return PRIVACY_BACKEND_URL;
+}
+
+/**
+ * Check if using mock mode
+ */
+export function isUsingMock(): boolean {
+  return IS_PRIVACY_CASH_MOCK;
 }

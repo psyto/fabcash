@@ -45,3 +45,5 @@ scripts/.test-wallet.json
 /ios
 /android
 cache/
+backend/.vercel
+backend/node_modules

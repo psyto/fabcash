@@ -1,0 +1,18 @@
+{
+  "name": "fabcash-privacy-backend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "vercel dev",
+    "deploy": "vercel --prod"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.98.0",
+    "privacycash": "^1.1.10"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vercel": "^37.0.0"
+  }
+}

@@ -64,6 +64,40 @@ This is not a limitation — it's the core feature.
 
 This project was inspired by [how Ugandans and Iranians turned to offline-capable tools during internet crackdowns](https://www.reuters.com/business/media-telecom/ugandans-iranians-turn-dorseys-messaging-app-bitchat-web-crackdowns-2026-01-14/). When governments restrict internet access, people need payment systems that work without constant connectivity. Fabcash brings that resilience to digital payments.
 
+### Philosophical Background
+
+**The Third Era of Crypto: Privacy**
+
+[Balaji Srinivasan](https://www.youtube.com/watch?v=u3B8xqsf66w) argues that crypto is entering its third era:
+
+```
+Era 1: Bitcoin (decentralized money)
+Era 2: Ethereum (decentralized compute)
+Era 3: Privacy (decentralized privacy)
+```
+
+Fabcash is built for Era 3. Not just "private transactions" — but a wallet architecture where privacy is the foundation, not a feature.
+
+**Lightning Network, Simplified**
+
+The Bitcoin Lightning Network pioneered a powerful idea: **payments don't need to settle immediately**. State channels enable instant transfers that settle on-chain later.
+
+Fabcash borrows this philosophy but implements it more simply on Solana:
+
+| Lightning Network | Fabcash |
+|-------------------|---------|
+| Requires channel setup | No setup required |
+| Requires channel funding | No channel funding |
+| Requires routing | Direct P2P (Bluetooth/QR) |
+| Complex state management | Simple signed transactions |
+| Settlement: close channel | Settlement: broadcast when online |
+
+**Same insight:** Separate the moment of payment from the moment of settlement.
+
+**Simpler implementation:** Solana's low fees and fast finality mean we don't need the complexity of payment channels. A signed transaction can wait — and when internet returns, it settles for $0.0002.
+
+Lightning proved the concept. Solana made it simple.
+
 ### Why Privacy Matters in Crackdowns
 
 In authoritarian contexts, the threat model extends beyond the moment of payment:

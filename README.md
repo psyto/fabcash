@@ -62,15 +62,24 @@ Fabcash integrates cutting-edge privacy protocols from the Solana ecosystem:
 
 [Light Protocol](https://www.zkcompression.com) provides ZK Compression for Solana, reducing on-chain footprint by up to 99%.
 
+**When it's used:** At settlement time (when transactions are broadcast), not at payment time. This preserves Fabcash's offline-first design.
+
 **How we use it:**
-- Ephemeral receive addresses are created as compressed accounts
+- When connectivity returns, transactions are broadcast with ZK compression
 - Smaller on-chain trace = harder to analyze payment patterns
-- Lower cost for creating many one-time addresses
+- Lower cost for settlement transactions
+
+```
+Payment (offline):     Alice ──Bluetooth──> Bob  [no internet needed]
+                              │
+Settlement (online):          └──> Broadcast with ZK Compression
+                                   └──> 99% smaller on-chain footprint
+```
 
 ```typescript
 import { LightSystemProgram } from '@lightprotocol/stateless.js';
 
-// Compress SOL into a ZK-compressed account
+// At settlement: Compress SOL into a ZK-compressed account
 await LightSystemProgram.compress({
   payer: wallet.publicKey,
   toAddress: ephemeralAddress,
@@ -88,6 +97,8 @@ await LightSystemProgram.compress({
 - Without shielding, this sweep creates an on-chain link that surveillance can trace
 - Privacy Cash breaks this link through a shielded pool
 
+**When it's used:** At settlement time, when sweeping funds from ephemeral addresses to main wallet. Not required during offline payment.
+
 **Architecture:**
 ```
 Mobile App ──> Backend API ──> Privacy Cash SDK ──> Solana
@@ -98,7 +109,8 @@ Mobile App ──> Backend API ──> Privacy Cash SDK ──> Solana
 The Privacy Cash SDK requires server-side execution for ZK proof generation. The mobile app communicates with a backend service that handles shielding and unshielding operations.
 
 **How we use it:**
-- Receiver sweeps ephemeral funds through privacy pool (not directly to main wallet)
+- Payment happens offline (Bluetooth/QR) - no Privacy Cash involved
+- When user goes online: sweep ephemeral funds through privacy pool
 - ZK proof generated server-side for withdrawal
 - On-chain: ephemeral address and main wallet cannot be linked
 - Even post-crackdown chain analysis cannot reconstruct payment relationships
@@ -123,15 +135,19 @@ await privacyCash.withdraw({
 ┌─────────────────────────────────────────────────────────┐
 │                       FABCASH                           │
 ├─────────────────────────────────────────────────────────┤
-│           Bluetooth / QR Transport (offline)            │
-├─────────────────────┬───────────────────────────────────┤
-│   Light Protocol    │         Privacy Cash              │
-│   ZK Compression    │        Shielded Pool              │
-│  (99% less data)    │    (Unlinkable txs)               │
-├─────────────────────┴───────────────────────────────────┤
+│  PAYMENT LAYER (offline - no internet needed)           │
+│  ├─ Bluetooth / QR Transport                            │
+│  └─ Ephemeral addresses per transaction                 │
+├─────────────────────────────────────────────────────────┤
+│  SETTLEMENT LAYER (online - when connectivity returns)  │
+│  ├─ Light Protocol ZK Compression (99% less data)       │
+│  └─ Privacy Cash Shielded Pool (unlinkable sweeps)      │
+├─────────────────────────────────────────────────────────┤
 │                      Solana L1                          │
 └─────────────────────────────────────────────────────────┘
 ```
+
+**Key insight:** Privacy technologies enhance the settlement phase without compromising offline payment capability.
 
 ---
 

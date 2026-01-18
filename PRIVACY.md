@@ -41,35 +41,74 @@ Fabcash is built for users in regions with internet crackdowns and government su
 └────────────────────────────────────────────────────────────────┘
 ```
 
-**Key insight**: Ephemeral addresses protect privacy at payment time. Privacy Cash protects privacy at settlement time
+**Key insight**: Ephemeral addresses protect privacy at payment time. Privacy Cash protects privacy at settlement time.
+
+---
+
+## Offline vs Online: When Privacy Technologies Apply
+
+A core principle of Fabcash is **separation of payment and settlement**. This table clarifies when each privacy technology is used:
+
+| Technology | Payment (Offline) | Settlement (Online) |
+|------------|------------------|---------------------|
+| Ephemeral addresses | ✓ Used | ✓ Used |
+| Bluetooth/QR transport | ✓ Used | Not applicable |
+| Light Protocol compression | Not needed | ✓ Applied at broadcast |
+| Privacy Cash shielding | Not needed | ✓ Applied at sweep |
+
+**Why this matters for crackdowns:**
+
+```
+During internet blackout:
+  └─> Payments continue via Bluetooth/QR
+  └─> Signed transactions stored locally
+  └─> No privacy technology requires internet at this stage
+
+When internet returns:
+  └─> Transactions broadcast with compression (smaller trace)
+  └─> Funds swept through shielded pool (unlinkable)
+  └─> Even if government monitors the network, privacy is preserved
+```
+
+This design ensures that **offline capability is never compromised** by privacy features
 
 ---
 
 ## Privacy Stack
 
-Fabcash uses a layered privacy approach:
+Fabcash uses a layered privacy approach with clear separation between **offline payment** and **online settlement**:
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│   ░░░░░░░░░░░░░░  OFFLINE PHASE  ░░░░░░░░░░░░░░░░░░░░░░░   │
+│   ░░░░░░░░░░░░░░  (no internet)  ░░░░░░░░░░░░░░░░░░░░░░░   │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
 │                    APPLICATION LAYER                         │
 │  • Ephemeral addresses (new keypair per transaction)         │
 │  • No persistent identity                                    │
-│  • Optional transaction history                              │
+│  • Signed transaction stored locally                         │
 ├─────────────────────────────────────────────────────────────┤
 │                    TRANSPORT LAYER                           │
 │  • Bluetooth with MAC randomization                          │
 │  • Direct device-to-device (no server)                       │
 │  • Session keys per connection                               │
 ├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│   ▓▓▓▓▓▓▓▓▓▓▓▓▓▓  ONLINE PHASE  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓   │
+│   ▓▓▓▓▓▓▓▓▓▓▓▓  (when connected)  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓   │
+│                                                             │
+├─────────────────────────────────────────────────────────────┤
 │                    COMPRESSION LAYER                         │
 │  • Light Protocol ZK Compression                             │
 │  • 99% smaller on-chain footprint                            │
-│  • Reduced data for chain analysis                           │
+│  • Applied when broadcasting transactions                    │
 ├─────────────────────────────────────────────────────────────┤
 │                    SHIELDING LAYER                           │
 │  • Privacy Cash shielded pool                                │
 │  • ZK proofs for unlinkable withdrawals                      │
-│  • Deposits and withdrawals cryptographically separated      │
+│  • Applied when sweeping to main wallet                      │
 ├─────────────────────────────────────────────────────────────┤
 │                    SETTLEMENT LAYER                          │
 │  • Solana L1                                                 │
@@ -77,6 +116,8 @@ Fabcash uses a layered privacy approach:
 │  • Low fees enable privacy-preserving patterns               │
 └─────────────────────────────────────────────────────────────┘
 ```
+
+**Key design principle:** Payment and settlement are decoupled. Privacy technologies enhance settlement without requiring internet during payment.
 
 ---
 
@@ -115,6 +156,8 @@ export async function generateEphemeralKey(): Promise<EphemeralKey> {
 
 **What:** Zero-knowledge compression that reduces on-chain data by up to 99%.
 
+**When used:** At settlement time, when transactions are broadcast to Solana. Not required during offline payment.
+
 **Why:** Less on-chain data = less information for chain analysis.
 
 **How:**
@@ -122,6 +165,7 @@ export async function generateEphemeralKey(): Promise<EphemeralKey> {
 // lib/solana/zk-compression.ts
 import { LightSystemProgram } from '@lightprotocol/stateless.js';
 
+// Called at SETTLEMENT time (when online), not at payment time
 export async function compressSol(payer: Keypair, lamports: number) {
   const compressIx = await LightSystemProgram.compress({
     payer: payer.publicKey,
@@ -142,6 +186,8 @@ export async function compressSol(payer: Keypair, lamports: number) {
 - Only the root hash is on-chain
 - Individual account data is not directly visible
 - Reduces the "surface area" for analysis
+
+**Offline compatibility:** ZK Compression does not affect the offline payment capability. Payments happen via Bluetooth/QR without internet. Compression is applied when the transaction is eventually broadcast.
 
 ---
 
@@ -212,26 +258,29 @@ await privacyCash.withdraw({
 
 ## Privacy Modes
 
-Fabcash supports different privacy levels:
+Fabcash supports different privacy levels. All modes support **offline payment** - the difference is in how settlement is handled.
 
 ### Standard Mode
-- Ephemeral addresses only
-- Direct transfer from sender to receiver
-- Privacy: Moderate (receiver address is unlinkable, but sender address is visible)
+- **Payment (offline):** Ephemeral addresses, Bluetooth/QR transfer
+- **Settlement (online):** Direct broadcast to Solana
+- Privacy: Moderate (receiver address is unlinkable, but sweep can be traced)
 
 ### Compressed Mode
-- Ephemeral addresses + Light Protocol compression
-- 99% smaller on-chain footprint
-- Privacy: Good (less data for analysis)
+- **Payment (offline):** Same as standard
+- **Settlement (online):** Broadcast with Light Protocol ZK compression
+- Privacy: Good (99% smaller on-chain footprint, less data for analysis)
 
 ### Shielded Mode
-- Ephemeral addresses + Privacy Cash shielding
-- Sender shields, then withdraws to receiver
-- Privacy: High (deposit and withdrawal are cryptographically unlinkable)
+- **Payment (offline):** Same as standard
+- **Settlement (online):** Sweep through Privacy Cash shielded pool
+- Privacy: High (ephemeral and main wallet cryptographically unlinkable)
 
 ### Maximum Privacy Mode
-- All layers: Ephemeral + Compression + Shielding
+- **Payment (offline):** Same as standard
+- **Settlement (online):** Compression + Shielded sweep
 - Privacy: Highest (minimal on-chain trace + unlinkable transactions)
+
+**Important:** The privacy mode selection affects settlement, not payment. All payments happen offline via Bluetooth/QR regardless of the selected privacy level.
 
 ---
 

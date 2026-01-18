@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
 import { TokenType, formatAmount, toSmallestUnit } from '@/lib/solana/transactions';
 import { shortenAddress } from '@/lib/solana/wallet';
 import { PrivacyMode } from './PrivacyModeSelector';
+import { PrivacyVisualization } from './PrivacyVisualization';
 
 const PRIVACY_MODE_LABELS: Record<PrivacyMode, { label: string; color: string }> = {
   standard: { label: 'Standard', color: '#666' },
@@ -36,6 +37,7 @@ export function ConfirmPayment({
   onCancel,
   isLoading = false,
 }: ConfirmPaymentProps) {
+  const [showVisualization, setShowVisualization] = useState(true);
   const amountValue = parseFloat(amount) || 0;
   const displayAmount = formatAmount(
     toSmallestUnit(amountValue, token),
@@ -57,12 +59,28 @@ export function ConfirmPayment({
 
         <View style={styles.divider} />
 
-        <View style={styles.row}>
+        <TouchableOpacity
+          style={styles.row}
+          onPress={() => setShowVisualization(!showVisualization)}
+        >
           <Text style={styles.label}>Privacy</Text>
-          <Text style={[styles.privacyValue, { color: privacyInfo.color }]}>
-            {privacyInfo.label}
-          </Text>
-        </View>
+          <View style={styles.privacyRow}>
+            <Text style={[styles.privacyValue, { color: privacyInfo.color }]}>
+              {privacyInfo.label}
+            </Text>
+            <Text style={styles.infoIcon}>{showVisualization ? '\u25B2' : '\u25BC'}</Text>
+          </View>
+        </TouchableOpacity>
+
+        {showVisualization && (
+          <PrivacyVisualization
+            mode={privacyMode}
+            senderLabel="You"
+            recipientLabel={shortenAddress(recipient, 4)}
+            amount={displayAmount}
+            compact
+          />
+        )}
 
         <View style={styles.divider} />
 
@@ -132,9 +150,18 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontFamily: 'monospace',
   },
+  privacyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 6,
+  },
   privacyValue: {
     fontSize: 14,
     fontWeight: '600',
+  },
+  infoIcon: {
+    fontSize: 10,
+    color: '#666',
   },
   divider: {
     height: 1,

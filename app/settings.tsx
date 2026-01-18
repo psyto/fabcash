@@ -7,6 +7,8 @@ import {
   TouchableOpacity,
   Alert,
   TextInput,
+  ActivityIndicator,
+  Modal,
 } from 'react-native';
 import { router } from 'expo-router';
 import * as Clipboard from 'expo-clipboard';
@@ -20,14 +22,25 @@ import {
   WalletState,
 } from '@/lib/solana/wallet';
 import { clearCompletedTransactions } from '@/lib/store/pending-txs';
+import {
+  activateCrackdownMode,
+  getCrackdownStatus,
+  CrackdownStep,
+} from '@/lib/solana/crackdown';
 
 export default function SettingsScreen() {
   const [wallet, setWallet] = useState<WalletState | null>(null);
   const [showImport, setShowImport] = useState(false);
   const [importKey, setImportKey] = useState('');
+  const [crackdownActive, setCrackdownActive] = useState(false);
+  const [crackdownSteps, setCrackdownSteps] = useState<CrackdownStep[]>([]);
+  const [publicBalance, setPublicBalance] = useState<number>(0);
 
   useEffect(() => {
     getOrCreateWallet().then(setWallet);
+    getCrackdownStatus().then((status) => {
+      setPublicBalance(status.publicSolBalance / 1_000_000_000);
+    });
   }, []);
 
   const handleExportKey = useCallback(async () => {
@@ -108,6 +121,44 @@ export default function SettingsScreen() {
     }
   }, [wallet]);
 
+  const handleCrackdownMode = useCallback(() => {
+    Alert.alert(
+      '\u{1F6A8} Activate Crackdown Mode',
+      `This will:\n\n\u2022 Shield ${publicBalance.toFixed(4)} SOL into privacy pool\n\u2022 Clear all transaction history\n\u2022 Clear all temporary keys\n\nYour funds will be safe but hidden from chain analysis.`,
+      [
+        { text: 'Cancel', style: 'cancel' },
+        {
+          text: 'Activate',
+          style: 'destructive',
+          onPress: async () => {
+            setCrackdownActive(true);
+            setCrackdownSteps([]);
+
+            const result = await activateCrackdownMode((step, allSteps) => {
+              setCrackdownSteps([...allSteps]);
+            });
+
+            if (result.success) {
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+              setTimeout(() => {
+                setCrackdownActive(false);
+                Alert.alert(
+                  '\u{1F512} Funds Protected',
+                  `\u2713 ${(result.solShielded / 1_000_000_000).toFixed(4)} SOL shielded\n\u2713 ${result.transactionsCleared} transactions cleared\n\u2713 ${result.ephemeralKeysCleared} keys cleared\n\nYour funds are now in the shielded pool.`,
+                  [{ text: 'OK', onPress: () => router.back() }]
+                );
+              }, 500);
+            } else {
+              Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);
+              setCrackdownActive(false);
+              Alert.alert('Error', result.error || 'Crackdown mode failed');
+            }
+          },
+        },
+      ]
+    );
+  }, [publicBalance]);
+
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.content}>
       {/* Wallet Section */}
@@ -169,6 +220,30 @@ export default function SettingsScreen() {
         </TouchableOpacity>
       </View>
 
+      {/* Emergency Section */}
+      <View style={styles.section}>
+        <Text style={[styles.sectionTitle, styles.emergencyTitle]}>
+          {'\u{1F6A8}'} Emergency
+        </Text>
+
+        <TouchableOpacity
+          style={[styles.item, styles.emergencyItem]}
+          onPress={handleCrackdownMode}
+        >
+          <View style={styles.emergencyContent}>
+            <Text style={styles.emergencyLabel}>Activate Crackdown Mode</Text>
+            <Text style={styles.emergencyDescription}>
+              Shield all funds & clear history
+            </Text>
+          </View>
+          <Text style={styles.itemAction}>{'\u276F'}</Text>
+        </TouchableOpacity>
+
+        <Text style={styles.emergencyNote}>
+          Use if you need to protect your funds and transaction history immediately.
+        </Text>
+      </View>
+
       {/* Danger Zone */}
       <View style={styles.section}>
         <Text style={[styles.sectionTitle, styles.dangerTitle]}>Danger Zone</Text>
@@ -181,6 +256,44 @@ export default function SettingsScreen() {
           <Text style={styles.itemAction}>{'\u276F'}</Text>
         </TouchableOpacity>
       </View>
+
+      {/* Crackdown Progress Modal */}
+      <Modal
+        visible={crackdownActive}
+        transparent
+        animationType="fade"
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>{'\u{1F6A8}'} Crackdown Mode</Text>
+            <Text style={styles.modalSubtitle}>Protecting your funds...</Text>
+
+            <View style={styles.stepsContainer}>
+              {crackdownSteps.map((step, index) => (
+                <View key={index} style={styles.stepRow}>
+                  <View style={styles.stepStatus}>
+                    {step.status === 'in_progress' ? (
+                      <ActivityIndicator size="small" color="#FF6B6B" />
+                    ) : step.status === 'completed' ? (
+                      <Text style={styles.stepCheckmark}>{'\u2713'}</Text>
+                    ) : step.status === 'failed' ? (
+                      <Text style={styles.stepFailed}>{'\u2717'}</Text>
+                    ) : (
+                      <Text style={styles.stepPending}>{'\u25CB'}</Text>
+                    )}
+                  </View>
+                  <View style={styles.stepInfo}>
+                    <Text style={styles.stepName}>{step.name}</Text>
+                    {step.details && (
+                      <Text style={styles.stepDetails}>{step.details}</Text>
+                    )}
+                  </View>
+                </View>
+              ))}
+            </View>
+          </View>
+        </View>
+      </Modal>
 
       {/* App Info */}
       <View style={styles.infoSection}>
@@ -281,5 +394,103 @@ const styles = StyleSheet.create({
   infoText: {
     fontSize: 12,
     color: '#666',
+  },
+  // Emergency styles
+  emergencyTitle: {
+    color: '#FF6B6B',
+  },
+  emergencyItem: {
+    borderColor: '#FF6B6B',
+    borderWidth: 2,
+    backgroundColor: 'rgba(255, 107, 107, 0.1)',
+  },
+  emergencyContent: {
+    flex: 1,
+  },
+  emergencyLabel: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: '#FF6B6B',
+  },
+  emergencyDescription: {
+    fontSize: 12,
+    color: '#888',
+    marginTop: 2,
+  },
+  emergencyNote: {
+    fontSize: 12,
+    color: '#666',
+    textAlign: 'center',
+    marginTop: 8,
+    paddingHorizontal: 8,
+  },
+  // Modal styles
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 20,
+  },
+  modalContent: {
+    backgroundColor: '#1a1a1a',
+    borderRadius: 16,
+    padding: 24,
+    width: '100%',
+    maxWidth: 320,
+    borderWidth: 2,
+    borderColor: '#FF6B6B',
+  },
+  modalTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#FF6B6B',
+    textAlign: 'center',
+    marginBottom: 4,
+  },
+  modalSubtitle: {
+    fontSize: 14,
+    color: '#888',
+    textAlign: 'center',
+    marginBottom: 24,
+  },
+  stepsContainer: {
+    gap: 16,
+  },
+  stepRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: 12,
+  },
+  stepStatus: {
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  stepCheckmark: {
+    fontSize: 18,
+    color: '#14F195',
+  },
+  stepFailed: {
+    fontSize: 18,
+    color: '#FF6B6B',
+  },
+  stepPending: {
+    fontSize: 18,
+    color: '#333',
+  },
+  stepInfo: {
+    flex: 1,
+  },
+  stepName: {
+    fontSize: 14,
+    color: '#fff',
+    fontWeight: '500',
+  },
+  stepDetails: {
+    fontSize: 12,
+    color: '#888',
+    marginTop: 2,
   },
 });

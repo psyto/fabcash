@@ -179,6 +179,20 @@ export function getActiveKeyCount(): number {
   return ephemeralKeysCache.size;
 }
 
+/**
+ * Clear all ephemeral keys (for crackdown mode)
+ */
+export async function clearAllEphemeralKeys(): Promise<number> {
+  let cleared = 0;
+
+  for (const [id] of ephemeralKeysCache) {
+    await deleteEphemeralKey(id);
+    cleared++;
+  }
+
+  return cleared;
+}
+
 // Helper functions for base64 encoding
 function bytesToBase64(bytes: Uint8Array): string {
   let binary = '';

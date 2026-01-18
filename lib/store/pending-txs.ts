@@ -234,3 +234,17 @@ export async function getTransactionHistory(): Promise<PendingTransaction[]> {
     )
     .sort((a, b) => b.createdAt - a.createdAt);
 }
+
+/**
+ * Clear ALL transactions (for crackdown mode)
+ * This removes all traces of transaction history
+ */
+export async function clearAllTransactions(): Promise<number> {
+  await initPendingTxStore();
+
+  const count = pendingTxsCache.size;
+  pendingTxsCache.clear();
+  await AsyncStorage.removeItem(PENDING_TXS_KEY);
+
+  return count;
+}

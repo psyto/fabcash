@@ -6,6 +6,12 @@ import {
   LAMPORTS_PER_SOL,
   Keypair,
 } from '@solana/web3.js';
+import {
+  getConnection,
+  createConnection,
+  getBalanceWithRetry,
+  getLatestBlockhashWithRetry,
+} from './rpc';
 
 // Devnet USDC mint address
 export const DEVNET_USDC_MINT = new PublicKey('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU');
@@ -37,14 +43,8 @@ export interface SignedTransaction {
   expiresAt: number;
 }
 
-const RPC_URL = 'https://api.devnet.solana.com';
-
-/**
- * Create connection for devnet
- */
-export function createConnection(): Connection {
-  return new Connection(RPC_URL, 'confirmed');
-}
+// Re-export createConnection for backward compatibility
+export { createConnection };
 
 /**
  * Build and sign a SOL transfer transaction
@@ -53,10 +53,9 @@ export async function buildSolTransfer(
   params: TransferParams
 ): Promise<SignedTransaction> {
   const { sender, recipient, amount, memo } = params;
-  const connection = createConnection();
 
-  // Get latest blockhash
-  const { blockhash, lastValidBlockHeight } = await connection.getLatestBlockhash();
+  // Get latest blockhash with retry logic for rate limits
+  const { blockhash, lastValidBlockHeight } = await getLatestBlockhashWithRetry();
 
   // Create transaction
   const transaction = new Transaction().add(
@@ -164,12 +163,11 @@ function generateTransactionId(): string {
 }
 
 /**
- * Get SOL balance for an address
+ * Get SOL balance for an address (with retry logic for rate limits)
  */
 export async function getSolBalance(addr: PublicKey): Promise<bigint> {
   try {
-    const connection = createConnection();
-    const balance = await connection.getBalance(addr);
+    const balance = await getBalanceWithRetry(addr);
     return BigInt(balance);
   } catch (error) {
     console.error('Failed to get SOL balance:', error);

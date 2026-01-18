@@ -8,22 +8,21 @@ import {
 } from '../broadcast';
 import { SignedTransaction } from '../transactions';
 
-// Mock Connection
+// Mock the RPC module
 const mockSendRawTransaction = jest.fn();
 const mockGetSignatureStatuses = jest.fn();
 const mockGetVersion = jest.fn();
+const mockGetConnection = jest.fn();
 
-jest.mock('@solana/web3.js', () => {
-  const actual = jest.requireActual('@solana/web3.js');
-  return {
-    ...actual,
-    Connection: jest.fn().mockImplementation(() => ({
-      sendRawTransaction: mockSendRawTransaction,
-      getSignatureStatuses: mockGetSignatureStatuses,
-      getVersion: mockGetVersion,
-    })),
-  };
-});
+jest.mock('../rpc', () => ({
+  getConnection: () => ({
+    getVersion: mockGetVersion,
+  }),
+  sendRawTransactionWithRetry: (...args: unknown[]) => mockSendRawTransaction(...args),
+  getSignatureStatusesWithRetry: (...args: unknown[]) => mockGetSignatureStatuses(...args),
+  withRetry: (fn: () => Promise<unknown>) => fn(), // Execute immediately without retry in tests
+  getRpcUrl: () => 'https://api.devnet.solana.com',
+}));
 
 // Helper to create a mock transaction
 function createMockTransaction(overrides?: Partial<SignedTransaction>): SignedTransaction {

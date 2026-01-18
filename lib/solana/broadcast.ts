@@ -1,7 +1,12 @@
 import { Connection } from '@solana/web3.js';
 import { SignedTransaction } from './transactions';
-
-const RPC_URL = 'https://api.devnet.solana.com';
+import {
+  getConnection,
+  sendRawTransactionWithRetry,
+  getSignatureStatusesWithRetry,
+  withRetry,
+  getRpcUrl,
+} from './rpc';
 
 export type TransactionStatus =
   | 'pending'      // Received locally, not yet broadcast
@@ -22,20 +27,12 @@ const MAX_RETRIES = 3;
 const INITIAL_RETRY_DELAY = 1000;
 
 /**
- * Create connection for devnet
- */
-function createConnection(): Connection {
-  return new Connection(RPC_URL, 'confirmed');
-}
-
-/**
  * Broadcast a signed transaction to the network
+ * Uses retry logic for rate limit handling
  */
 export async function broadcastTransaction(
   tx: SignedTransaction
 ): Promise<BroadcastResult> {
-  const connection = createConnection();
-
   // Check if transaction has expired
   if (Date.now() > tx.expiresAt) {
     return {
@@ -52,14 +49,14 @@ export async function broadcastTransaction(
       // Decode base64 transaction to raw bytes
       const rawTransaction = base64ToBytes(tx.base64);
 
-      // Send the raw transaction
-      const sig = await connection.sendRawTransaction(rawTransaction, {
+      // Send the raw transaction with retry logic for rate limits
+      const sig = await sendRawTransactionWithRetry(rawTransaction, {
         skipPreflight: false,
         preflightCommitment: 'confirmed',
       });
 
       // Wait for confirmation
-      const confirmed = await waitForConfirmation(connection, sig);
+      const confirmed = await waitForConfirmation(sig);
 
       if (confirmed) {
         return {
@@ -101,9 +98,9 @@ export async function broadcastTransaction(
 
 /**
  * Wait for transaction confirmation
+ * Uses retry logic for rate limit handling
  */
 async function waitForConfirmation(
-  connection: Connection,
   sig: string,
   timeout = 30000
 ): Promise<boolean> {
@@ -111,7 +108,8 @@ async function waitForConfirmation(
 
   while (Date.now() - startTime < timeout) {
     try {
-      const { value } = await connection.getSignatureStatuses([sig]);
+      // Use retry-enabled signature status check
+      const { value } = await getSignatureStatusesWithRetry([sig]);
 
       const status = value[0];
       if (status) {
@@ -140,8 +138,8 @@ async function waitForConfirmation(
  */
 export async function checkNetworkConnectivity(): Promise<boolean> {
   try {
-    const connection = createConnection();
-    await connection.getVersion();
+    const connection = getConnection();
+    await withRetry(() => connection.getVersion());
     return true;
   } catch {
     return false;
@@ -150,13 +148,13 @@ export async function checkNetworkConnectivity(): Promise<boolean> {
 
 /**
  * Get transaction status from the network
+ * Uses retry logic for rate limit handling
  */
 export async function getTransactionStatus(
   sig: string
 ): Promise<TransactionStatus | null> {
   try {
-    const connection = createConnection();
-    const { value } = await connection.getSignatureStatuses([sig]);
+    const { value } = await getSignatureStatusesWithRetry([sig]);
 
     const status = value[0];
     if (!status) {

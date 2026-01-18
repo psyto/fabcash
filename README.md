@@ -383,11 +383,11 @@ solana airdrop 2 <YOUR_ADDRESS> --url devnet
 ```
 app/
 ├── _layout.tsx            # Root layout with providers
-├── settings.tsx           # Wallet backup/import
+├── settings.tsx           # Wallet backup/import, Crackdown Mode
 └── (tabs)/
     ├── _layout.tsx        # Tab navigation
-    ├── index.tsx          # Home - balance display
-    ├── send.tsx           # Send payment flow
+    ├── index.tsx          # Home - balance display, Shield SOL
+    ├── send.tsx           # Send payment flow with privacy modes
     └── receive.tsx        # Receive payment flow
 
 lib/
@@ -397,7 +397,8 @@ lib/
 │   ├── ephemeral.ts       # Ephemeral key management
 │   ├── broadcast.ts       # RPC broadcasting with retry
 │   ├── zk-compression.ts  # Light Protocol integration
-│   └── privacy-cash.ts    # Privacy Cash SDK integration
+│   ├── privacy-cash.ts    # Privacy Cash client
+│   └── crackdown.ts       # Emergency shield all funds
 ├── bluetooth/
 │   ├── protocol.ts        # BLE payload serialization
 │   ├── peripheral.ts      # Receiver (BLE advertise)
@@ -410,9 +411,16 @@ lib/
 
 components/
 ├── AmountInput.tsx        # Amount entry with token selector
-├── ConfirmPayment.tsx     # Payment confirmation modal
+├── ConfirmPayment.tsx     # Payment confirmation with privacy viz
+├── PrivacyModeSelector.tsx # 4-level privacy mode picker
+├── PrivacyVisualization.tsx # Chain analysis visibility diagram
 ├── PendingBadge.tsx       # Pending tx indicator
 └── TransactionStatus.tsx  # Tx status display
+
+backend-server/            # Privacy Cash backend (for AWS/EC2)
+├── server.js              # Express API with Privacy Cash SDK
+├── package.json
+└── README.md              # Deployment instructions
 ```
 
 ---
@@ -431,9 +439,13 @@ components/
 
 - [x] Core offline payment flow (BLE + QR)
 - [x] Light Protocol ZK Compression integration
-- [x] Privacy Cash shielded payments integration (mock for demo)
-- [x] UI for privacy mode selection
-- [ ] Privacy Cash backend service (production)
+- [x] Privacy Cash shielded payments integration
+- [x] 4-level privacy mode selector UI
+- [x] Privacy Visualization (chain analysis view)
+- [x] Crackdown Mode (emergency shield all funds)
+- [x] Shield SOL button on home screen
+- [x] Privacy Cash backend server (AWS/EC2 ready)
+- [ ] Deploy backend to production
 - [ ] NFC support for tap-to-pay
 - [ ] Mainnet deployment
 - [ ] Multi-token support

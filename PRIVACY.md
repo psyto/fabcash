@@ -319,6 +319,116 @@ Fabcash supports different privacy levels. All modes support **offline payment**
 
 ---
 
+## Privacy Visualization
+
+Fabcash includes a **Privacy Visualization** component that shows users exactly what chain analysts can see for each privacy mode. This helps users make informed decisions about which privacy level to use.
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    STANDARD MODE                             │
+│                                                             │
+│  [You] ─── 0.1 SOL ───> [Recipient]                        │
+│                                                             │
+│  Chain analyst sees:                                        │
+│  ✗ Your wallet address                                      │
+│  ✗ Recipient's ephemeral address                            │
+│  ✗ Payment amount (0.1 SOL)                                 │
+│  ✗ Transaction timestamp                                    │
+│                                                             │
+│  Chain analyst cannot see:                                  │
+│  ✓ Recipient's main wallet                                  │
+│  ✓ Real-world identity                                      │
+└─────────────────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────────────────┐
+│                    SHIELDED MODE                             │
+│                                                             │
+│  [You] ─── ? ───> [Privacy Pool] ─── ? ───> [Recipient]   │
+│                                                             │
+│  Chain analyst sees:                                        │
+│  ✗ You deposited to privacy pool                            │
+│  ✗ Someone withdrew from pool                               │
+│                                                             │
+│  Chain analyst cannot see:                                  │
+│  ✓ Your wallet address                                      │
+│  ✓ Recipient address                                        │
+│  ✓ Payment amount                                           │
+│  ✓ Connection between deposit and withdrawal                │
+└─────────────────────────────────────────────────────────────┘
+```
+
+The visualization is shown during payment confirmation, allowing users to understand the privacy implications before sending.
+
+---
+
+## Crackdown Mode (Emergency Protocol)
+
+For users in hostile environments, Fabcash includes a **Crackdown Mode** - an emergency button that maximizes privacy in crisis situations.
+
+### What Crackdown Mode Does
+
+1. **Shields all funds**: Moves entire balance into Privacy Cash shielded pool
+2. **Clears transaction history**: Removes local pending transaction records
+3. **Purges ephemeral keys**: Deletes all stored ephemeral keypairs
+4. **Prepares for surveillance**: Leaves no traceable state on device
+
+### When to Use
+
+- Internet crackdown is expected or occurring
+- Device may be inspected by authorities
+- Need to quickly minimize on-chain exposure
+- Preparing for border crossing or checkpoint
+
+### Architecture
+
+```
+Before Crackdown Mode:
+  Main Wallet: 1.5 SOL
+  Ephemeral Keys: 5 stored
+  Pending TXs: 3 queued
+
+  Chain analyst can see:
+  ✗ Main wallet balance
+  ✗ Ephemeral address connections (when swept)
+  ✗ Transaction patterns
+
+After Crackdown Mode:
+  Main Wallet: 0 SOL (shielded)
+  Ephemeral Keys: 0 (purged)
+  Pending TXs: 0 (cleared)
+  Privacy Pool: Contains your funds (unlinkable)
+
+  Chain analyst sees:
+  ✓ Empty main wallet
+  ✓ Deposit to privacy pool (but cannot link to you)
+```
+
+### Implementation
+
+```typescript
+// lib/solana/crackdown.ts
+export async function activateCrackdownMode(
+  onProgress?: CrackdownProgressCallback
+): Promise<CrackdownResult> {
+  // 1. Shield all SOL balance
+  await shieldAllFunds(balance);
+
+  // 2. Clear pending transactions
+  await clearAllTransactions();
+
+  // 3. Purge ephemeral keys
+  await clearAllEphemeralKeys();
+
+  return { success: true };
+}
+```
+
+### Recovery
+
+After the crisis, use the **Private Withdraw** feature to move funds from the privacy pool back to your wallet. The connection between your previous activity and new wallet is cryptographically broken.
+
+---
+
 ## Privacy Recommendations for Users
 
 1. **Shield funds in advance**: Don't shield right before paying. This creates timing correlation.
@@ -330,6 +440,10 @@ Fabcash supports different privacy levels. All modes support **offline payment**
 4. **Use shielded mode for sensitive payments**: When privacy matters most.
 
 5. **Keep transaction history off**: Disable optional history for maximum privacy.
+
+6. **Familiarize with Crackdown Mode**: Know how to activate it quickly in emergencies.
+
+7. **Use Privacy Visualization**: Check what analysts can see before confirming payments.
 
 ---
 

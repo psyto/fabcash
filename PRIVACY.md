@@ -6,6 +6,45 @@ This document details the privacy technologies integrated into Fabcash and how t
 
 ---
 
+## Breaking the Digital Wallet Standard
+
+Every digital wallet has a fundamental flaw that physical wallets don't:
+
+```
+Physical wallet (empty):
+  Forensic analysis reveals: Nothing
+  Past contents: Unknown
+  Previous owners: Unknown
+
+Digital wallet (empty):
+  Forensic analysis reveals: EVERYTHING
+  Past contents: Every transaction ever made
+  Previous owners: All counterparties linked forever
+```
+
+**This is the broken standard of digital wallets.**
+
+An empty physical wallet tells you nothing. An empty Bitcoin/Ethereum wallet tells you everything.
+
+Fabcash is designed to break this standard:
+
+| After emptying wallet | Traditional | Fabcash |
+|-----------------------|-------------|---------|
+| Past balance visible? | Yes | No |
+| Transaction history? | Complete | Shielded |
+| Counterparties linked? | Forever | Unlinkable |
+| Forensic value? | Total | Zero |
+
+**The goal:** An empty Fabcash wallet should be as forensically useless as an empty physical wallet.
+
+---
+
+## Real-World Inspiration
+
+This project was inspired by [how Ugandans and Iranians turned to offline-capable tools during internet crackdowns](https://www.reuters.com/business/media-telecom/ugandans-iranians-turn-dorseys-messaging-app-bitchat-web-crackdowns-2026-01-14/). When governments restrict internet access, people need payment systems that work without constant connectivity — and protect their privacy when connectivity returns.
+
+---
+
 ## The Third Era of Crypto
 
 [Balaji Srinivasan](https://www.youtube.com/watch?v=u3B8xqsf66w) argues that crypto is entering its third era:
@@ -746,39 +785,6 @@ Shielded settlement:
 - [Privacy Cash SDK](https://github.com/Privacy-Cash/privacy-cash-sdk)
 - [ZK Compression Whitepaper](https://www.zkcompression.com/references/whitepaper)
 - [Solana Privacy Ecosystem](https://www.helius.dev/blog/solana-privacy)
-
----
-
-## Breaking the Digital Wallet Standard
-
-Every digital wallet has a fundamental flaw that physical wallets don't:
-
-```
-Physical wallet (empty):
-  Forensic analysis reveals: Nothing
-  Past contents: Unknown
-  Previous owners: Unknown
-
-Digital wallet (empty):
-  Forensic analysis reveals: EVERYTHING
-  Past contents: Every transaction ever made
-  Previous owners: All counterparties linked forever
-```
-
-**This is the broken standard of digital wallets.**
-
-An empty physical wallet tells you nothing. An empty Bitcoin/Ethereum wallet tells you everything.
-
-Fabcash is designed to break this standard:
-
-| After emptying wallet | Traditional | Fabcash |
-|-----------------------|-------------|---------|
-| Past balance visible? | Yes | No |
-| Transaction history? | Complete | Shielded |
-| Counterparties linked? | Forever | Unlinkable |
-| Forensic value? | Total | Zero |
-
-**The goal:** An empty Fabcash wallet should be as forensically useless as an empty physical wallet.
 
 ---
 

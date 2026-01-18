@@ -47,3 +47,5 @@ scripts/.test-wallet.json
 cache/
 backend/.vercel
 backend/node_modules
+backend-server/node_modules
+backend-server/cache

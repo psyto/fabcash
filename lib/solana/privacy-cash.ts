@@ -19,11 +19,15 @@ const PRIVACY_BACKEND_URL = process.env.EXPO_PUBLIC_PRIVACY_BACKEND_URL || 'http
 export let IS_PRIVACY_CASH_MOCK = false;
 
 const PRIVACY_BALANCE_CACHE_KEY = 'fabcash_privacy_balance_cache';
+const DEMO_ADJUSTMENT_KEY = 'fabcash_demo_adjustment';
 
 export interface PrivacyBalance {
   sol: number;      // In lamports
   usdc: number;     // In base units (micro-USDC)
 }
+
+// Demo mode: track how much SOL has been "moved" to shielded pool
+let demoSolAdjustment = 0;
 
 export interface ShieldResult {
   success: boolean;
@@ -136,6 +140,10 @@ export async function shieldSol(lamports: number): Promise<ShieldResult> {
       throw new Error(data.error || 'Shield failed');
     }
 
+    // Update local cache (backend is demo mode, so track locally)
+    cachedBalance.sol += lamports;
+    await saveMockBalance();
+
     console.log(`[Privacy Cash] Shielded ${lamports} lamports:`, data.signature);
 
     return {
@@ -222,6 +230,10 @@ export async function privateWithdrawSol(
       throw new Error(data.error || 'Withdraw failed');
     }
 
+    // Update local cache (deduct from shielded balance)
+    cachedBalance.sol = Math.max(0, cachedBalance.sol - lamports);
+    await saveMockBalance();
+
     console.log(`[Privacy Cash] Withdrew ${lamports} lamports to ${recipientAddress}:`, data.signature);
 
     return {
@@ -278,36 +290,25 @@ export async function privateWithdrawUsdc(
 
 /**
  * Get shielded (private) balance
+ * Always returns local cache since backend is in demo mode
  */
 export async function getPrivateBalance(): Promise<PrivacyBalance> {
   if (!initialized) {
-    return { sol: 0, usdc: 0 };
-  }
-
-  if (IS_PRIVACY_CASH_MOCK) {
-    return { ...cachedBalance };
-  }
-
-  try {
-    const response = await fetch(`${PRIVACY_BACKEND_URL}/api/balance`, {
-      method: 'GET',
-      headers: { 'Content-Type': 'application/json' },
-    });
-
-    const data = await response.json();
-
-    if (!response.ok || !data.success) {
-      throw new Error(data.error || 'Failed to get balance');
+    // Try to load cached balance even if not initialized
+    try {
+      const stored = await SecureStore.getItemAsync(PRIVACY_BALANCE_CACHE_KEY);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return { sol: parsed.sol || 0, usdc: parsed.usdc || 0 };
+      }
+    } catch (e) {
+      // Ignore
     }
-
-    return {
-      sol: data.balance.lamports || 0,
-      usdc: 0, // USDC not yet supported
-    };
-  } catch (error) {
-    console.error('Get private balance failed:', error);
     return { sol: 0, usdc: 0 };
   }
+
+  // Return local cache (backend demo mode doesn't track real balances)
+  return { ...cachedBalance };
 }
 
 /**

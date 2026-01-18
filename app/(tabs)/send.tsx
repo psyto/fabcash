@@ -8,7 +8,7 @@ import {
   Alert,
   TextInput,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useFocusEffect } from 'expo-router';
 import * as Haptics from 'expo-haptics';
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import { AmountInput } from '@/components/AmountInput';
@@ -50,44 +50,35 @@ export default function SendScreen() {
   const [txId, setTxId] = useState<string | null>(null);
   const [permission, requestPermission] = useCameraPermissions();
 
-  // Load max balance
-  useEffect(() => {
-    let cancelled = false;
-    const loadBalance = async () => {
-      try {
-        const wallet = await getOrCreateWallet();
-        const balance = token === 'SOL'
-          ? await getSolBalance(wallet.publicKey)
-          : await getUsdcBalance(wallet.publicKey);
+  // Load balances function
+  const loadBalances = useCallback(async () => {
+    try {
+      const wallet = await getOrCreateWallet();
+      const balance = token === 'SOL'
+        ? await getSolBalance(wallet.publicKey)
+        : await getUsdcBalance(wallet.publicKey);
 
-        if (!cancelled) {
-          const formatted = fromSmallestUnit(balance, token);
-          console.log('[Send] Balance loaded:', formatted, token);
-          setMaxAmount(formatted);
-        }
+      const formatted = fromSmallestUnit(balance, token);
+      setMaxAmount(formatted);
 
-        // Load private balance if Privacy Cash is initialized
-        if (!cancelled && isPrivacyCashInitialized()) {
-          const privBalance = await getPrivateBalance();
-          setPrivateBalance(fromSmallestUnit(
-            BigInt(token === 'SOL' ? privBalance.sol : privBalance.usdc),
-            token
-          ));
-        }
-      } catch (error) {
-        console.error('[Send] Failed to load balance:', error);
-        if (!cancelled) {
-          setMaxAmount(0);
-        }
-      }
-    };
-
-    // Reset and reload
-    setMaxAmount(undefined);
-    loadBalance();
-
-    return () => { cancelled = true; };
+      // Load private balance
+      const privBalance = await getPrivateBalance();
+      setPrivateBalance(fromSmallestUnit(
+        BigInt(token === 'SOL' ? privBalance.sol : privBalance.usdc),
+        token
+      ));
+    } catch (error) {
+      console.error('[Send] Failed to load balance:', error);
+      setMaxAmount(0);
+    }
   }, [token]);
+
+  // Reload balances when screen is focused
+  useFocusEffect(
+    useCallback(() => {
+      loadBalances();
+    }, [loadBalances])
+  );
 
   const handleScan = useCallback(async () => {
     if (!permission?.granted) {

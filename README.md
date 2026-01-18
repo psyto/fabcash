@@ -487,8 +487,40 @@ backend-server/            # Privacy Cash backend (for AWS/EC2)
 
 ---
 
+## Solana Mobile
+
+Fabcash is designed with **Solana Mobile** as a primary target platform. The offline-first philosophy aligns perfectly with how Solana Mobile users interact with their devices.
+
+### Why Solana Mobile?
+
+| Feature | Benefit for Fabcash |
+|---------|-------------------|
+| **Seed Vault** | Hardware-secured key storage, superior to software-only solutions |
+| **Offline users** | Many Solana Mobile users operate in low-connectivity environments |
+| **dApp Store** | Distribution without Google Play's crypto restrictions |
+| **NFC (Seeker)** | Enables tap-to-pay for even faster transactions |
+| **Crypto-native** | Users already understand wallet concepts |
+
+### Planned Integration
+
+```
+Current:     expo-secure-store → Software keychain
+Future:      Seed Vault SDK    → Hardware security module
+
+Current:     Bluetooth + QR
+Future:      Bluetooth + QR + NFC tap-to-pay
+```
+
+### Target Devices
+
+* **Saga** - First-generation Solana phone
+* **Seeker** - Next-generation with improved NFC and hardware
+
+---
+
 ## Roadmap
 
+### Completed
 - [x] Core offline payment flow (BLE + QR)
 - [x] Light Protocol ZK Compression integration
 - [x] Privacy Cash shielded payments integration
@@ -497,9 +529,18 @@ backend-server/            # Privacy Cash backend (for AWS/EC2)
 - [x] Crackdown Mode (emergency shield all funds)
 - [x] Shield SOL button on home screen
 - [x] Privacy Cash backend server (AWS/EC2 ready)
+
+### In Progress
 - [ ] Deploy backend to production
-- [ ] NFC support for tap-to-pay
 - [ ] Mainnet deployment
+
+### Solana Mobile Integration
+- [ ] Solana Mobile Seed Vault integration (hardware-secured keys)
+- [ ] NFC tap-to-pay (Seeker has NFC)
+- [ ] Solana dApp Store submission
+- [ ] Android-native BLE optimizations
+
+### Future
 - [ ] Multi-token support
 - [ ] Mesh network broadcasting (device-to-device relay)
 - [ ] Tor integration for RPC calls

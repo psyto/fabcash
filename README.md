@@ -87,6 +87,43 @@ When internet returns (government monitoring network):
 
 This layered approach ensures that even post-crackdown forensic analysis cannot reconstruct payment relationships.
 
+### Why Solana? (Economics Matter)
+
+**Fabcash is only possible on Solana.** This isn't brand loyalty — it's economics.
+
+| Chain | Tx Fee | Finality | Small Payments |
+|-------|--------|----------|----------------|
+| **Solana** | $0.0002 | 400ms | Practical |
+| Bitcoin | $1-10+ | 10 min | Impractical |
+| Ethereum L1 | $1-50+ | 12 sec | Impractical |
+| Ethereum L2 | $0.01-0.10 | Varies | Possible but complex |
+
+**The math:**
+
+```
+Buying coffee with Fabcash (Solana):
+  Coffee: $5.00
+  Tx fee: $0.0002
+  Total:  $5.0002
+  Fee %:  0.004%  ✓ Negligible
+
+Buying coffee with Bitcoin:
+  Coffee: $5.00
+  Tx fee: $3.00
+  Total:  $8.00
+  Fee %:  60%  ✗ Absurd
+```
+
+**Why this matters for the burner wallet concept:**
+
+- **Ephemeral addresses** = many small transactions = fees must be negligible
+- **Privacy sweeps** = additional transactions = fees add up
+- **True "cash" UX** = users shouldn't think about fees
+
+On Bitcoin or Ethereum L1, Fabcash would be economically unusable. The fees would exceed the payment amounts for typical daily spending.
+
+**Solana's economics made Fabcash possible. The concept wouldn't be practical elsewhere.**
+
 ---
 
 ## 2. Privacy Technology
@@ -516,7 +553,7 @@ backend-server/            # Privacy Cash backend (for AWS/EC2)
 
 ## Built With
 
-* **[Solana](https://solana.com)** - High-performance L1 blockchain
+* **[Solana](https://solana.com)** - The only L1 where this concept is economically viable ($0.0002 fees, 400ms finality)
 * **[Light Protocol](https://www.zkcompression.com)** - ZK Compression for Solana
 * **[Privacy Cash](https://github.com/Privacy-Cash/privacy-cash)** - Shielded transaction protocol
 * **[Expo](https://expo.dev)** - React Native framework

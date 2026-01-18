@@ -58,6 +58,27 @@ Fabcash:
 
 ---
 
+## Why Only Solana?
+
+Fabcash's privacy model requires many small transactions:
+- Ephemeral addresses (new address per payment)
+- Privacy sweeps (moving funds through shielded pools)
+- ZK compression (additional on-chain operations)
+
+**This is only economically viable on Solana.**
+
+| Chain | Fee per Tx | 10 Payments/Day | Monthly Cost |
+|-------|------------|-----------------|--------------|
+| **Solana** | $0.0002 | $0.002 | $0.06 |
+| Bitcoin | $3.00 | $30.00 | $900 |
+| Ethereum L1 | $5.00 | $50.00 | $1,500 |
+
+On Bitcoin or Ethereum, Fabcash's privacy model would cost users hundreds of dollars per month in fees alone. The concept is economically impossible.
+
+**Solana's negligible fees made Fabcash possible.**
+
+---
+
 ## Privacy Goals
 
 1. **Sender Privacy**: Observers cannot determine who sent a payment

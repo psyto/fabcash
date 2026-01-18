@@ -495,26 +495,43 @@ Fabcash is designed with **Solana Mobile** as a primary target platform. The off
 
 | Feature | Benefit for Fabcash |
 |---------|-------------------|
-| **Seed Vault** | Hardware-secured key storage, superior to software-only solutions |
 | **Offline users** | Many Solana Mobile users operate in low-connectivity environments |
 | **dApp Store** | Distribution without Google Play's crypto restrictions |
 | **NFC (Seeker)** | Enables tap-to-pay for even faster transactions |
 | **Crypto-native** | Users already understand wallet concepts |
 
+### Why NOT Seed Vault?
+
+Fabcash intentionally does **not** use Solana Mobile's Seed Vault. This is a privacy decision:
+
+| Seed Vault | Fabcash Approach |
+|------------|------------------|
+| Creates permission trail | No special permissions |
+| Hardware proves wallet exists | Plausible deniability |
+| Saga/Seeker only | Works on any phone |
+| Designed for permanent wallets | True burner wallet |
+
+**For maximum privacy:** No Seed Vault = no evidence = better for hostile environments.
+
+Seed Vault is excellent for main wallets holding significant funds. But Fabcash is daily spending cash where **privacy > fund security**.
+
 ### Planned Integration
 
 ```
-Current:     expo-secure-store → Software keychain
-Future:      Seed Vault SDK    → Hardware security module
-
 Current:     Bluetooth + QR
-Future:      Bluetooth + QR + NFC tap-to-pay
+Future:      Bluetooth + QR + NFC tap-to-pay (Seeker)
+
+Key storage: expo-secure-store (intentionally software-only)
+            → No hardware binding
+            → Works on any device
+            → True burner wallet
 ```
 
 ### Target Devices
 
 * **Saga** - First-generation Solana phone
-* **Seeker** - Next-generation with improved NFC and hardware
+* **Seeker** - Next-generation with NFC tap-to-pay
+* **Any Android/iOS** - Fabcash works everywhere (not locked to Solana phones)
 
 ---
 

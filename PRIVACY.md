@@ -749,6 +749,39 @@ Shielded settlement:
 
 ---
 
+## Breaking the Digital Wallet Standard
+
+Every digital wallet has a fundamental flaw that physical wallets don't:
+
+```
+Physical wallet (empty):
+  Forensic analysis reveals: Nothing
+  Past contents: Unknown
+  Previous owners: Unknown
+
+Digital wallet (empty):
+  Forensic analysis reveals: EVERYTHING
+  Past contents: Every transaction ever made
+  Previous owners: All counterparties linked forever
+```
+
+**This is the broken standard of digital wallets.**
+
+An empty physical wallet tells you nothing. An empty Bitcoin/Ethereum wallet tells you everything.
+
+Fabcash is designed to break this standard:
+
+| After emptying wallet | Traditional | Fabcash |
+|-----------------------|-------------|---------|
+| Past balance visible? | Yes | No |
+| Transaction history? | Complete | Shielded |
+| Counterparties linked? | Forever | Unlinkable |
+| Forensic value? | Total | Zero |
+
+**The goal:** An empty Fabcash wallet should be as forensically useless as an empty physical wallet.
+
+---
+
 <p align="center">
   <em>Privacy is not about having something to hide.<br/>
   Privacy is about having nothing to reveal.</em>

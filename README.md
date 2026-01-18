@@ -293,6 +293,41 @@ Fabcash is designed to behave like physical cash:
 
 This is intentional. For larger amounts, sweep to a backed-up cold wallet.
 
+### 3.5 Breaking the Digital Wallet Standard
+
+**The problem with every digital wallet:**
+
+```
+Physical wallet (empty):
+  → No one can know how much money was ever inside
+  → No history
+  → No forensic analysis possible
+
+Digital wallet (empty):
+  → Blockchain shows ENTIRE history forever
+  → Every transaction, every amount, every counterparty
+  → Chain analysis reconstructs everything
+```
+
+This is a broken standard. A digital wallet leaves a permanent forensic trail that a physical wallet never would.
+
+**Fabcash breaks this standard:**
+
+| Aspect | Traditional Digital Wallet | Fabcash |
+|--------|---------------------------|---------|
+| Empty wallet reveals | Full transaction history | Nothing |
+| Past balances | Permanently visible | Unknown |
+| Counterparties | Permanently linked | Ephemeral addresses |
+| Delete app | History remains on-chain | Shielded, unlinkable |
+
+**How we achieve this:**
+- **No seed phrase** → Cannot recover history even if coerced
+- **Ephemeral addresses** → Each payment is isolated
+- **Privacy Cash** → Settlement breaks on-chain links
+- **Delete app** → Only shielded pool remains (unlinkable to you)
+
+The goal: **An empty Fabcash wallet reveals nothing about its past** — just like an empty physical wallet.
+
 ---
 
 ## 4. Design Principles

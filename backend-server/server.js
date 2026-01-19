@@ -36,12 +36,10 @@ async function initPrivacyCash() {
 
     // Initialize Privacy Cash SDK
     privacyCash = new PrivacyCash({
-      rpcUrl: RPC_URL,
-      keypair: serviceKeypair,
-      cacheDir: './cache',
+      RPC_url: RPC_URL,
+      owner: serviceKeypair,
     });
 
-    await privacyCash.initialize();
     console.log('Privacy Cash initialized successfully');
     return true;
   } catch (error) {
@@ -66,7 +64,7 @@ app.get('/api/balance', async (req, res) => {
       return res.status(503).json({ success: false, error: 'Privacy Cash not initialized' });
     }
 
-    const balance = await privacyCash.getShieldedBalance();
+    const { lamports: balance } = await privacyCash.getPrivateBalance();
 
     res.json({
       success: true,
@@ -95,11 +93,11 @@ app.post('/api/shield', async (req, res) => {
     }
 
     console.log(`Shielding ${lamports} lamports...`);
-    const result = await privacyCash.shield(lamports);
+    const result = await privacyCash.deposit({ lamports });
 
     res.json({
       success: true,
-      signature: result.signature,
+      signature: result.tx,
       message: `Shielded ${lamports / LAMPORTS_PER_SOL} SOL`,
     });
   } catch (error) {
@@ -126,14 +124,15 @@ app.post('/api/withdraw', async (req, res) => {
     }
 
     console.log(`Withdrawing ${lamports} lamports to ${recipientAddress}...`);
-    const result = await privacyCash.withdraw(lamports, recipientAddress);
+    const result = await privacyCash.withdraw({ lamports, recipientAddress });
 
     res.json({
       success: true,
-      signature: result.signature,
-      recipient: recipientAddress,
-      amount: lamports,
-      message: `Withdrew ${lamports / LAMPORTS_PER_SOL} SOL to ${recipientAddress}`,
+      signature: result.tx,
+      recipient: result.recipient,
+      amount: result.amount_in_lamports,
+      fee: result.fee_in_lamports,
+      message: `Withdrew ${result.amount_in_lamports / LAMPORTS_PER_SOL} SOL to ${result.recipient}`,
     });
   } catch (error) {
     console.error('Withdraw error:', error);

@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Fabcash - Solana Privacy Hack 2026</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      background: #0a0a0a;
+      color: #ffffff;
+      overflow: hidden;
+    }
+
+    .slide {
+      display: none;
+      width: 100vw;
+      height: 100vh;
+      padding: 60px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .slide.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Title slide */
+    .slide.title-slide {
+      text-align: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #0a0a0a 100%);
+    }
+
+    .slide.title-slide h1 {
+      font-size: 5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(135deg, #14F195 0%, #9945FF 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .slide.title-slide .tagline {
+      font-size: 1.8rem;
+      color: #888;
+      margin-bottom: 2rem;
+    }
+
+    .slide.title-slide .subtitle {
+      font-size: 1.2rem;
+      color: #14F195;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+      margin-bottom: 3rem;
+    }
+
+    .slide.title-slide blockquote {
+      font-size: 1.4rem;
+      font-style: italic;
+      color: #aaa;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+
+    /* Content slides */
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 0.3rem;
+      color: #fff;
+    }
+
+    h2 {
+      font-size: 1.6rem;
+      font-weight: 400;
+      color: #14F195;
+      margin-bottom: 2rem;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    /* Code blocks */
+    pre {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 24px 32px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 1rem;
+      line-height: 1.6;
+      overflow-x: auto;
+      border: 1px solid #333;
+    }
+
+    code {
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      background: #1a1a2e;
+      padding: 2px 8px;
+      border-radius: 4px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1.5rem 0;
+      font-size: 1.1rem;
+    }
+
+    th, td {
+      padding: 16px 24px;
+      text-align: left;
+      border-bottom: 1px solid #333;
+    }
+
+    th {
+      background: #1a1a2e;
+      color: #14F195;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    tr:hover td {
+      background: rgba(20, 241, 149, 0.05);
+    }
+
+    td:first-child {
+      color: #aaa;
+    }
+
+    .highlight {
+      color: #14F195;
+      font-weight: 600;
+    }
+
+    /* Two column layout */
+    .two-col {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: start;
+    }
+
+    /* Lists */
+    ul {
+      list-style: none;
+      font-size: 1.2rem;
+      line-height: 2;
+    }
+
+    ul li::before {
+      content: "→";
+      color: #14F195;
+      margin-right: 12px;
+    }
+
+    /* Boxes */
+    .box {
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 24px 32px;
+      border: 1px solid #333;
+      margin: 1rem 0;
+    }
+
+    .box.accent {
+      border-color: #14F195;
+      background: rgba(20, 241, 149, 0.05);
+    }
+
+    .box h3 {
+      color: #14F195;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .box p {
+      font-size: 1.1rem;
+      color: #ccc;
+      line-height: 1.6;
+    }
+
+    /* Stack diagram */
+    .stack {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      max-width: 700px;
+    }
+
+    .stack-layer {
+      background: #1a1a2e;
+      border: 1px solid #333;
+      border-radius: 8px;
+      padding: 20px 28px;
+      text-align: center;
+    }
+
+    .stack-layer.highlight-layer {
+      border-color: #14F195;
+      background: rgba(20, 241, 149, 0.1);
+    }
+
+    .stack-layer .label {
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 4px;
+    }
+
+    .stack-layer .detail {
+      font-size: 0.9rem;
+      color: #888;
+    }
+
+    /* Flow diagram */
+    .flow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 20px;
+      margin: 2rem 0;
+      flex-wrap: wrap;
+    }
+
+    .flow-step {
+      background: #1a1a2e;
+      border: 1px solid #333;
+      border-radius: 12px;
+      padding: 20px 28px;
+      text-align: center;
+      min-width: 180px;
+    }
+
+    .flow-step.active-step {
+      border-color: #14F195;
+      background: rgba(20, 241, 149, 0.1);
+    }
+
+    .flow-arrow {
+      color: #14F195;
+      font-size: 1.5rem;
+    }
+
+    /* Progress bar */
+    .progress {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      height: 4px;
+      background: linear-gradient(90deg, #14F195, #9945FF);
+      transition: width 0.3s ease;
+    }
+
+    /* Slide counter */
+    .slide-counter {
+      position: fixed;
+      bottom: 20px;
+      right: 30px;
+      font-size: 0.9rem;
+      color: #555;
+    }
+
+    /* Navigation hint */
+    .nav-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 30px;
+      font-size: 0.8rem;
+      color: #444;
+    }
+
+    /* Era timeline */
+    .era-timeline {
+      display: flex;
+      gap: 30px;
+      margin: 2rem 0;
+    }
+
+    .era {
+      flex: 1;
+      background: #1a1a2e;
+      border-radius: 12px;
+      padding: 28px;
+      border: 1px solid #333;
+      text-align: center;
+    }
+
+    .era.current {
+      border-color: #14F195;
+      background: rgba(20, 241, 149, 0.1);
+    }
+
+    .era .era-num {
+      font-size: 0.8rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+    }
+
+    .era .era-title {
+      font-size: 1.3rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .era.current .era-title {
+      color: #14F195;
+    }
+
+    .era .era-example {
+      font-size: 1rem;
+      color: #888;
+    }
+
+    /* Impact text */
+    .impact {
+      font-size: 1.4rem;
+      color: #aaa;
+      max-width: 800px;
+      line-height: 1.8;
+      margin: 1.5rem 0;
+    }
+
+    .impact strong {
+      color: #fff;
+    }
+
+    /* Logos */
+    .built-with {
+      display: flex;
+      gap: 40px;
+      justify-content: center;
+      margin-top: 2rem;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    .built-with span {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Completed/Roadmap */
+    .roadmap-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 40px;
+    }
+
+    .roadmap-col h3 {
+      color: #14F195;
+      font-size: 1rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid #333;
+    }
+
+    .roadmap-col ul li::before {
+      content: "✓";
+    }
+
+    .roadmap-col.future ul li::before {
+      content: "○";
+      color: #666;
+    }
+
+    /* Speaker Notes */
+    .speaker-notes {
+      display: none;
+    }
+
+    .notes-panel {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 200px;
+      background: #111;
+      border-top: 2px solid #14F195;
+      padding: 20px 30px;
+      overflow-y: auto;
+      z-index: 1000;
+    }
+
+    .notes-panel.visible {
+      display: block;
+    }
+
+    .notes-panel h4 {
+      color: #14F195;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    .notes-panel p {
+      color: #ccc;
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    .notes-panel .timing {
+      position: absolute;
+      top: 20px;
+      right: 30px;
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    body.notes-active .slide {
+      height: calc(100vh - 200px);
+    }
+
+    body.notes-active .progress {
+      bottom: 200px;
+    }
+
+    body.notes-active .slide-counter,
+    body.notes-active .nav-hint {
+      bottom: 220px;
+    }
+
+    /* Notes toggle hint */
+    .notes-hint {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 0.8rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Slide 1: Title -->
+  <section class="slide title-slide active">
+    <div class="subtitle">Solana Privacy Hack 2026</div>
+    <h1>Fabcash</h1>
+    <p class="tagline">True Burner Wallet for Solana</p>
+    <blockquote>"A wallet you can lose. A wallet you can deny. A wallet that works like cash."</blockquote>
+    <div class="built-with">
+      <span>Light Protocol</span>
+      <span>Privacy Cash</span>
+      <span>Solana</span>
+    </div>
+    <div class="speaker-notes" data-timing="30s">
+      Fabcash is a true burner wallet for Solana. A wallet you can lose. A wallet you can deny. A wallet that works like cash. We built it because every digital wallet today has a fundamental problem that physical wallets don't have.
+    </div>
+  </section>
+
+  <!-- Slide 2: The Problem -->
+  <section class="slide">
+    <h1>The Problem</h1>
+    <h2>Every Digital Wallet is Broken</h2>
+    <div class="content">
+      <div class="two-col">
+        <div class="box">
+          <h3>Physical Wallet (Empty)</h3>
+          <p>Past contents: <span class="highlight">Unknown</span><br>
+          Previous transactions: <span class="highlight">Unknown</span><br>
+          Forensic value: <span class="highlight">Zero</span></p>
+        </div>
+        <div class="box">
+          <h3>Digital Wallet (Empty)</h3>
+          <p>Past contents: <strong style="color:#ff6b6b">EVERYTHING</strong><br>
+          Previous transactions: <strong style="color:#ff6b6b">Complete history</strong><br>
+          Forensic value: <strong style="color:#ff6b6b">Total</strong></p>
+        </div>
+      </div>
+      <p class="impact">
+        <strong>Border crossings:</strong> "Unlock your wallet" → Full history exposed<br>
+        <strong>Device seizure:</strong> Seed phrase recovery reveals everything<br>
+        <strong>Internet crackdowns:</strong> Uganda & Iran showed people need offline-capable, private payments
+      </p>
+    </div>
+    <div class="speaker-notes" data-timing="45s">
+      Here's the problem: When you empty a physical wallet, forensic analysis reveals nothing. No one can tell what was in it yesterday, or who you paid last month. But when you empty a digital wallet? Everything is still there. Every transaction. Every counterparty. Forever. This isn't a theoretical concern. At border crossings, people are forced to unlock their phones. Their entire financial history is exposed. During internet crackdowns in Uganda and Iran, we saw people desperately need payment systems that work offline — and protect their privacy when connectivity returns. The current standard of digital wallets is broken. We're here to fix it.
+    </div>
+  </section>
+
+  <!-- Slide 3: The Solution -->
+  <section class="slide">
+    <h1>The Solution</h1>
+    <h2>Fabcash: True Burner Wallet</h2>
+    <div class="content">
+      <table>
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th>Traditional Wallet</th>
+            <th>Fabcash</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Seed phrase</td>
+            <td>Required</td>
+            <td class="highlight">None</td>
+          </tr>
+          <tr>
+            <td>Empty wallet reveals</td>
+            <td>Everything</td>
+            <td class="highlight">Nothing</td>
+          </tr>
+          <tr>
+            <td>Offline payments</td>
+            <td>No</td>
+            <td class="highlight">Yes (BLE/QR)</td>
+          </tr>
+          <tr>
+            <td>Recovery under coercion</td>
+            <td>Full history</td>
+            <td class="highlight">Impossible</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="box accent">
+        <p style="text-align:center; font-size:1.2rem;">An empty Fabcash wallet is as forensically useless as an empty physical wallet.</p>
+      </div>
+    </div>
+    <div class="speaker-notes" data-timing="45s">
+      Fabcash is a true burner wallet. Here's what that means: No seed phrase. There's nothing to recover, nothing to coerce out of you. If someone seizes your device and demands your seed phrase, there isn't one. Empty wallet reveals nothing. Unlike every other wallet where an empty balance still exposes your entire history. Offline payments. You can send money over Bluetooth or QR codes without any internet connection. Settlement happens later. And recovery under coercion? Impossible. That's not a bug — that's the entire point. An empty Fabcash wallet is as forensically useless as an empty physical wallet.
+    </div>
+  </section>
+
+  <!-- Slide 4: How It Works -->
+  <section class="slide">
+    <h1>How It Works</h1>
+    <h2>Three Privacy Layers</h2>
+    <div class="content">
+      <div class="stack">
+        <div class="stack-layer">
+          <div class="label">1. No Seed Phrase</div>
+          <div class="detail">Nothing to recover, nothing to coerce</div>
+        </div>
+        <div class="stack-layer">
+          <div class="label">2. Offline Payments</div>
+          <div class="detail">Bluetooth/QR transfer → Settle when online → No network activity at payment time</div>
+        </div>
+        <div class="stack-layer highlight-layer">
+          <div class="label">3. ZK Privacy (Light Protocol + Privacy Cash)</div>
+          <div class="detail">Ephemeral addresses • Shielded pools • 99% smaller on-chain footprint</div>
+        </div>
+      </div>
+      <div class="box accent" style="margin-top:2rem; max-width:700px;">
+        <h3>Crackdown Mode</h3>
+        <p>One-tap emergency button shields all funds instantly.</p>
+      </div>
+    </div>
+    <div class="speaker-notes" data-timing="45s">
+      We achieve this through three privacy layers. First, no seed phrase. The private key exists only on device, only in memory when needed. Nothing to backup means nothing to extract. Second, offline payments. Transactions are signed and transferred via Bluetooth or QR code. They settle when you're back online. This means there's no network activity at the moment of payment — nothing to correlate, nothing to monitor. Third, ZK privacy through Light Protocol and Privacy Cash. Every payment uses a new ephemeral address. Funds move through shielded pools that break the transaction graph. And ZK compression means 99% smaller on-chain footprint. Plus Crackdown Mode — one tap to shield all funds instantly when you need it.
+    </div>
+  </section>
+
+  <!-- Slide 5: Why Solana -->
+  <section class="slide">
+    <h1>Why Only Solana?</h1>
+    <h2>The Economics of Privacy</h2>
+    <div class="content">
+      <p class="impact">Fabcash requires many small transactions: ephemeral addresses, privacy sweeps, ZK operations.</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Chain</th>
+            <th>Fee / Tx</th>
+            <th>10 Payments/Day</th>
+            <th>Monthly Cost</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td class="highlight">Solana</td>
+            <td class="highlight">$0.0002</td>
+            <td class="highlight">$0.002</td>
+            <td class="highlight">$0.06</td>
+          </tr>
+          <tr>
+            <td>Bitcoin</td>
+            <td>$3.00</td>
+            <td>$30</td>
+            <td>$900</td>
+          </tr>
+          <tr>
+            <td>Ethereum</td>
+            <td>$5.00</td>
+            <td>$50</td>
+            <td>$1,500</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="box accent">
+        <p style="text-align:center;">This privacy model is <strong style="color:#14F195">economically impossible</strong> on any other L1.</p>
+      </div>
+    </div>
+    <div class="speaker-notes" data-timing="30s">
+      Why did we build this on Solana? Because it's the only chain where this is economically possible. Our privacy model requires lots of small transactions — new addresses for every payment, privacy sweeps, ZK operations. On Solana, that costs 6 cents a month. On Bitcoin, $900 a month. On Ethereum, $1,500. This concept — true disposable wallets for everyday use — is economically impossible on any other Layer 1. Solana's fees make it viable.
+    </div>
+  </section>
+
+  <!-- Slide 6: Demo Flow -->
+  <section class="slide">
+    <h1>Demo Flow</h1>
+    <h2>See It In Action</h2>
+    <div class="content">
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color:#14F195; font-size:1rem; margin-bottom:1rem;">1. OFFLINE PAYMENT</h3>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="label">Sender</div>
+            <div class="detail" style="color:#888; font-size:0.9rem;">Signs transaction</div>
+          </div>
+          <div class="flow-arrow">→ BLE/QR →</div>
+          <div class="flow-step active-step">
+            <div class="label">Receiver</div>
+            <div class="detail" style="color:#888; font-size:0.9rem;">No internet needed</div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-bottom: 2rem;">
+        <h3 style="color:#14F195; font-size:1rem; margin-bottom:1rem;">2. DEFERRED SETTLEMENT</h3>
+        <div class="flow">
+          <div class="flow-step">
+            <div class="label">Connect</div>
+            <div class="detail" style="color:#888; font-size:0.9rem;">When online</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step">
+            <div class="label">Broadcast</div>
+            <div class="detail" style="color:#888; font-size:0.9rem;">Deferred tx</div>
+          </div>
+          <div class="flow-arrow">→</div>
+          <div class="flow-step active-step">
+            <div class="label">Shielded</div>
+            <div class="detail" style="color:#888; font-size:0.9rem;">Funds arrive</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h3 style="color:#14F195; font-size:1rem; margin-bottom:1rem;">3. CRACKDOWN MODE</h3>
+        <div class="flow">
+          <div class="flow-step" style="border-color:#ff6b6b;">
+            <div class="label">Emergency</div>
+          </div>
+          <div class="flow-arrow">→ One Tap →</div>
+          <div class="flow-step active-step">
+            <div class="label">All Funds Shielded</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="speaker-notes" data-timing="60s">
+      Let me show you how it works. Offline payment: The sender signs a transaction on their device. It transfers to the receiver over Bluetooth or QR code. No internet required on either side. The receiver now has a valid signed transaction. Deferred settlement: When the receiver gets back online — could be minutes, could be days — they broadcast the transaction. The funds arrive in their shielded account. Because settlement is deferred, there's no network traffic at the moment of payment. You can't correlate when the payment happened with any network activity. Crackdown Mode: If you're in an emergency situation — protest, border crossing, whatever — one tap. All your funds are instantly shielded. The wallet looks empty, and there's no history to reveal.
+    </div>
+  </section>
+
+  <!-- Slide 7: Vision & Roadmap -->
+  <section class="slide">
+    <h1>The Vision</h1>
+    <h2>Era 3 of Crypto: Decentralized Privacy</h2>
+    <div class="content">
+      <div class="era-timeline">
+        <div class="era">
+          <div class="era-num">Era 1</div>
+          <div class="era-title">Decentralized Money</div>
+          <div class="era-example">Bitcoin</div>
+        </div>
+        <div class="era">
+          <div class="era-num">Era 2</div>
+          <div class="era-title">Decentralized Compute</div>
+          <div class="era-example">Ethereum</div>
+        </div>
+        <div class="era current">
+          <div class="era-num">Era 3</div>
+          <div class="era-title">Decentralized Privacy</div>
+          <div class="era-example">Fabcash</div>
+        </div>
+      </div>
+      <div class="roadmap-grid" style="margin-top:2rem;">
+        <div class="roadmap-col">
+          <h3>Completed</h3>
+          <ul>
+            <li>Offline BLE/QR payments</li>
+            <li>Light Protocol (ZK Compression)</li>
+            <li>Privacy Cash (Shielded txs)</li>
+            <li>Crackdown Mode</li>
+          </ul>
+        </div>
+        <div class="roadmap-col future">
+          <h3>Roadmap</h3>
+          <ul>
+            <li>Mainnet deployment</li>
+            <li>Solana dApp Store</li>
+            <li>NFC tap-to-pay (Seeker)</li>
+            <li>Multi-device mesh</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="speaker-notes" data-timing="45s">
+      We believe crypto is entering its third era. Era 1 was decentralized money — Bitcoin proved it was possible. Era 2 was decentralized compute — Ethereum and smart contracts. Era 3 is decentralized privacy. Not privacy as a feature bolted on top, but privacy as the foundation. We've already built the core: offline Bluetooth and QR payments, Light Protocol integration for ZK compression, Privacy Cash integration for shielded transactions, and Crackdown Mode. Next: mainnet deployment, Solana dApp Store, and NFC tap-to-pay on Seeker devices. Fabcash. An empty wallet that reveals nothing about its past. Thank you.
+    </div>
+  </section>
+
+  <!-- Notes Panel -->
+  <div class="notes-panel" id="notesPanel">
+    <h4>Speaker Notes</h4>
+    <div class="timing" id="notesTiming"></div>
+    <p id="notesContent"></p>
+  </div>
+
+  <!-- Progress bar -->
+  <div class="progress" id="progress"></div>
+
+  <!-- Slide counter -->
+  <div class="slide-counter" id="slideCounter">1 / 7</div>
+
+  <!-- Navigation hint -->
+  <div class="nav-hint">← → Space | N = notes</div>
+
+  <script>
+    const slides = document.querySelectorAll('.slide');
+    const progress = document.getElementById('progress');
+    const counter = document.getElementById('slideCounter');
+    const notesPanel = document.getElementById('notesPanel');
+    const notesContent = document.getElementById('notesContent');
+    const notesTiming = document.getElementById('notesTiming');
+    let current = 0;
+    let notesVisible = false;
+
+    function updateNotes() {
+      const notes = slides[current].querySelector('.speaker-notes');
+      if (notes) {
+        notesContent.textContent = notes.textContent.trim();
+        notesTiming.textContent = notes.dataset.timing || '';
+      } else {
+        notesContent.textContent = '';
+        notesTiming.textContent = '';
+      }
+    }
+
+    function toggleNotes() {
+      notesVisible = !notesVisible;
+      notesPanel.classList.toggle('visible', notesVisible);
+      document.body.classList.toggle('notes-active', notesVisible);
+      if (notesVisible) {
+        updateNotes();
+      }
+    }
+
+    function showSlide(n) {
+      slides[current].classList.remove('active');
+      current = (n + slides.length) % slides.length;
+      slides[current].classList.add('active');
+      progress.style.width = ((current + 1) / slides.length * 100) + '%';
+      counter.textContent = (current + 1) + ' / ' + slides.length;
+      if (notesVisible) {
+        updateNotes();
+      }
+    }
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        toggleNotes();
+      } else if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'Enter') {
+        e.preventDefault();
+        showSlide(current + 1);
+      } else if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        showSlide(current - 1);
+      } else if (e.key === 'Home') {
+        showSlide(0);
+      } else if (e.key === 'End') {
+        showSlide(slides.length - 1);
+      }
+    });
+
+    // Touch/swipe support
+    let touchStartX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.touches[0].clientX;
+    });
+    document.addEventListener('touchend', (e) => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        showSlide(current + (diff > 0 ? 1 : -1));
+      }
+    });
+
+    // Click to advance (but not on notes panel)
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.notes-panel')) return;
+      if (e.clientX > window.innerWidth / 2) {
+        showSlide(current + 1);
+      } else {
+        showSlide(current - 1);
+      }
+    });
+  </script>
+</body>
+</html>

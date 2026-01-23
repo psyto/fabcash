@@ -7,8 +7,13 @@
 
 import { Connection } from '@solana/web3.js';
 
-// Public Solana devnet RPC (free, rate-limited)
-const PUBLIC_RPC_URL = 'https://api.devnet.solana.com';
+// Helius RPC for reliability
+// Note: EXPO_PUBLIC_ vars are inlined at build time by Metro
+const HELIUS_API_KEY = process.env.EXPO_PUBLIC_HELIUS_API_KEY;
+const PUBLIC_RPC_URL = HELIUS_API_KEY
+  ? `https://devnet.helius-rpc.com/?api-key=${HELIUS_API_KEY}`
+  : 'https://api.devnet.solana.com';
+
 
 // Retry configuration
 const MAX_RETRIES = 3;

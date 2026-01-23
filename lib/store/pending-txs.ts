@@ -5,6 +5,7 @@ import {
   TransactionStatus,
   checkNetworkConnectivity,
 } from '../solana/broadcast';
+import { isDemoMode, DEMO_TRANSACTIONS } from '../config/demo';
 
 const PENDING_TXS_KEY = 'fabcash_pending_transactions';
 
@@ -223,6 +224,18 @@ export async function clearCompletedTransactions(): Promise<number> {
  * Get transaction history (completed transactions)
  */
 export async function getTransactionHistory(): Promise<PendingTransaction[]> {
+  // Demo mode - return mock transaction history
+  if (isDemoMode()) {
+    return DEMO_TRANSACTIONS.map(tx => ({
+      ...tx,
+      base64: '',
+      sender: 'demo_sender',
+      recipient: 'demo_recipient',
+      broadcastAttempts: 1,
+      expiresAt: Date.now() + 3600000,
+    }));
+  }
+
   await initPendingTxStore();
   return Array.from(pendingTxsCache.values())
     .filter(

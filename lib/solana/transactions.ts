@@ -12,6 +12,12 @@ import {
   getBalanceWithRetry,
   getLatestBlockhashWithRetry,
 } from './rpc';
+import {
+  isDemoMode,
+  demoDelay,
+  DEMO_SOL_BALANCE,
+  DEMO_USDC_BALANCE,
+} from '../config/demo';
 
 // Devnet USDC mint address
 export const DEVNET_USDC_MINT = new PublicKey('4zMMC9srt5Ri5X14GAgXhaHii3GnPAEERYPJgZJDncDU');
@@ -166,6 +172,13 @@ function generateTransactionId(): string {
  * Get SOL balance for an address (with retry logic for rate limits)
  */
 export async function getSolBalance(addr: PublicKey): Promise<bigint> {
+  // Demo mode - return mock balance
+  if (isDemoMode()) {
+    console.log('[DEMO] Returning mock SOL balance:', DEMO_SOL_BALANCE.toString());
+    await demoDelay();
+    return DEMO_SOL_BALANCE;
+  }
+
   try {
     const balance = await getBalanceWithRetry(addr);
     return BigInt(balance);
@@ -179,6 +192,12 @@ export async function getSolBalance(addr: PublicKey): Promise<bigint> {
  * Get USDC balance for an address
  */
 export async function getUsdcBalance(addr: PublicKey): Promise<bigint> {
+  // Demo mode - return mock balance
+  if (isDemoMode()) {
+    await demoDelay();
+    return DEMO_USDC_BALANCE;
+  }
+
   // Simplified - return 0 for now
   // Full implementation would need @solana/spl-token
   return BigInt(0);

@@ -11,6 +11,7 @@
  */
 
 import * as SecureStore from 'expo-secure-store';
+import { isDemoMode, getDemoShieldedSol, addDemoShieldedSol } from '../config/demo';
 
 // Backend URL for Privacy Cash API
 const PRIVACY_BACKEND_URL = process.env.EXPO_PUBLIC_PRIVACY_BACKEND_URL || 'https://backend-fabrknt.vercel.app';
@@ -114,6 +115,13 @@ async function saveMockBalance(): Promise<void> {
  * Shield SOL - deposit into privacy pool
  */
 export async function shieldSol(lamports: number): Promise<ShieldResult> {
+  // Demo mode - simulate successful shield
+  if (isDemoMode()) {
+    addDemoShieldedSol(lamports / 1_000_000_000); // Convert lamports to SOL
+    console.log(`[DEMO] Shielded ${lamports} lamports`);
+    return { success: true, txSignature: `demo_shield_${Date.now().toString(36)}` };
+  }
+
   if (!initialized) {
     throw new Error('Privacy Cash not initialized');
   }
@@ -293,6 +301,14 @@ export async function privateWithdrawUsdc(
  * Always returns local cache since backend is in demo mode
  */
 export async function getPrivateBalance(): Promise<PrivacyBalance> {
+  // Demo mode - return tracked shielded balance
+  if (isDemoMode()) {
+    return {
+      sol: getDemoShieldedSol() * 1_000_000_000, // Convert to lamports
+      usdc: 0,
+    };
+  }
+
   if (!initialized) {
     // Try to load cached balance even if not initialized
     try {
@@ -323,6 +339,10 @@ export async function clearPrivacyCache(): Promise<void> {
  * Check if Privacy Cash is initialized
  */
 export function isPrivacyCashInitialized(): boolean {
+  // In demo mode, always return true so UI shows shielded balance
+  if (isDemoMode()) {
+    return true;
+  }
   return initialized;
 }
 

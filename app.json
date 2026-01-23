@@ -19,7 +19,8 @@
       "infoPlist": {
         "NSBluetoothAlwaysUsageDescription": "This app uses Bluetooth to send and receive payments",
         "NSBluetoothPeripheralUsageDescription": "This app uses Bluetooth to send and receive payments",
-        "NSCameraUsageDescription": "This app uses the camera to scan QR codes for payments"
+        "NSCameraUsageDescription": "This app uses the camera to scan QR codes for payments",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -35,7 +36,8 @@
         "android.permission.BLUETOOTH_CONNECT",
         "android.permission.BLUETOOTH_SCAN",
         "android.permission.BLUETOOTH_ADVERTISE",
-        "android.permission.CAMERA"
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
       ]
     },
     "web": {
@@ -56,9 +58,19 @@
         "react-native-ble-plx",
         {
           "isBackgroundEnabled": true,
-          "modes": ["peripheral", "central"]
+          "modes": [
+            "peripheral",
+            "central"
+          ]
         }
       ]
-    ]
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "8efc25c9-678f-454e-9634-30fcdd4d767a"
+      }
+    },
+    "owner": "psyto"
   }
 }

@@ -142,7 +142,8 @@ export default function HomeScreen() {
         // Refresh all data
         await loadData();
 
-        Alert.alert('Shielded', `${amount.toFixed(4)} SOL moved to privacy pool`);
+        // Skip alert in demo mode for cleaner video
+        // Alert.alert('Shielded', `${amount.toFixed(4)} SOL moved to privacy pool`);
       } else {
         throw new Error(result.error);
       }

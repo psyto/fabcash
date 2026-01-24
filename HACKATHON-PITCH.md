@@ -70,7 +70,7 @@ Three principles make this possible:
 
 **Two: Nothing to monitor.** Payments happen offline via Bluetooth. No network activity to surveil.
 
-**Three: Nothing to trace.** Settlement happens through Privacy Cash. The transaction graph is broken.
+**Three: Nothing to trace.** Settlement happens through Privacy Cash and Light Protocol. ZK compression plus shielded pools — the transaction graph is broken.
 
 Let me show you.
 
@@ -144,7 +144,7 @@ I enter the recipient and amount. But here's where philosophy meets practice.
 
 **[Show privacy mode selector]**
 
-Three privacy modes. Standard. Compressed. Shielded.
+Three privacy modes. Standard. Compressed — that's Light Protocol's ZK compression. And Shielded — Privacy Cash's private pool.
 
 **[Select Shielded]**
 
@@ -263,6 +263,7 @@ Use these for maximum impact:
 - [ ] README with documentation
 - [ ] Deployed to Solana devnet
 - [ ] Privacy Cash SDK integration documented
+- [ ] Light Protocol API integration documented
 
 ---
 

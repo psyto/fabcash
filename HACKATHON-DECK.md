@@ -169,11 +169,11 @@ Fabcash under coercion:
 
 ---
 
-# Slide 8: Privacy Cash Integration
+# Slide 8: Privacy Stack Integration
 
-## The Privacy Layer
+## The Privacy Layers
 
-Fabcash uses **Privacy Cash SDK** as its core privacy infrastructure:
+Fabcash uses **Privacy Cash SDK** and **Light Protocol API** as its privacy infrastructure:
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -185,17 +185,17 @@ Fabcash uses **Privacy Cash SDK** as its core privacy infrastructure:
 │  ├─ Offline Payments (nothing to monitor)              │
 │  └─ Crackdown Mode (emergency disappear)               │
 ├─────────────────────────────────────────────────────────┤
-│  PRIVACY CASH SDK                                       │
-│  ├─ shield() — Move funds to private pool              │
-│  ├─ withdraw() — Private withdrawal anywhere           │
-│  └─ ZK proofs — Break transaction graph                │
+│  PRIVACY CASH SDK              │  LIGHT PROTOCOL API    │
+│  ├─ shield() — Private pool    │  ├─ ZK Compression     │
+│  ├─ withdraw() — Private out   │  ├─ 99% smaller state  │
+│  └─ Break transaction graph    │  └─ Compressed accounts│
 ├─────────────────────────────────────────────────────────┤
 │  SOLANA                                                 │
 │  └─ $0.0002/tx makes this economically possible        │
 └─────────────────────────────────────────────────────────┘
 ```
 
-**Privacy Cash makes our philosophy technically achievable.**
+**Privacy Cash + Light Protocol make our philosophy technically achievable.**
 
 ---
 
@@ -277,6 +277,7 @@ Solana's fees don't just enable our tech. They enable our philosophy.
 
 ### Completed
 - [x] Privacy Cash SDK integration (shield, withdraw, balance)
+- [x] Light Protocol API integration (ZK compression)
 - [x] No seed phrase architecture (true burner)
 - [x] Offline payment protocol (BLE + QR)
 - [x] Crackdown Mode (emergency shield)
@@ -311,7 +312,12 @@ We don't just *use* Privacy Cash. We built an entire wallet philosophy around wh
 - Shielded settlement (unlinkable receives)
 - Private sends (break transaction graph)
 
-**Without Privacy Cash, Fabcash's philosophy is impossible.**
+**Light Protocol enables:**
+- ZK Compression (99% smaller on-chain footprint)
+- Compressed privacy mode
+- Economically viable ephemeral addresses
+
+**Without Privacy Cash + Light Protocol, Fabcash's philosophy is impossible.**
 
 ---
 
@@ -343,6 +349,8 @@ We agree. So we built a wallet that actually delivers it.
 
 **Track:** Private Payments
 **Bounty:** Privacy Cash — Best Overall App
+
+**Built with:** Privacy Cash SDK | Light Protocol API | Solana
 
 ---
 

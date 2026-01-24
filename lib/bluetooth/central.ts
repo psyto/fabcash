@@ -1,7 +1,7 @@
 import { BleManager, Device, Characteristic } from 'react-native-ble-plx';
 import { Platform, PermissionsAndroid } from 'react-native';
 import {
-  FABRKNT_SERVICE_UUID,
+  FABCASH_SERVICE_UUID,
   PAYMENT_REQUEST_CHAR_UUID,
   TRANSACTION_CHAR_UUID,
   PaymentRequest,
@@ -102,7 +102,7 @@ export async function startScanning(cbs: CentralCallbacks): Promise<void> {
 
     // Start scanning for devices with our service UUID
     manager.startDeviceScan(
-      [FABRKNT_SERVICE_UUID],
+      [FABCASH_SERVICE_UUID],
       { allowDuplicates: false },
       async (error, device) => {
         if (error) {
@@ -178,7 +178,7 @@ export async function readPaymentRequest(): Promise<PaymentRequest | null> {
 
   try {
     const characteristic = await connectedDevice.readCharacteristicForService(
-      FABRKNT_SERVICE_UUID,
+      FABCASH_SERVICE_UUID,
       PAYMENT_REQUEST_CHAR_UUID
     );
 
@@ -241,7 +241,7 @@ export async function sendPayment(params: {
         const chunkData = `${isLast ? '1' : '0'}${chunks[i]}`;
 
         await connectedDevice.writeCharacteristicWithResponseForService(
-          FABRKNT_SERVICE_UUID,
+          FABCASH_SERVICE_UUID,
           TRANSACTION_CHAR_UUID,
           Buffer.from(chunkData).toString('base64')
         );

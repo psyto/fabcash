@@ -272,3 +272,7 @@ MIT
   <strong>Solana Privacy Hack 2026</strong><br/>
   <em>An empty Fabcash wallet reveals nothing about its past.</em>
 </p>
+
+---
+
+**GitHub:** [psyto/fabcash](https://github.com/psyto/fabcash)

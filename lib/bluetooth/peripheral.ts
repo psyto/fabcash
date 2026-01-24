@@ -1,7 +1,7 @@
 import { BleManager, Characteristic, Service } from 'react-native-ble-plx';
 import { Platform, PermissionsAndroid } from 'react-native';
 import {
-  FABRKNT_SERVICE_UUID,
+  FABCASH_SERVICE_UUID,
   PAYMENT_REQUEST_CHAR_UUID,
   TRANSACTION_CHAR_UUID,
   PaymentRequest,

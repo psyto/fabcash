@@ -262,7 +262,7 @@ async function checkNetworkConnectivity(): Promise<boolean> {
 
 ```typescript
 // lib/bluetooth/protocol.ts:4-6
-FABRKNT_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
+FABCASH_SERVICE_UUID = '6e400001-b5a3-f393-e0a9-e50e24dcca9e';
 PAYMENT_REQUEST_CHAR_UUID = '6e400002-b5a3-f393-e0a9-e50e24dcca9e';
 TRANSACTION_CHAR_UUID = '6e400003-b5a3-f393-e0a9-e50e24dcca9e';
 ```

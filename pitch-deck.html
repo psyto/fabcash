@@ -3,19 +3,55 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fabcash — Solana Privacy Hack 2026</title>
+  <title>FABCASH | SOLANA PRIVACY HACK 2026</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&display=swap');
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
     }
 
+    :root {
+      --amber: #FF9500;
+      --amber-dim: #CC7700;
+      --green: #00FF41;
+      --green-dim: #00CC33;
+      --red: #FF3333;
+      --white: #FFFFFF;
+      --gray: #888888;
+      --dark-gray: #333333;
+      --bg: #0A0A0A;
+      --border: #444444;
+    }
+
     body {
-      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-      background: #000;
-      color: #fff;
+      font-family: 'IBM Plex Mono', 'SF Mono', Monaco, 'Courier New', monospace;
+      background: var(--bg);
+      color: var(--amber);
       overflow: hidden;
+      font-size: 18px;
+      line-height: 1.5;
+    }
+
+    /* Scanline effect */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      z-index: 1000;
     }
 
     .deck {
@@ -33,345 +69,460 @@
       scroll-snap-align: start;
       display: flex;
       flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 60px;
+      padding: 25px;
       position: relative;
     }
 
-    .slide-number {
-      position: absolute;
-      bottom: 30px;
-      right: 40px;
-      font-size: 14px;
-      color: #666;
-    }
-
-    h1 {
-      font-size: 3.5rem;
+    /* Terminal header bar */
+    .header-bar {
+      background: var(--amber);
+      color: #000;
+      padding: 8px 15px;
       font-weight: 700;
+      font-size: 14px;
+      letter-spacing: 1px;
+      display: flex;
+      justify-content: space-between;
       margin-bottom: 20px;
-      text-align: center;
     }
 
-    h2 {
-      font-size: 2.5rem;
+    .header-bar .left {
+      text-transform: uppercase;
+    }
+
+    .header-bar .right {
+      font-weight: 400;
+    }
+
+    /* Content area */
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    /* Terminal box */
+    .terminal-box {
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.5);
+      max-width: 1000px;
+      width: 100%;
+    }
+
+    .terminal-box .box-header {
+      background: var(--dark-gray);
+      color: var(--white);
+      padding: 10px 15px;
+      font-size: 14px;
       font-weight: 600;
-      margin-bottom: 30px;
-      text-align: center;
-      color: #9945FF;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--border);
     }
 
-    h3 {
-      font-size: 1.8rem;
-      font-weight: 500;
-      margin-bottom: 20px;
-      color: #14F195;
+    .terminal-box .box-content {
+      padding: 20px;
     }
 
-    p {
-      font-size: 1.4rem;
-      line-height: 1.8;
-      max-width: 900px;
-      text-align: center;
-      color: #ccc;
-    }
-
+    /* Quote styling */
     .quote {
-      font-size: 2rem;
-      font-style: italic;
-      color: #9945FF;
-      border-left: 4px solid #9945FF;
-      padding-left: 30px;
-      margin: 30px 0;
-      text-align: left;
+      color: var(--green);
+      font-size: 26px;
+      padding: 25px;
+      text-align: center;
     }
 
-    .tagline {
-      font-size: 1.6rem;
-      color: #888;
-      margin-top: 20px;
+    .quote::before {
+      content: '> ';
+      color: var(--amber);
     }
 
-    .code-block {
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 12px;
-      padding: 30px 40px;
-      font-family: 'SF Mono', Monaco, 'Courier New', monospace;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      text-align: left;
-      color: #14F195;
-      margin: 20px 0;
-      max-width: 800px;
+    .source {
+      color: var(--gray);
+      text-align: center;
+      font-size: 16px;
+      margin-top: 10px;
     }
 
-    .comparison {
+    /* Grid comparison */
+    .comparison-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 40px;
-      margin: 30px 0;
-      max-width: 1000px;
+      gap: 25px;
+      max-width: 1100px;
+      width: 100%;
     }
 
-    .comparison-box {
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 16px;
-      padding: 30px;
+    .panel {
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.3);
     }
 
-    .comparison-box.bad {
-      border-color: #FF6B6B;
+    .panel-header {
+      padding: 12px 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 1px;
+      border-bottom: 1px solid var(--border);
     }
 
-    .comparison-box.good {
-      border-color: #14F195;
+    .panel-header.good {
+      background: var(--green);
+      color: #000;
     }
 
-    .comparison-box h4 {
-      font-size: 1.3rem;
-      margin-bottom: 20px;
+    .panel-header.bad {
+      background: var(--red);
       color: #fff;
     }
 
-    .comparison-box.bad h4 {
-      color: #FF6B6B;
+    .panel-content {
+      padding: 15px;
+      font-size: 18px;
     }
 
-    .comparison-box.good h4 {
-      color: #14F195;
+    .panel-content .row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border-bottom: 1px dotted var(--dark-gray);
     }
 
-    .comparison-box ul {
-      list-style: none;
-      font-size: 1.1rem;
-      line-height: 2;
-      color: #aaa;
-    }
-
-    table {
-      border-collapse: collapse;
-      margin: 30px 0;
-      font-size: 1.1rem;
-    }
-
-    th, td {
-      padding: 15px 30px;
-      text-align: left;
-      border-bottom: 1px solid #333;
-    }
-
-    th {
-      color: #9945FF;
-      font-weight: 600;
-    }
-
-    td {
-      color: #ccc;
-    }
-
-    .highlight {
-      color: #14F195;
-      font-weight: 600;
-    }
-
-    .principles {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 30px;
-      margin: 40px 0;
-      max-width: 1100px;
-    }
-
-    .principle {
-      background: #111;
-      border: 1px solid #333;
-      border-radius: 16px;
-      padding: 30px;
-      text-align: left;
-    }
-
-    .principle h4 {
-      color: #9945FF;
-      font-size: 1.2rem;
-      margin-bottom: 15px;
-    }
-
-    .principle p {
-      font-size: 1rem;
-      text-align: left;
-      color: #888;
-    }
-
-    .stack {
-      background: #111;
-      border: 1px solid #9945FF;
-      border-radius: 16px;
-      padding: 30px;
-      font-family: 'SF Mono', Monaco, monospace;
-      font-size: 0.95rem;
-      line-height: 1.8;
-      text-align: left;
-      max-width: 700px;
-    }
-
-    .stack-layer {
-      padding: 15px 20px;
-      border-bottom: 1px solid #333;
-    }
-
-    .stack-layer:last-child {
+    .panel-content .row:last-child {
       border-bottom: none;
     }
 
-    .stack-layer.philosophy {
-      color: #fff;
+    .panel-content .label {
+      color: var(--gray);
+    }
+
+    .panel-content .value {
+      color: var(--amber);
       font-weight: 600;
     }
 
-    .stack-layer.app {
-      color: #14F195;
+    .panel-content .value.good {
+      color: var(--green);
     }
 
-    .stack-layer.sdk {
-      color: #9945FF;
+    .panel-content .value.bad {
+      color: var(--red);
     }
 
-    .stack-layer.chain {
-      color: #888;
+    /* Data table */
+    .data-table {
+      width: 100%;
+      max-width: 950px;
+      border-collapse: collapse;
+      font-size: 18px;
     }
 
-    .crackdown-flow {
+    .data-table th {
+      background: var(--dark-gray);
+      color: var(--amber);
+      text-align: left;
+      padding: 12px 15px;
+      font-weight: 600;
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 1px;
+      border: 1px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 12px 15px;
+      border: 1px solid var(--border);
+      color: var(--gray);
+    }
+
+    .data-table td.highlight {
+      color: var(--green);
+      font-weight: 600;
+    }
+
+    .data-table td.warning {
+      color: var(--red);
+    }
+
+    .data-table tr:hover td {
+      background: rgba(255, 149, 0, 0.1);
+    }
+
+    /* ASCII art style boxes */
+    .ascii-box {
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--amber);
+      white-space: pre;
+      text-align: left;
+    }
+
+    .ascii-box .green {
+      color: var(--green);
+    }
+
+    .ascii-box .red {
+      color: var(--red);
+    }
+
+    .ascii-box .white {
+      color: var(--white);
+    }
+
+    .ascii-box .dim {
+      color: var(--gray);
+    }
+
+    /* Flow diagram */
+    .flow {
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 15px;
-      margin: 30px 0;
+      gap: 8px;
     }
 
-    .crackdown-step {
-      background: #1a1a1a;
-      border: 1px solid #FF6B6B;
-      border-radius: 12px;
-      padding: 15px 30px;
-      font-size: 1.1rem;
-      color: #FF6B6B;
-    }
-
-    .arrow {
-      font-size: 1.5rem;
-      color: #666;
-    }
-
-    .features {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 20px;
-      margin: 30px 0;
-      max-width: 800px;
-    }
-
-    .feature {
-      display: flex;
-      align-items: center;
-      gap: 15px;
-      font-size: 1.1rem;
-      color: #ccc;
-    }
-
-    .feature .check {
-      color: #14F195;
-      font-size: 1.3rem;
-    }
-
-    .links {
-      margin-top: 40px;
+    .flow-step {
+      background: rgba(255, 51, 51, 0.2);
+      border: 1px solid var(--red);
+      color: var(--red);
+      padding: 12px 25px;
+      font-size: 18px;
+      width: 380px;
       text-align: center;
     }
 
-    .links a {
-      color: #9945FF;
-      text-decoration: none;
-      font-size: 1.3rem;
+    .flow-arrow {
+      color: var(--gray);
+      font-size: 20px;
     }
 
-    .links a:hover {
-      text-decoration: underline;
+    /* Three column principles */
+    .principles-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+      max-width: 1200px;
+      width: 100%;
     }
 
-    .built-with {
-      margin-top: 30px;
-      font-size: 1rem;
-      color: #666;
+    .principle-box {
+      border: 1px solid var(--border);
+      background: rgba(0, 0, 0, 0.3);
     }
 
-    .nav {
-      position: fixed;
-      bottom: 30px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 10px;
-      z-index: 100;
+    .principle-box .p-header {
+      background: var(--amber);
+      color: #000;
+      padding: 10px 12px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
-    .nav button {
-      background: #1a1a1a;
-      border: 1px solid #333;
-      color: #fff;
+    .principle-box .p-title {
+      color: var(--green);
+      padding: 15px;
+      font-size: 20px;
+      font-weight: 600;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .principle-box .p-body {
+      padding: 15px;
+      color: var(--gray);
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    /* Status line */
+    .status-bar {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--dark-gray);
+      border-top: 1px solid var(--border);
       padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
       font-size: 14px;
     }
 
-    .nav button:hover {
-      background: #333;
+    .status-bar .left {
+      color: var(--gray);
     }
 
-    .era-table {
-      margin: 30px 0;
+    .status-bar .center {
+      color: var(--amber);
     }
 
-    .era-table td:first-child {
-      color: #9945FF;
-      font-weight: 600;
+    .status-bar .right {
+      color: var(--gray);
     }
 
-    .era-table tr:last-child td {
-      color: #14F195;
-      font-weight: 600;
+    /* Blinking cursor */
+    .cursor {
+      display: inline-block;
+      width: 12px;
+      height: 24px;
+      background: var(--amber);
+      animation: blink 1s step-end infinite;
+      vertical-align: middle;
+      margin-left: 5px;
     }
 
-    .manifesto-quote {
-      font-size: 2.5rem;
-      font-style: italic;
-      color: #9945FF;
-      margin-bottom: 10px;
+    @keyframes blink {
+      50% { opacity: 0; }
     }
 
-    .manifesto-source {
-      font-size: 1.2rem;
-      color: #666;
+    /* Big text */
+    .big-text {
+      font-size: 32px;
+      color: var(--white);
+      text-align: center;
+      margin: 25px 0;
     }
 
-    @media (max-width: 768px) {
-      .slide {
-        padding: 30px;
-      }
-      h1 {
-        font-size: 2rem;
-      }
-      h2 {
-        font-size: 1.5rem;
-      }
-      .comparison {
+    .highlight-text {
+      color: var(--green);
+    }
+
+    .warning-text {
+      color: var(--red);
+    }
+
+    /* Features list */
+    .features-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
+      max-width: 700px;
+    }
+
+    .feature-item {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 18px;
+    }
+
+    .feature-item .check {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    .feature-item .text {
+      color: var(--gray);
+    }
+
+    /* Title slide special */
+    .title-big {
+      font-size: 64px;
+      color: var(--green);
+      font-weight: 700;
+      letter-spacing: 6px;
+      text-shadow: 0 0 30px rgba(0, 255, 65, 0.5);
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: var(--amber);
+      margin-top: 20px;
+      letter-spacing: 2px;
+    }
+
+    /* Link styling */
+    a {
+      color: var(--green);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Speaker Notes Panel */
+    .notes-panel {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.95);
+      border-top: 2px solid var(--amber);
+      padding: 20px 30px;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+      z-index: 2000;
+      max-height: 40vh;
+      overflow-y: auto;
+    }
+
+    .notes-panel.visible {
+      transform: translateY(0);
+    }
+
+    .notes-panel .notes-header {
+      color: var(--amber);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .notes-panel .notes-content {
+      color: var(--white);
+      font-size: 18px;
+      line-height: 1.8;
+    }
+
+    .notes-panel .notes-content strong {
+      color: var(--green);
+    }
+
+    .notes-panel .notes-content em {
+      color: var(--amber);
+      font-style: normal;
+    }
+
+    .notes-hint {
+      position: fixed;
+      bottom: 60px;
+      right: 20px;
+      color: var(--dark-gray);
+      font-size: 12px;
+      z-index: 500;
+    }
+
+    /* Hide notes content in slides */
+    .slide .notes {
+      display: none;
+    }
+
+    @media (max-width: 1000px) {
+      .comparison-grid,
+      .principles-grid {
         grid-template-columns: 1fr;
       }
-      .principles {
+      .features-list {
         grid-template-columns: 1fr;
+      }
+      .ascii-box {
+        font-size: 11px;
+      }
+      .big-text {
+        font-size: 26px;
+      }
+      .title-big {
+        font-size: 42px;
       }
     }
   </style>
@@ -381,383 +532,701 @@
 
     <!-- Slide 1: Manifesto -->
     <section class="slide">
-      <p class="manifesto-quote">"Privacy is necessary for an open society."</p>
-      <p class="manifesto-source">— Cypherpunk Manifesto, 1993</p>
-      <p style="margin-top: 60px; font-size: 1.5rem;">Every cypherpunk knows this truth.</p>
-      <p style="margin-top: 20px; font-size: 1.8rem; color: #fff;">But 30 years later, <span class="highlight">every digital wallet still betrays it.</span></p>
-      <p style="margin-top: 40px; font-size: 1.3rem;">We built Fabcash to finally fix this.</p>
-      <div class="slide-number">1 / 14</div>
+      <div class="header-bar">
+        <span class="left">FABCASH TERMINAL</span>
+        <span class="right">SOLANA PRIVACY HACK 2026</span>
+      </div>
+      <div class="content">
+        <div class="terminal-box" style="max-width: 800px;">
+          <div class="box-header">CYPHERPUNK MANIFESTO // 1993</div>
+          <div class="box-content">
+            <div class="quote">"Privacy is necessary for an open society."</div>
+            <div class="source">— Eric Hughes, A Cypherpunk's Manifesto</div>
+          </div>
+        </div>
+        <p style="margin-top: 50px; color: var(--gray); font-size: 22px;">Every cypherpunk knows this truth.</p>
+        <p style="margin-top: 20px; font-size: 24px;">But 30 years later, <span class="highlight-text">every digital wallet still betrays it.</span></p>
+        <p style="margin-top: 40px; color: var(--amber); font-size: 22px;">We built Fabcash to finally fix this.<span class="cursor"></span></p>
+      </div>
+      <div class="status-bar">
+        <span class="left">TRACK: PRIVATE PAYMENTS</span>
+        <span class="center">PAGE 1/14</span>
+        <span class="right">BOUNTY: PRIVACY CASH</span>
+      </div>
+      <div class="notes">
+        <strong>Opening hook — set the philosophical tone.</strong><br><br>
+        "Privacy is necessary for an open society." That's the opening line of the Cypherpunk Manifesto. Written in 1993.<br><br>
+        Thirty years later, I want to ask a simple question...<br><br>
+        <em>PAUSE here. Let this land before moving to the next slide.</em>
+      </div>
     </section>
 
     <!-- Slide 2: The Broken Standard -->
     <section class="slide">
-      <h2>A Question No One Asks</h2>
-      <div class="comparison">
-        <div class="comparison-box good">
-          <h4>Physical Wallet (empty)</h4>
-          <ul>
-            <li>Past contents: Unknown</li>
-            <li>Previous transactions: Unknown</li>
-            <li>Previous counterparties: Unknown</li>
-            <li>Forensic value: <strong>Zero</strong></li>
-          </ul>
-        </div>
-        <div class="comparison-box bad">
-          <h4>Digital Wallet (empty)</h4>
-          <ul>
-            <li>Past contents: EVERYTHING</li>
-            <li>Previous transactions: Complete history</li>
-            <li>Previous counterparties: Linked forever</li>
-            <li>Forensic value: <strong>Total surveillance</strong></li>
-          </ul>
-        </div>
+      <div class="header-bar">
+        <span class="left">FORENSIC ANALYSIS // WALLET COMPARISON</span>
+        <span class="right">THE BROKEN STANDARD</span>
       </div>
-      <p style="margin-top: 30px;">This is the <span style="color: #FF6B6B;">broken standard</span> of digital wallets.</p>
-      <p style="margin-top: 15px;">Every wallet — Phantom, MetaMask, Coinbase — accepts this as normal.</p>
-      <p style="margin-top: 15px; color: #fff; font-weight: 600;">We don't.</p>
-      <div class="slide-number">2 / 14</div>
+      <div class="content">
+        <div class="big-text">A Question No One Asks</div>
+        <div class="comparison-grid" style="margin-top: 40px;">
+          <div class="panel">
+            <div class="panel-header good">PHYSICAL WALLET (EMPTY)</div>
+            <div class="panel-content">
+              <div class="row"><span class="label">Past contents</span><span class="value good">UNKNOWN</span></div>
+              <div class="row"><span class="label">Previous transactions</span><span class="value good">UNKNOWN</span></div>
+              <div class="row"><span class="label">Previous counterparties</span><span class="value good">UNKNOWN</span></div>
+              <div class="row"><span class="label">Forensic value</span><span class="value good">ZERO</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header bad">DIGITAL WALLET (EMPTY)</div>
+            <div class="panel-content">
+              <div class="row"><span class="label">Past contents</span><span class="value bad">EVERYTHING</span></div>
+              <div class="row"><span class="label">Previous transactions</span><span class="value bad">COMPLETE HISTORY</span></div>
+              <div class="row"><span class="label">Previous counterparties</span><span class="value bad">LINKED FOREVER</span></div>
+              <div class="row"><span class="label">Forensic value</span><span class="value bad">TOTAL SURVEILLANCE</span></div>
+            </div>
+          </div>
+        </div>
+        <p style="margin-top: 40px; color: var(--gray); font-size: 20px;">Every wallet — <span style="color: var(--white);">Phantom, MetaMask, Coinbase</span> — accepts this as normal.</p>
+        <p style="margin-top: 15px; color: var(--green); font-size: 22px; font-weight: 600;">We don't.</p>
+      </div>
+      <div class="status-bar">
+        <span class="left">ANALYSIS MODE</span>
+        <span class="center">PAGE 2/14</span>
+        <span class="right">STATUS: ACTIVE</span>
+      </div>
+      <div class="notes">
+        <strong>The key comparison that frames everything.</strong><br><br>
+        When you empty a physical wallet, what does forensic analysis reveal? <em>Nothing.</em> Past contents unknown. Previous transactions unknown. Forensic value: zero.<br><br>
+        When you empty a digital wallet, what does forensic analysis reveal? <em>Everything.</em> Every transaction you ever made. Every counterparty you ever paid. Forever.<br><br>
+        <em>PAUSE after "We don't." — say it with conviction.</em>
+      </div>
     </section>
 
     <!-- Slide 3: The Insight -->
     <section class="slide">
-      <h2>An Empty Wallet Should Be Empty</h2>
-      <div class="quote">"An empty Fabcash wallet reveals nothing about its past."</div>
-      <p style="margin-top: 20px;">This single sentence is our entire philosophy.</p>
-      <table style="margin-top: 40px;">
-        <tr>
-          <th>After emptying wallet</th>
-          <th>Traditional</th>
-          <th>Fabcash</th>
-        </tr>
-        <tr>
-          <td>Past balance visible?</td>
-          <td style="color: #FF6B6B;">Yes</td>
-          <td class="highlight">No</td>
-        </tr>
-        <tr>
-          <td>Transaction history?</td>
-          <td style="color: #FF6B6B;">Complete</td>
-          <td class="highlight">Gone</td>
-        </tr>
-        <tr>
-          <td>Counterparties linked?</td>
-          <td style="color: #FF6B6B;">Forever</td>
-          <td class="highlight">Unlinkable</td>
-        </tr>
-        <tr>
-          <td>Forensic value?</td>
-          <td style="color: #FF6B6B;">Total</td>
-          <td class="highlight">Zero</td>
-        </tr>
-      </table>
-      <div class="slide-number">3 / 14</div>
+      <div class="header-bar">
+        <span class="left">CORE PHILOSOPHY // FABCASH</span>
+        <span class="right">THE INSIGHT</span>
+      </div>
+      <div class="content">
+        <div class="terminal-box" style="max-width: 850px;">
+          <div class="box-header">PRIMARY DIRECTIVE</div>
+          <div class="box-content">
+            <div class="quote" style="font-size: 28px;">"An empty Fabcash wallet reveals nothing about its past."</div>
+            <p style="text-align: center; color: var(--gray); margin-top: 20px; font-size: 20px;">This single sentence is our entire philosophy.</p>
+          </div>
+        </div>
+        <table class="data-table" style="margin-top: 50px;">
+          <tr>
+            <th>AFTER EMPTYING WALLET</th>
+            <th>TRADITIONAL</th>
+            <th>FABCASH</th>
+          </tr>
+          <tr>
+            <td>Past balance visible?</td>
+            <td class="warning">YES</td>
+            <td class="highlight">NO</td>
+          </tr>
+          <tr>
+            <td>Transaction history?</td>
+            <td class="warning">COMPLETE</td>
+            <td class="highlight">GONE</td>
+          </tr>
+          <tr>
+            <td>Counterparties linked?</td>
+            <td class="warning">FOREVER</td>
+            <td class="highlight">UNLINKABLE</td>
+          </tr>
+          <tr>
+            <td>Forensic value?</td>
+            <td class="warning">TOTAL</td>
+            <td class="highlight">ZERO</td>
+          </tr>
+        </table>
+      </div>
+      <div class="status-bar">
+        <span class="left">PHILOSOPHY ENGINE</span>
+        <span class="center">PAGE 3/14</span>
+        <span class="right">DIFF: CRITICAL</span>
+      </div>
+      <div class="notes">
+        <strong>THE MOST QUOTABLE MOMENT — display for 3+ seconds.</strong><br><br>
+        "An empty Fabcash wallet reveals nothing about its past."<br><br>
+        This single sentence is our entire philosophy. Everything we built flows from this one idea.<br><br>
+        <em>Let the table comparison sink in silently.</em>
+      </div>
     </section>
 
     <!-- Slide 4: Real-World Inspiration -->
     <section class="slide">
-      <h2>Why This Matters Now</h2>
-      <p style="margin-bottom: 40px;">In January 2025, Ugandans and Iranians turned to offline-capable tools during internet crackdowns.</p>
-      <div class="comparison">
-        <div class="comparison-box bad">
-          <h4>The Problem They Faced</h4>
-          <ul>
-            <li>Government shuts down internet</li>
-            <li>Need to transact during blackout</li>
-            <li>When internet returns, monitoring begins</li>
-            <li>Payment history becomes evidence</li>
-          </ul>
+      <div class="header-bar">
+        <span class="left">REAL WORLD // USE CASE</span>
+        <span class="right">WHY THIS MATTERS NOW</span>
+      </div>
+      <div class="content">
+        <div class="terminal-box" style="max-width: 800px; margin-bottom: 40px;">
+          <div class="box-header">REUTERS REPORT // JAN 2025</div>
+          <div class="box-content" style="color: var(--gray); font-size: 20px;">
+            Ugandans and Iranians turned to offline-capable tools during internet crackdowns.
+          </div>
         </div>
-        <div class="comparison-box good">
-          <h4>What They Needed</h4>
-          <ul>
-            <li>Payments that work offline</li>
-            <li>History that can disappear</li>
-            <li>Wallets that can be denied</li>
-            <li style="color: #14F195; font-weight: 600;">Fabcash is what they needed.</li>
-          </ul>
+        <div class="comparison-grid">
+          <div class="panel">
+            <div class="panel-header bad">PROBLEM FACED</div>
+            <div class="panel-content" style="color: var(--gray); line-height: 2;">
+              <div>• Government shuts down internet</div>
+              <div>• Need to transact during blackout</div>
+              <div>• When internet returns, monitoring begins</div>
+              <div>• <span style="color: var(--red);">Payment history becomes evidence</span></div>
+            </div>
+          </div>
+          <div class="panel">
+            <div class="panel-header good">SOLUTION NEEDED</div>
+            <div class="panel-content" style="color: var(--gray); line-height: 2;">
+              <div>• Payments that work offline</div>
+              <div>• History that can disappear</div>
+              <div>• Wallets that can be denied</div>
+              <div>• <span style="color: var(--green);">Fabcash is what they needed</span></div>
+            </div>
+          </div>
         </div>
       </div>
-      <div class="slide-number">4 / 14</div>
+      <div class="status-bar">
+        <span class="left">FIELD REPORT</span>
+        <span class="center">PAGE 4/14</span>
+        <span class="right">URGENCY: HIGH</span>
+      </div>
+      <div class="notes">
+        <strong>Ground the philosophy in real-world urgency.</strong><br><br>
+        This isn't theoretical. In January 2025, Reuters reported how people in Uganda and Iran needed exactly this during internet crackdowns.<br><br>
+        When the internet comes back, the government monitors everything. Your payment history becomes evidence against you.<br><br>
+        <em>Fabcash is what they needed.</em>
+      </div>
     </section>
 
     <!-- Slide 5: The Third Era -->
     <section class="slide">
-      <h2>Where Crypto Is Going</h2>
-      <table class="era-table">
-        <tr>
-          <th>Era</th>
-          <th>Focus</th>
-          <th>Philosophy</th>
-        </tr>
-        <tr>
-          <td>Era 1</td>
-          <td>Decentralized money</td>
-          <td>"Not your keys, not your coins"</td>
-        </tr>
-        <tr>
-          <td>Era 2</td>
-          <td>Decentralized compute</td>
-          <td>"Code is law"</td>
-        </tr>
-        <tr>
-          <td>Era 3</td>
-          <td>Decentralized privacy</td>
-          <td>"Nothing to hide = Nothing to reveal"</td>
-        </tr>
-      </table>
-      <p style="margin-top: 40px;">Previous eras treated privacy as optional — something encrypted on top.</p>
-      <p style="margin-top: 15px;"><span class="highlight">Era 3 makes privacy the foundation.</span></p>
-      <p style="margin-top: 30px; font-size: 1.6rem; color: #fff;">Fabcash is an Era 3 wallet.</p>
-      <div class="slide-number">5 / 14</div>
+      <div class="header-bar">
+        <span class="left">CRYPTO EVOLUTION // BALAJI FRAMEWORK</span>
+        <span class="right">ERA 3</span>
+      </div>
+      <div class="content">
+        <div class="big-text">Where Crypto Is Going</div>
+        <table class="data-table" style="margin-top: 40px;">
+          <tr>
+            <th>ERA</th>
+            <th>FOCUS</th>
+            <th>PHILOSOPHY</th>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);">ERA 1</td>
+            <td>Decentralized money</td>
+            <td>"Not your keys, not your coins"</td>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);">ERA 2</td>
+            <td>Decentralized compute</td>
+            <td>"Code is law"</td>
+          </tr>
+          <tr>
+            <td class="highlight">ERA 3</td>
+            <td class="highlight">Decentralized privacy</td>
+            <td class="highlight">"Nothing to hide = Nothing to reveal"</td>
+          </tr>
+        </table>
+        <p style="margin-top: 50px; color: var(--gray); font-size: 20px;">Previous eras treated privacy as optional — something encrypted on top.</p>
+        <p style="margin-top: 20px; color: var(--green); font-size: 22px;">Era 3 makes privacy the foundation.</p>
+        <p style="margin-top: 40px; color: var(--white); font-size: 26px;">FABCASH IS AN ERA 3 WALLET<span class="cursor"></span></p>
+      </div>
+      <div class="status-bar">
+        <span class="left">EVOLUTION TRACKER</span>
+        <span class="center">PAGE 5/14</span>
+        <span class="right">PARADIGM: SHIFT</span>
+      </div>
+      <div class="notes">
+        <strong>Position Fabcash in the broader crypto narrative.</strong><br><br>
+        Balaji Srinivasan argues crypto is entering its third era. Era 1 was decentralized money. Era 2 was decentralized compute.<br><br>
+        Era 3 is decentralized privacy. Not "add encryption" — design so there's nothing to encrypt.<br><br>
+        <em>Fabcash is an Era 3 wallet.</em>
+      </div>
     </section>
 
     <!-- Slide 6: True Burner Wallet -->
     <section class="slide">
-      <h2>A New Category</h2>
-      <p style="margin-bottom: 30px;"><strong>Fabcash is a true burner wallet.</strong> We're defining the category.</p>
-      <table>
-        <tr>
-          <th>Property</th>
-          <th>Traditional Wallet</th>
-          <th>Fabcash</th>
-        </tr>
-        <tr>
-          <td>Seed phrase</td>
-          <td>Required</td>
-          <td class="highlight">None</td>
-        </tr>
-        <tr>
-          <td>Private key backup</td>
-          <td>Encouraged</td>
-          <td class="highlight">Impossible</td>
-        </tr>
-        <tr>
-          <td>Recovery</td>
-          <td>From any device</td>
-          <td class="highlight">Never</td>
-        </tr>
-        <tr>
-          <td>Coercion resistance</td>
-          <td>Weak</td>
-          <td class="highlight">Strong</td>
-        </tr>
-      </table>
-      <p style="margin-top: 40px; font-size: 1.3rem; color: #9945FF;">No seed phrase is not a missing feature. It IS the privacy feature.</p>
-      <div class="slide-number">6 / 14</div>
+      <div class="header-bar">
+        <span class="left">NEW CATEGORY // DEFINITION</span>
+        <span class="right">TRUE BURNER WALLET</span>
+      </div>
+      <div class="content">
+        <div class="big-text">Defining the Category</div>
+        <table class="data-table" style="margin-top: 40px;">
+          <tr>
+            <th>PROPERTY</th>
+            <th>TRADITIONAL WALLET</th>
+            <th>FABCASH</th>
+          </tr>
+          <tr>
+            <td>Seed phrase</td>
+            <td>Required</td>
+            <td class="highlight">NONE</td>
+          </tr>
+          <tr>
+            <td>Private key backup</td>
+            <td>Encouraged</td>
+            <td class="highlight">IMPOSSIBLE</td>
+          </tr>
+          <tr>
+            <td>Recovery</td>
+            <td>From any device</td>
+            <td class="highlight">NEVER</td>
+          </tr>
+          <tr>
+            <td>Coercion resistance</td>
+            <td class="warning">Weak</td>
+            <td class="highlight">STRONG</td>
+          </tr>
+        </table>
+        <div class="terminal-box" style="margin-top: 50px; max-width: 700px;">
+          <div class="box-header">COERCION SCENARIO</div>
+          <div class="box-content">
+            <pre class="ascii-box"><span class="dim">Traditional wallet:</span>
+  "Where is your seed phrase?"
+  <span class="red">→ Must comply</span>
+  <span class="red">→ Adversary recovers ENTIRE wallet history</span>
+
+<span class="dim">Fabcash:</span>
+  "Where is your seed phrase?"
+  <span class="green">→ "There isn't one."</span>
+  <span class="green">→ Nothing to recover, even under torture</span></pre>
+          </div>
+        </div>
+      </div>
+      <div class="status-bar">
+        <span class="left">SECURITY MODEL</span>
+        <span class="center">PAGE 6/14</span>
+        <span class="right">RESISTANCE: MAX</span>
+      </div>
+      <div class="notes">
+        <strong>Key quotable: "No seed phrase is not a missing feature. It IS the privacy feature."</strong><br><br>
+        Traditional wallet under coercion: "Where is your seed phrase?" You must comply. Adversary recovers your entire history.<br><br>
+        Fabcash under coercion: "Where is your seed phrase?" "There isn't one." Nothing to recover, even under torture.<br><br>
+        <em>Let the coercion scenario sink in.</em>
+      </div>
     </section>
 
     <!-- Slide 7: Three Principles -->
     <section class="slide">
-      <h2>The Philosophy in Practice</h2>
-      <div class="principles">
-        <div class="principle">
-          <h4>Principle 1: Nothing to Coerce</h4>
-          <h3 style="font-size: 1.1rem; margin-bottom: 15px;">No Seed Phrase</h3>
-          <p>Key exists only on device, only when needed. Lose device = lose funds. Plausible deniability by design.</p>
-        </div>
-        <div class="principle">
-          <h4>Principle 2: Nothing to Monitor</h4>
-          <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Offline Payments</h3>
-          <p>Bluetooth/QR signed transaction transfer. No network activity at payment time. Settlement happens later.</p>
-        </div>
-        <div class="principle">
-          <h4>Principle 3: Nothing to Trace</h4>
-          <h3 style="font-size: 1.1rem; margin-bottom: 15px;">Shielded Settlement</h3>
-          <p>Ephemeral addresses per payment. Privacy Cash + Light Protocol. Transaction graph broken.</p>
+      <div class="header-bar">
+        <span class="left">IMPLEMENTATION // THREE PRINCIPLES</span>
+        <span class="right">PHILOSOPHY IN PRACTICE</span>
+      </div>
+      <div class="content">
+        <div class="principles-grid">
+          <div class="principle-box">
+            <div class="p-header">PRINCIPLE 1</div>
+            <div class="p-title">Nothing to Coerce</div>
+            <div class="p-body">
+              <strong style="color: var(--amber);">NO SEED PHRASE</strong><br><br>
+              Key exists only on device, only when needed.<br>
+              Lose device = lose funds.<br>
+              Plausible deniability by design.
+            </div>
+          </div>
+          <div class="principle-box">
+            <div class="p-header">PRINCIPLE 2</div>
+            <div class="p-title">Nothing to Monitor</div>
+            <div class="p-body">
+              <strong style="color: var(--amber);">OFFLINE PAYMENTS</strong><br><br>
+              Bluetooth/QR signed transaction transfer.<br>
+              No network activity at payment time.<br>
+              Settlement happens later.
+            </div>
+          </div>
+          <div class="principle-box">
+            <div class="p-header">PRINCIPLE 3</div>
+            <div class="p-title">Nothing to Trace</div>
+            <div class="p-body">
+              <strong style="color: var(--amber);">SHIELDED SETTLEMENT</strong><br><br>
+              Ephemeral addresses per payment.<br>
+              Privacy Cash + Light Protocol.<br>
+              Transaction graph broken.
+            </div>
+          </div>
         </div>
       </div>
-      <div class="slide-number">7 / 14</div>
+      <div class="status-bar">
+        <span class="left">ARCHITECTURE VIEW</span>
+        <span class="center">PAGE 7/14</span>
+        <span class="right">PRINCIPLES: 3/3</span>
+      </div>
+      <div class="notes">
+        <strong>Three principles make this possible:</strong><br><br>
+        <em>One: Nothing to coerce.</em> There is no seed phrase. If someone demands your recovery phrase — there isn't one.<br><br>
+        <em>Two: Nothing to monitor.</em> Payments happen offline via Bluetooth. No network activity to surveil.<br><br>
+        <em>Three: Nothing to trace.</em> Settlement through Privacy Cash and Light Protocol. ZK compression plus shielded pools — the transaction graph is broken.
+      </div>
     </section>
 
     <!-- Slide 8: Privacy Stack -->
     <section class="slide">
-      <h2>Privacy Stack Integration</h2>
-      <div class="stack">
-        <div class="stack-layer philosophy">FABCASH PHILOSOPHY<br><span style="font-weight: 400; font-size: 0.9rem;">"An empty wallet reveals nothing"</span></div>
-        <div class="stack-layer app">FABCASH APP<br>
-          <span style="font-size: 0.85rem;">├─ No Seed Phrase (nothing to coerce)<br>
-          ├─ Offline Payments (nothing to monitor)<br>
-          └─ Crackdown Mode (emergency disappear)</span>
-        </div>
-        <div class="stack-layer sdk">PRIVACY CASH SDK &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; LIGHT PROTOCOL API<br>
-          <span style="font-size: 0.85rem;">├─ shield() — Private pool &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ├─ ZK Compression<br>
-          ├─ withdraw() — Private out &nbsp;&nbsp;&nbsp; ├─ 99% smaller state<br>
-          └─ Break transaction graph &nbsp;&nbsp;&nbsp;&nbsp; └─ Compressed accounts</span>
-        </div>
-        <div class="stack-layer chain">SOLANA<br><span style="font-size: 0.85rem;">└─ $0.0002/tx makes this economically possible</span></div>
+      <div class="header-bar">
+        <span class="left">TECH STACK // INTEGRATION</span>
+        <span class="right">PRIVACY LAYERS</span>
       </div>
-      <p style="margin-top: 30px;"><span class="highlight">Privacy Cash + Light Protocol</span> make our philosophy technically achievable.</p>
-      <div class="slide-number">8 / 14</div>
+      <div class="content">
+        <div class="terminal-box" style="max-width: 850px;">
+          <div class="box-header">FABCASH ARCHITECTURE</div>
+          <div class="box-content">
+            <pre class="ascii-box">┌─────────────────────────────────────────────────────────────┐
+│ <span class="white">FABCASH PHILOSOPHY</span>                                          │
+│ "An empty wallet reveals nothing"                           │
+├─────────────────────────────────────────────────────────────┤
+│ <span class="green">FABCASH APP</span>                                                  │
+│ ├─ No Seed Phrase <span class="dim">(nothing to coerce)</span>                     │
+│ ├─ Offline Payments <span class="dim">(nothing to monitor)</span>                  │
+│ └─ Crackdown Mode <span class="dim">(emergency disappear)</span>                   │
+├──────────────────────────────┬──────────────────────────────┤
+│ <span class="green">PRIVACY CASH SDK</span>              │ <span class="green">LIGHT PROTOCOL API</span>          │
+│ ├─ shield() — Private pool   │ ├─ ZK Compression            │
+│ ├─ withdraw() — Private out  │ ├─ 99% smaller state         │
+│ └─ Break transaction graph   │ └─ Compressed accounts       │
+├──────────────────────────────┴──────────────────────────────┤
+│ <span class="dim">SOLANA</span>                                                       │
+│ └─ $0.0002/tx makes this economically possible              │
+└─────────────────────────────────────────────────────────────┘</pre>
+          </div>
+        </div>
+        <p style="margin-top: 40px; color: var(--amber); font-size: 22px;"><span class="highlight-text">Privacy Cash + Light Protocol</span> make our philosophy technically achievable.</p>
+      </div>
+      <div class="status-bar">
+        <span class="left">STACK DIAGRAM</span>
+        <span class="center">PAGE 8/14</span>
+        <span class="right">LAYERS: 4</span>
+      </div>
+      <div class="notes">
+        <strong>The tech stack that makes the philosophy real.</strong><br><br>
+        Privacy Cash SDK provides the shielded pool — shield(), withdraw(), break the transaction graph.<br><br>
+        Light Protocol API provides ZK compression — 99% smaller state, compressed accounts.<br><br>
+        Solana's $0.0002/tx makes this economically possible.<br><br>
+        <em>Without Privacy Cash + Light Protocol, Fabcash's philosophy is impossible.</em>
+      </div>
     </section>
 
     <!-- Slide 9: Crackdown Mode -->
     <section class="slide">
-      <h2>The Emergency Button</h2>
-      <p style="margin-bottom: 20px;">Scenario: Border crossing. Protest. Device seizure imminent.</p>
-      <p style="font-size: 1.5rem; color: #FF6B6B; margin-bottom: 30px;">One tap.</p>
-      <div class="crackdown-flow">
-        <div class="crackdown-step">1. Shield ALL SOL → Privacy Cash</div>
-        <div class="arrow">↓</div>
-        <div class="crackdown-step">2. Clear ephemeral keys</div>
-        <div class="arrow">↓</div>
-        <div class="crackdown-step">3. Clear transaction history</div>
-        <div class="arrow">↓</div>
-        <div class="crackdown-step">4. Delete wallet</div>
+      <div class="header-bar">
+        <span class="left">EMERGENCY PROTOCOL // CRACKDOWN MODE</span>
+        <span class="right">ONE TAP</span>
       </div>
-      <p style="margin-top: 30px;"><span class="highlight">App appears freshly installed.</span> Funds safe in Privacy Cash pool.</p>
-      <p style="margin-top: 15px;">This is what "true burner wallet" means in practice.</p>
-      <div class="slide-number">9 / 14</div>
+      <div class="content">
+        <div class="big-text">The Emergency Button</div>
+        <p style="margin: 25px 0; color: var(--gray); font-size: 20px;">Scenario: Border crossing. Protest. Device seizure imminent.</p>
+        <div class="flow" style="margin-top: 30px;">
+          <div style="background: var(--red); color: #000; padding: 15px 40px; font-weight: 700; font-size: 18px;">[ACTIVATE CRACKDOWN MODE]</div>
+          <div class="flow-arrow">│</div>
+          <div class="flow-arrow">▼</div>
+          <div class="flow-step">1. Shield ALL SOL → Privacy Cash</div>
+          <div class="flow-arrow">▼</div>
+          <div class="flow-step">2. Clear ephemeral keys</div>
+          <div class="flow-arrow">▼</div>
+          <div class="flow-step">3. Clear transaction history</div>
+          <div class="flow-arrow">▼</div>
+          <div class="flow-step">4. Delete wallet</div>
+          <div class="flow-arrow">│</div>
+          <div class="flow-arrow">▼</div>
+          <div style="background: var(--green); color: #000; padding: 15px 40px; font-weight: 700; font-size: 18px;">[APP APPEARS FRESHLY INSTALLED]</div>
+        </div>
+        <p style="margin-top: 35px; color: var(--green); font-size: 22px;">Funds safe in Privacy Cash pool. Nothing to reveal.</p>
+      </div>
+      <div class="status-bar">
+        <span class="left">EMERGENCY MODE</span>
+        <span class="center">PAGE 9/14</span>
+        <span class="right">THREAT LEVEL: CRITICAL</span>
+      </div>
+      <div class="notes">
+        <strong>THIS IS THE EMOTIONAL PEAK of the presentation.</strong><br><br>
+        Imagine: border crossing. Protest. Device seizure imminent. One tap.<br><br>
+        All SOL instantly shields to Privacy Cash. Ephemeral keys deleted. Transaction history gone. Wallet destroyed.<br><br>
+        The app now looks freshly installed. There is nothing to reveal. But your funds? Safe in Privacy Cash. Recoverable later, elsewhere.<br><br>
+        <em>"Not hidden history. No history." — pause and let this land.</em>
+      </div>
     </section>
 
     <!-- Slide 10: Why Only Solana -->
     <section class="slide">
-      <h2>The Economics of Philosophy</h2>
-      <p style="margin-bottom: 30px;">Our philosophy requires many small transactions.</p>
-      <table>
-        <tr>
-          <th>Chain</th>
-          <th>Fee/Tx</th>
-          <th>Monthly (10 tx/day)</th>
-        </tr>
-        <tr>
-          <td class="highlight">Solana</td>
-          <td class="highlight">$0.0002</td>
-          <td class="highlight">$0.06</td>
-        </tr>
-        <tr>
-          <td>Bitcoin</td>
-          <td>$3.00</td>
-          <td style="color: #FF6B6B;">$900</td>
-        </tr>
-        <tr>
-          <td>Ethereum</td>
-          <td>$5.00</td>
-          <td style="color: #FF6B6B;">$1,500</td>
-        </tr>
-      </table>
-      <p style="margin-top: 40px;">On Bitcoin or Ethereum, our philosophy would cost users $1,000+/month.</p>
-      <p style="margin-top: 15px;"><strong>True burner wallets are economically impossible elsewhere.</strong></p>
-      <p style="margin-top: 30px; color: #9945FF;">Solana's fees don't just enable our tech. They enable our philosophy.</p>
-      <div class="slide-number">10 / 14</div>
+      <div class="header-bar">
+        <span class="left">ECONOMICS // FEE ANALYSIS</span>
+        <span class="right">WHY SOLANA</span>
+      </div>
+      <div class="content">
+        <div class="big-text">The Economics of Philosophy</div>
+        <p style="margin: 25px 0; color: var(--gray); font-size: 20px;">Our philosophy requires many small transactions.</p>
+        <table class="data-table" style="margin-top: 30px;">
+          <tr>
+            <th>CHAIN</th>
+            <th>FEE/TX</th>
+            <th>MONTHLY (10 TX/DAY)</th>
+            <th>VIABLE?</th>
+          </tr>
+          <tr>
+            <td class="highlight">SOLANA</td>
+            <td class="highlight">$0.0002</td>
+            <td class="highlight">$0.06</td>
+            <td class="highlight">YES</td>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);">BITCOIN</td>
+            <td>$3.00</td>
+            <td class="warning">$900</td>
+            <td class="warning">NO</td>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);">ETHEREUM</td>
+            <td>$5.00</td>
+            <td class="warning">$1,500</td>
+            <td class="warning">NO</td>
+          </tr>
+        </table>
+        <div class="terminal-box" style="margin-top: 50px; max-width: 700px;">
+          <div class="box-header">CONCLUSION</div>
+          <div class="box-content" style="text-align: center;">
+            <p style="color: var(--white); font-size: 20px;">True burner wallets are economically impossible elsewhere.</p>
+            <p style="color: var(--green); margin-top: 15px; font-size: 22px;">Solana's fees enable our philosophy.</p>
+          </div>
+        </div>
+      </div>
+      <div class="status-bar">
+        <span class="left">MARKET DATA</span>
+        <span class="center">PAGE 10/14</span>
+        <span class="right">LAST UPDATE: LIVE</span>
+      </div>
+      <div class="notes">
+        <strong>Why this only works on Solana.</strong><br><br>
+        Our philosophy requires many small transactions: new address per payment, privacy sweeps through pools, instant settlement.<br><br>
+        On Bitcoin or Ethereum, this would cost users $1,000+ per month. On Solana: $0.06.<br><br>
+        <em>Solana's fees don't just enable our tech. They enable our philosophy.</em>
+      </div>
     </section>
 
     <!-- Slide 11: Demo Summary -->
     <section class="slide">
-      <h2>The Philosophy in Action</h2>
-      <table>
-        <tr>
-          <th>Feature</th>
-          <th>Philosophy</th>
-          <th>Implementation</th>
-        </tr>
-        <tr>
-          <td>Home Screen</td>
-          <td>See what matters</td>
-          <td>Public + Shielded balance</td>
-        </tr>
-        <tr>
-          <td>Shield SOL</td>
-          <td>Funds can disappear</td>
-          <td>Privacy Cash deposit</td>
-        </tr>
-        <tr>
-          <td>Send</td>
-          <td>Choice of privacy</td>
-          <td>Standard / Compressed / Shielded</td>
-        </tr>
-        <tr>
-          <td>Receive</td>
-          <td>No persistent identity</td>
-          <td>Fresh ephemeral address</td>
-        </tr>
-        <tr>
-          <td>Crackdown Mode</td>
-          <td>Nothing to reveal</td>
-          <td>One-tap emergency shield</td>
-        </tr>
-      </table>
-      <p style="margin-top: 40px;">Watch the demo video to see each principle in action.</p>
-      <div class="slide-number">11 / 14</div>
+      <div class="header-bar">
+        <span class="left">FEATURE MATRIX // DEMO</span>
+        <span class="right">PHILOSOPHY IN ACTION</span>
+      </div>
+      <div class="content">
+        <table class="data-table" style="max-width: 1000px;">
+          <tr>
+            <th>FEATURE</th>
+            <th>PHILOSOPHY</th>
+            <th>IMPLEMENTATION</th>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);">Home Screen</td>
+            <td>See what matters</td>
+            <td class="highlight">Public + Shielded balance</td>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);">Shield SOL</td>
+            <td>Funds can disappear</td>
+            <td class="highlight">Privacy Cash deposit</td>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);">Send</td>
+            <td>Choice of privacy</td>
+            <td class="highlight">Standard / Compressed / Shielded</td>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);">Receive</td>
+            <td>No persistent identity</td>
+            <td class="highlight">Fresh ephemeral address</td>
+          </tr>
+          <tr>
+            <td style="color: var(--amber);">Crackdown Mode</td>
+            <td>Nothing to reveal</td>
+            <td class="highlight">One-tap emergency shield</td>
+          </tr>
+        </table>
+        <p style="margin-top: 50px; color: var(--gray); font-size: 20px;">Watch the demo video to see each principle in action.</p>
+      </div>
+      <div class="status-bar">
+        <span class="left">DEMO MODE</span>
+        <span class="center">PAGE 11/14</span>
+        <span class="right">FEATURES: 5/5</span>
+      </div>
+      <div class="notes">
+        <strong>Map each feature back to philosophy.</strong><br><br>
+        Home Screen: Two balances — public SOL and shielded SOL. The shielded balance is invisible to chain analysis.<br><br>
+        Shield: Watch SOL move into Privacy Cash. One moment visible, the next, not.<br><br>
+        Send: Three privacy modes — Standard, Compressed (Light Protocol), Shielded (Privacy Cash).<br><br>
+        Receive: Fresh ephemeral address every time. Nothing links payments together.
+      </div>
     </section>
 
     <!-- Slide 12: What We Built -->
     <section class="slide">
-      <h2>Philosophy → Code → Working App</h2>
-      <div class="features">
-        <div class="feature"><span class="check">✓</span> Privacy Cash SDK integration</div>
-        <div class="feature"><span class="check">✓</span> Light Protocol API integration</div>
-        <div class="feature"><span class="check">✓</span> No seed phrase architecture</div>
-        <div class="feature"><span class="check">✓</span> Offline payment protocol (BLE + QR)</div>
-        <div class="feature"><span class="check">✓</span> Crackdown Mode</div>
-        <div class="feature"><span class="check">✓</span> Ephemeral addresses</div>
-        <div class="feature"><span class="check">✓</span> iOS development build</div>
-        <div class="feature"><span class="check">✓</span> Deployed to Solana Devnet</div>
+      <div class="header-bar">
+        <span class="left">BUILD LOG // COMPLETED</span>
+        <span class="right">WHAT WE BUILT</span>
       </div>
-      <p style="margin-top: 40px; color: #888;">Open source (MIT) • github.com/psyto/fabcash</p>
-      <div class="slide-number">12 / 14</div>
+      <div class="content">
+        <div class="big-text">Philosophy → Code → Working App</div>
+        <div class="features-list" style="margin-top: 50px;">
+          <div class="feature-item"><span class="check">[✓]</span><span class="text">Privacy Cash SDK integration</span></div>
+          <div class="feature-item"><span class="check">[✓]</span><span class="text">Light Protocol API integration</span></div>
+          <div class="feature-item"><span class="check">[✓]</span><span class="text">No seed phrase architecture</span></div>
+          <div class="feature-item"><span class="check">[✓]</span><span class="text">Offline payment protocol (BLE + QR)</span></div>
+          <div class="feature-item"><span class="check">[✓]</span><span class="text">Crackdown Mode</span></div>
+          <div class="feature-item"><span class="check">[✓]</span><span class="text">Ephemeral addresses</span></div>
+          <div class="feature-item"><span class="check">[✓]</span><span class="text">iOS development build</span></div>
+          <div class="feature-item"><span class="check">[✓]</span><span class="text">Deployed to Solana Devnet</span></div>
+        </div>
+        <div class="terminal-box" style="margin-top: 50px; max-width: 550px;">
+          <div class="box-header">DEPLOYMENT STATUS</div>
+          <div class="box-content">
+            <div style="display: flex; justify-content: space-between; margin-bottom: 10px; font-size: 18px;">
+              <span style="color: var(--gray);">License</span>
+              <span style="color: var(--green);">MIT (Open Source)</span>
+            </div>
+            <div style="display: flex; justify-content: space-between; font-size: 18px;">
+              <span style="color: var(--gray);">Repository</span>
+              <span style="color: var(--green);">github.com/psyto/fabcash</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="status-bar">
+        <span class="left">BUILD COMPLETE</span>
+        <span class="center">PAGE 12/14</span>
+        <span class="right">STATUS: DEPLOYED</span>
+      </div>
+      <div class="notes">
+        <strong>Everything we shipped during the hackathon.</strong><br><br>
+        Full Privacy Cash SDK integration. Full Light Protocol API integration. No seed phrase architecture. Offline payments via BLE and QR. Crackdown Mode. Ephemeral addresses.<br><br>
+        Working iOS development build. Deployed to Solana Devnet. Open source under MIT license.
+      </div>
     </section>
 
     <!-- Slide 13: Why Fabcash Wins -->
     <section class="slide">
-      <h2>Not Just Another Wallet</h2>
-      <table>
-        <tr>
-          <th>Other Projects</th>
-          <th>Fabcash</th>
-        </tr>
-        <tr>
-          <td>"We added privacy features"</td>
-          <td class="highlight">"We removed the need for them"</td>
-        </tr>
-        <tr>
-          <td>"Encrypt your seed phrase"</td>
-          <td class="highlight">"Don't create one"</td>
-        </tr>
-        <tr>
-          <td>"Hide your transactions"</td>
-          <td class="highlight">"Have nothing to hide"</td>
-        </tr>
-        <tr>
-          <td>"Privacy is an option"</td>
-          <td class="highlight">"Privacy is the architecture"</td>
-        </tr>
-      </table>
-      <p style="margin-top: 40px;">We built an entire wallet philosophy around what<br><span class="highlight">Privacy Cash + Light Protocol</span> make possible.</p>
-      <div class="slide-number">13 / 14</div>
+      <div class="header-bar">
+        <span class="left">COMPETITIVE ANALYSIS // DIFFERENTIATION</span>
+        <span class="right">WHY FABCASH WINS</span>
+      </div>
+      <div class="content">
+        <div class="big-text">Not Just Another Wallet</div>
+        <table class="data-table" style="margin-top: 40px;">
+          <tr>
+            <th>OTHER PROJECTS</th>
+            <th>FABCASH</th>
+          </tr>
+          <tr>
+            <td>"We added privacy features"</td>
+            <td class="highlight">"We removed the need for them"</td>
+          </tr>
+          <tr>
+            <td>"Encrypt your seed phrase"</td>
+            <td class="highlight">"Don't create one"</td>
+          </tr>
+          <tr>
+            <td>"Hide your transactions"</td>
+            <td class="highlight">"Have nothing to hide"</td>
+          </tr>
+          <tr>
+            <td>"Privacy is an option"</td>
+            <td class="highlight">"Privacy is the architecture"</td>
+          </tr>
+        </table>
+        <div class="terminal-box" style="margin-top: 50px; max-width: 750px;">
+          <div class="box-header">SPONSOR INTEGRATION</div>
+          <div class="box-content" style="text-align: center;">
+            <p style="color: var(--gray); font-size: 20px;">We built an entire wallet philosophy around what</p>
+            <p style="color: var(--green); font-size: 24px; margin-top: 15px;">PRIVACY CASH + LIGHT PROTOCOL</p>
+            <p style="color: var(--gray); margin-top: 10px; font-size: 20px;">make possible.</p>
+          </div>
+        </div>
+      </div>
+      <div class="status-bar">
+        <span class="left">MARKET POSITION</span>
+        <span class="center">PAGE 13/14</span>
+        <span class="right">ADVANTAGE: STRONG</span>
+      </div>
+      <div class="notes">
+        <strong>Why judges should pick Fabcash.</strong><br><br>
+        Other projects: "We added privacy features." Fabcash: "We removed the need for them."<br><br>
+        We don't just use Privacy Cash. We built an entire wallet philosophy around what Privacy Cash and Light Protocol make possible.<br><br>
+        <em>Judges remember philosophy. They forget feature lists.</em>
+      </div>
     </section>
 
     <!-- Slide 14: Thank You -->
     <section class="slide">
-      <h1 style="font-size: 4rem; color: #9945FF;">Fabcash</h1>
-      <p class="quote" style="border: none; padding: 0; text-align: center; font-size: 1.8rem;">An empty wallet that reveals nothing about its past.</p>
-      <div class="links">
-        <a href="https://github.com/psyto/fabcash">github.com/psyto/fabcash</a>
+      <div class="header-bar">
+        <span class="left">SESSION COMPLETE // THANK YOU</span>
+        <span class="right">FABCASH</span>
       </div>
-      <p style="margin-top: 40px; font-size: 1.2rem;">
-        <strong>Track:</strong> Private Payments<br>
-        <strong>Bounty:</strong> Privacy Cash — Best Overall App
-      </p>
-      <p class="built-with">Built with: Privacy Cash SDK | Light Protocol API | Solana</p>
-      <p style="margin-top: 50px; font-style: italic; color: #666;">"A wallet you can lose. A wallet you can deny. A wallet that works like cash."</p>
-      <p style="margin-top: 30px; color: #9945FF;">Solana Privacy Hack 2026</p>
-      <div class="slide-number">14 / 14</div>
+      <div class="content">
+        <div class="title-big">FABCASH</div>
+        <div class="terminal-box" style="margin-top: 40px; max-width: 700px;">
+          <div class="box-header">MISSION STATEMENT</div>
+          <div class="box-content">
+            <div class="quote">"An empty wallet that reveals nothing about its past."</div>
+          </div>
+        </div>
+        <div style="margin-top: 50px; text-align: center;">
+          <p style="color: var(--gray); margin-bottom: 15px; font-size: 18px;">SOURCE CODE</p>
+          <a href="https://github.com/psyto/fabcash" style="font-size: 24px;">github.com/psyto/fabcash</a>
+        </div>
+        <div style="margin-top: 40px; color: var(--gray); text-align: center; font-size: 20px;">
+          <p><span style="color: var(--amber);">TRACK:</span> Private Payments</p>
+          <p><span style="color: var(--amber);">BOUNTY:</span> Privacy Cash — Best Overall App</p>
+        </div>
+        <p style="margin-top: 30px; color: var(--gray); font-size: 16px;">Built with: Privacy Cash SDK | Light Protocol API | Solana</p>
+        <p style="margin-top: 40px; color: var(--amber); font-style: italic; font-size: 22px;">"A wallet you can lose. A wallet you can deny. A wallet that works like cash."</p>
+      </div>
+      <div class="status-bar">
+        <span class="left">SOLANA PRIVACY HACK 2026</span>
+        <span class="center">PAGE 14/14</span>
+        <span class="right">END TRANSMISSION</span>
+      </div>
+      <div class="notes">
+        <strong>Close with the manifesto callback.</strong><br><br>
+        Fabcash isn't just a wallet. It's a proof of concept. A proof that Era 3 wallets are possible.<br><br>
+        "Privacy is necessary for an open society."<br><br>
+        Thirty years ago, the cypherpunks wrote that manifesto. Today, we built a wallet that finally delivers it.<br><br>
+        <em>Thank you.</em>
+      </div>
     </section>
 
   </div>
 
-  <nav class="nav">
-    <button onclick="prevSlide()">← Prev</button>
-    <button onclick="nextSlide()">Next →</button>
-  </nav>
+  <!-- Speaker Notes Panel -->
+  <div class="notes-panel" id="notesPanel">
+    <div class="notes-header">
+      <span>SPEAKER NOTES</span>
+      <span style="color: var(--gray);">Press N to toggle</span>
+    </div>
+    <div class="notes-content" id="notesContent"></div>
+  </div>
+
+  <div class="notes-hint" id="notesHint">Press N for speaker notes | ← → to navigate</div>
 
   <script>
     const deck = document.getElementById('deck');
     const slides = document.querySelectorAll('.slide');
+    const notesPanel = document.getElementById('notesPanel');
+    const notesContent = document.getElementById('notesContent');
+    const notesHint = document.getElementById('notesHint');
     let currentSlide = 0;
+    let notesVisible = false;
 
     function goToSlide(n) {
       currentSlide = Math.max(0, Math.min(n, slides.length - 1));
       slides[currentSlide].scrollIntoView({ behavior: 'smooth' });
+      updateNotes();
     }
 
     function nextSlide() {
@@ -768,6 +1237,21 @@
       goToSlide(currentSlide - 1);
     }
 
+    function updateNotes() {
+      const notesEl = slides[currentSlide].querySelector('.notes');
+      if (notesEl) {
+        notesContent.innerHTML = notesEl.innerHTML;
+      } else {
+        notesContent.innerHTML = '<em>No notes for this slide.</em>';
+      }
+    }
+
+    function toggleNotes() {
+      notesVisible = !notesVisible;
+      notesPanel.classList.toggle('visible', notesVisible);
+      notesHint.style.display = notesVisible ? 'none' : 'block';
+    }
+
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
       if (e.key === 'ArrowRight' || e.key === ' ') {
@@ -776,6 +1260,9 @@
       } else if (e.key === 'ArrowLeft') {
         e.preventDefault();
         prevSlide();
+      } else if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        toggleNotes();
       }
     });
 
@@ -783,8 +1270,15 @@
     deck.addEventListener('scroll', () => {
       const scrollLeft = deck.scrollLeft;
       const slideWidth = window.innerWidth;
-      currentSlide = Math.round(scrollLeft / slideWidth);
+      const newSlide = Math.round(scrollLeft / slideWidth);
+      if (newSlide !== currentSlide) {
+        currentSlide = newSlide;
+        updateNotes();
+      }
     });
+
+    // Initialize notes
+    updateNotes();
   </script>
 </body>
 </html>

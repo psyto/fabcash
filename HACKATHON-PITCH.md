@@ -5,197 +5,285 @@
 
 ---
 
-## Video Structure (3:00 total)
+## Philosophy-First Structure (3:00 total)
 
-| Section | Duration | Content |
-|---------|----------|---------|
-| Hook & Problem | 0:30 | Why wallets are broken |
-| Solution Overview | 0:30 | Fabcash introduction |
-| Live Demo | 1:30 | App walkthrough |
-| Closing | 0:30 | Summary & call to action |
+| Section | Duration | Focus |
+|---------|----------|-------|
+| **The Question** | 0:40 | Philosophy hook — the broken standard |
+| **The Answer** | 0:25 | Fabcash introduction |
+| **The Proof** | 1:25 | Demo showing philosophy in action |
+| **The Vision** | 0:30 | Close with manifesto |
 
 ---
 
 ## Script
 
-### [0:00-0:30] Hook & Problem
+### [0:00-0:40] The Question (Philosophy Hook)
 
-**[Show comparison graphic or text on screen]**
+**[Black screen with white text, then transition to physical vs digital wallet comparison]**
 
-"When you empty a physical wallet, forensic analysis reveals nothing. But when you empty a digital wallet? Everything is still there. Every transaction. Every counterparty. Forever.
+*"Privacy is necessary for an open society."*
 
-At border crossings, during device seizures, in internet crackdowns — your wallet's history becomes a liability.
+That's the opening line of the Cypherpunk Manifesto. Written in 1993.
 
-This is the broken standard of digital wallets. We built Fabcash to fix it."
+Thirty years later, I want to ask a simple question.
+
+**[Show physical wallet image]**
+
+When you empty a physical wallet, what does forensic analysis reveal?
+
+Nothing. Past contents unknown. Previous transactions unknown. Forensic value: zero.
+
+**[Show digital wallet image]**
+
+When you empty a digital wallet, what does forensic analysis reveal?
+
+Everything. Every transaction you ever made. Every counterparty you ever paid. Forever.
+
+**[Pause]**
+
+This is the broken standard of digital wallets.
+
+Every wallet — Phantom, MetaMask, Coinbase — accepts this as normal.
+
+We don't.
 
 ---
 
-### [0:30-1:00] Solution Overview
+### [0:40-1:05] The Answer (Fabcash Introduction)
 
-**[Show Fabcash logo and key features]**
+**[Show Fabcash logo]**
 
-"Fabcash is a true burner wallet for Solana, built on Privacy Cash SDK.
+Fabcash is a true burner wallet for Solana.
 
-Three things make it different:
+Our philosophy fits in one sentence:
 
-**One:** No seed phrase. There's nothing to recover, nothing to coerce. If someone demands your seed phrase — there isn't one.
+**[Text on screen]**
 
-**Two:** Offline payments. Send money over Bluetooth or QR codes. No internet required.
+> *"An empty Fabcash wallet reveals nothing about its past."*
 
-**Three:** Privacy Cash integration. Funds move through shielded pools, breaking the transaction graph.
+**[Show three principles]**
 
-Let me show you how it works."
+Three principles make this possible:
+
+**One: Nothing to coerce.** There is no seed phrase. If someone demands your recovery phrase — there isn't one.
+
+**Two: Nothing to monitor.** Payments happen offline via Bluetooth. No network activity to surveil.
+
+**Three: Nothing to trace.** Settlement happens through Privacy Cash. The transaction graph is broken.
+
+Let me show you.
 
 ---
 
-### [1:00-2:30] Live Demo
+### [1:05-2:30] The Proof (Demo)
 
 **[Screen recording of iOS Simulator]**
 
-#### Home Screen (15 sec)
-"Here's the home screen. You can see public SOL balance and shielded balance separately.
+#### Home Screen — "See What Matters" (15 sec)
 
-The shielded balance uses Privacy Cash — funds here are protected from chain analysis."
+**[Show home screen]**
 
-**[Tap Shield SOL button]**
+Here's the home screen. Two balances: public SOL and shielded SOL.
 
-"Tapping 'Shield SOL' moves funds into the Privacy Cash pool."
+The shielded balance is in Privacy Cash — invisible to chain analysis.
 
-**[Confirm shield]**
+**[Tap Shield SOL]**
 
-"The Privacy Cash SDK handles the ZK proofs. My SOL is now in the shielded pool."
+Watch what happens when I shield funds.
 
----
+**[Confirm and wait]**
 
-#### Send Payment (30 sec)
-**[Navigate to Send tab]**
+The SOL moves into Privacy Cash. One moment it's visible on-chain. The next, it's not.
 
-"Sending a payment. I'll enter a recipient address and amount."
-
-**[Enter address and 0.01 SOL]**
-
-"Here's where Privacy Cash integration matters. I can choose my privacy mode."
-
-**[Select Shielded mode]**
-
-"Shielded mode uses Privacy Cash for maximum privacy. The recipient gets funds, but the transaction graph is broken."
-
-**[Tap Continue, show confirmation]**
-
-"Transaction ready. If I were offline, this would transfer via Bluetooth and settle later."
+This is "nothing to trace" in action.
 
 ---
 
-#### Receive Payment (20 sec)
-**[Navigate to Receive tab]**
+#### Crackdown Mode — "Nothing to Reveal" (35 sec)
 
-"For receiving, Fabcash generates a fresh ephemeral address every time."
-
-**[Show QR code]**
-
-"This address is single-use. After receiving funds, they're swept through the Privacy Cash pool to my main wallet."
-
-**[Tap to copy address]**
-
-"Each payment is unlinkable to the next."
-
----
-
-#### Crackdown Mode (25 sec)
 **[Navigate to Settings → Emergency]**
 
-"This is our unique feature: Crackdown Mode.
+Now the unique feature. Crackdown Mode.
 
-One tap, and everything changes."
+Imagine: border crossing. Protest. Device seizure imminent.
 
-**[Tap Activate Crackdown Mode]**
+**[Show the Crackdown Mode button]**
 
-"All SOL instantly shields to Privacy Cash. Transaction history cleared. Ephemeral keys deleted. The wallet looks freshly installed."
+One tap.
 
-**[Show progress, then completion]**
+**[Tap Activate, then Confirm]**
 
-"Funds are safe in the Privacy Cash pool. The app reveals nothing about its past.
+Watch what happens.
 
-This is what 'true burner wallet' means."
+**[Show progress: shielding, clearing keys, clearing history]**
+
+All SOL instantly shields to Privacy Cash. Ephemeral keys deleted. Transaction history gone. Wallet destroyed.
+
+**[Show completion]**
+
+The app now looks freshly installed. There is nothing to reveal.
+
+But my funds? Safe in Privacy Cash. Recoverable later, elsewhere.
+
+**[Pause]**
+
+*This* is what "true burner wallet" means. Not hidden history. No history.
 
 ---
 
-### [2:30-3:00] Closing
+#### Send Payment — "Choice of Privacy" (20 sec)
 
-**[Show GitHub and summary slide]**
+**[Navigate to Send tab]**
 
-"Fabcash demonstrates what's possible when you design privacy into the architecture, not bolt it on after.
+Sending a payment.
 
-Built on Privacy Cash SDK. Deployed on Solana devnet. Fully open source.
+**[Enter address and amount]**
 
-**The problem:** Every digital wallet exposes your entire history.
-**The solution:** An empty Fabcash wallet reveals nothing about its past.
+I enter the recipient and amount. But here's where philosophy meets practice.
 
-Check out the code at github.com/psyto/fabcash.
+**[Show privacy mode selector]**
 
-Thank you."
+Three privacy modes. Standard. Compressed. Shielded.
 
-**[End with logo and GitHub link]**
+**[Select Shielded]**
+
+Shielded uses Privacy Cash. The recipient gets funds, but the transaction graph? Broken.
+
+**[Tap Continue]**
+
+---
+
+#### Receive Payment — "No Persistent Identity" (15 sec)
+
+**[Navigate to Receive tab]**
+
+Receiving a payment.
+
+**[Show QR code with address]**
+
+Fresh ephemeral address. Every. Single. Time.
+
+**[Tap to copy]**
+
+This address will never be used again. Nothing links this payment to the next one.
+
+---
+
+### [2:30-3:00] The Vision (Close with Manifesto)
+
+**[Return to philosophy slides]**
+
+Fabcash isn't just a wallet. It's a proof of concept.
+
+**[Show Era 3 concept]**
+
+A proof that Era 3 wallets are possible. Wallets where:
+
+- Empty means empty
+- Coercion yields nothing
+- Privacy is the architecture, not a feature
+
+**[Show Cypherpunk quote]**
+
+> *"Privacy is necessary for an open society."*
+
+Thirty years ago, the cypherpunks wrote that manifesto.
+
+Today, we built a wallet that finally delivers it.
+
+**[Show GitHub and final tagline]**
+
+Fabcash. An empty wallet that reveals nothing about its past.
+
+github.com/psyto/fabcash
+
+Thank you.
 
 ---
 
 ## Recording Notes
 
+### Key Philosophy Moments to Emphasize
+
+1. **The Question** (0:00-0:40)
+   - Pause after "What does forensic analysis reveal?"
+   - Let the comparison sink in
+   - "We don't." should land with conviction
+
+2. **The Single Sentence** (0:50)
+   - Display on screen for 3+ seconds
+   - This is the most quotable moment
+
+3. **Crackdown Mode** (1:25-2:00)
+   - This is the emotional peak
+   - "Nothing to reveal" should feel powerful
+   - Pause after showing completion
+
+4. **The Close** (2:40-3:00)
+   - Return to philosophical tone
+   - End on the manifesto callback
+
 ### Technical Setup
+
 - iOS Simulator: iPhone 16 Pro
-- App: Development build with demo mode enabled
-- Screen recording: `xcrun simctl io recordVideo`
+- Demo mode: Enabled (instant responses)
+- Screen recording: `./scripts/record-demo.sh`
 
-### Demo Mode
-The app runs in demo mode with:
-- Pre-loaded balances (2.5 SOL, 150 USDC)
-- Mock Privacy Cash responses (instant)
-- No network delays
+### Pacing Notes
 
-### Key Moments to Capture
-1. Shield SOL → Privacy Cash deposit
-2. Send with Shielded mode selected
-3. Ephemeral address generation
-4. Crackdown Mode activation and completion
+- **Slower than you think.** Philosophy needs room to breathe.
+- Pause after key statements. Let them land.
+- The demo should feel deliberate, not rushed.
 
-### Automated Recording
-Use the demo script for consistent recording:
-```bash
-./scripts/record-demo.sh
-```
+---
+
+## Quotable Lines
+
+Use these for maximum impact:
+
+1. *"An empty Fabcash wallet reveals nothing about its past."*
+
+2. *"No seed phrase is not a missing feature. It IS the privacy feature."*
+
+3. *"Not hidden history. No history."*
+
+4. *"Privacy is the architecture, not a feature."*
+
+5. *"A wallet you can lose. A wallet you can deny. A wallet that works like cash."*
+
+6. *"Thirty years ago, the cypherpunks wrote that manifesto. Today, we built a wallet that finally delivers it."*
 
 ---
 
 ## Submission Checklist
 
-- [ ] Demo video (max 3 minutes)
-- [ ] GitHub repository (open source)
+- [ ] Demo video (max 3 minutes) — Philosophy-first structure
+- [ ] GitHub repository (open source) — github.com/psyto/fabcash
 - [ ] README with documentation
 - [ ] Deployed to Solana devnet
 - [ ] Privacy Cash SDK integration documented
 
 ---
 
-## Tracks & Bounties
+## Target Tracks & Bounties
 
 ### Primary Track
 **Track 01: Private Payments** ($15,000 prize pool)
-- Fabcash is a confidential/private transfer solution
-- Uses Privacy Cash for shielded transactions
-- Offline capability for crackdown scenarios
 
 ### Sponsor Bounty
 **Privacy Cash** ($15,000 total)
-- Best Overall App: $6,000 ← Primary target
+- **Best Overall App: $6,000** ← Primary target
 - Best Integration: $6,000
 - Honorable Mentions: $3,000
 
-### Why We Qualify
+### Why Philosophy Wins
 
-| Requirement | Fabcash |
-|-------------|---------|
-| Uses Privacy Cash SDK | ✅ Core integration |
-| Privacy-enabled app | ✅ Burner wallet |
-| Novel use case | ✅ Crackdown Mode |
-| Open source | ✅ MIT License |
-| Solana devnet | ✅ Deployed |
+| Typical Submission | Fabcash |
+|--------------------|---------|
+| "We built X with Y" | "We questioned a fundamental assumption" |
+| Technical-first | Philosophy-first |
+| Feature list | Manifesto |
+| "Privacy features" | "Privacy architecture" |
+
+**Judges remember philosophy. They forget feature lists.**

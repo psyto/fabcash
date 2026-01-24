@@ -4,118 +4,215 @@
 
 ---
 
-# Slide 1: Title
+# Slide 1: The Manifesto
 
-## Fabcash
-### True Burner Wallet for Solana
+## "Privacy is necessary for an open society."
+### — Cypherpunk Manifesto, 1993
 
-**No Seed Phrase. Offline Payments. Zero-Knowledge Privacy.**
+Every cypherpunk knows this truth.
 
-> *"A wallet you can lose. A wallet you can deny. A wallet that works like cash."*
+But 30 years later, **every digital wallet still betrays it.**
 
-**Built with:** Privacy Cash SDK | Light Protocol | Solana
-
-**GitHub:** [psyto/fabcash](https://github.com/psyto/fabcash)
+We built Fabcash to finally fix this.
 
 ---
 
-# Slide 2: The Problem
+# Slide 2: The Broken Standard
 
-## Every Digital Wallet is Broken
+## A Question No One Asks
+
+**What does an empty physical wallet reveal about its past?**
 
 ```
-Physical wallet (empty):     Digital wallet (empty):
-├─ Past contents: Unknown    ├─ Past contents: EVERYTHING
-├─ Previous txs: Unknown     ├─ Previous txs: Complete history
-└─ Forensic value: Zero      └─ Forensic value: Total
+Physical wallet (empty):
+├─ Past contents: Unknown
+├─ Previous transactions: Unknown
+├─ Previous counterparties: Unknown
+└─ Forensic value: Zero
 ```
 
-### Real-World Impact
+**What does an empty digital wallet reveal about its past?**
 
-- **Border crossings:** "Unlock your wallet" → Full history exposed
-- **Device seizure:** Seed phrase recovery reveals everything
-- **Internet crackdowns:** Uganda & Iran showed the need for offline, private payments
+```
+Digital wallet (empty):
+├─ Past contents: EVERYTHING
+├─ Previous transactions: Complete history
+├─ Previous counterparties: Linked forever
+└─ Forensic value: Total surveillance
+```
 
-**An empty digital wallet still exposes your entire financial history.**
+**This is the broken standard of digital wallets.**
+
+Every wallet — Phantom, MetaMask, Coinbase — accepts this as normal.
+
+We don't.
 
 ---
 
-# Slide 3: The Solution
+# Slide 3: The Insight
 
-## Fabcash: Privacy by Architecture
+## An Empty Wallet Should Be Empty
 
-| Feature | Traditional Wallet | Fabcash |
-|---------|-------------------|---------|
-| Seed phrase | Required | **None** |
-| Empty wallet reveals | Everything | **Nothing** |
-| Offline payments | No | **Yes (BLE/QR)** |
-| Recovery under coercion | Full history | **Impossible** |
+> *"An empty Fabcash wallet reveals nothing about its past."*
+
+This single sentence is our entire philosophy.
+
+| After emptying wallet | Traditional | Fabcash |
+|-----------------------|-------------|---------|
+| Past balance visible? | Yes | **No** |
+| Transaction history? | Complete | **Gone** |
+| Counterparties linked? | Forever | **Unlinkable** |
+| Forensic value? | Total | **Zero** |
 
 **An empty Fabcash wallet is as forensically useless as an empty physical wallet.**
 
----
-
-# Slide 4: Privacy Cash Integration
-
-## Core Privacy Layer
-
-Fabcash uses **Privacy Cash SDK** for shielded transactions:
-
-```
-┌─────────────────────────────────────────────────────────┐
-│  FABCASH APP                                            │
-│  ├─ Offline Payments (BLE/QR)                          │
-│  ├─ No Seed Phrase Architecture                        │
-│  └─ Crackdown Mode (Emergency Shield)                  │
-├─────────────────────────────────────────────────────────┤
-│  PRIVACY CASH SDK                                       │
-│  ├─ Shielded SOL Deposits (shield)                     │
-│  ├─ Private Withdrawals (withdraw)                     │
-│  └─ ZK Proofs for Unlinkability                        │
-├─────────────────────────────────────────────────────────┤
-│  SOLANA DEVNET                                          │
-│  └─ $0.0002 per transaction                            │
-└─────────────────────────────────────────────────────────┘
-```
-
-### Privacy Cash API Endpoints Used
-- `POST /api/shield` — Move SOL to shielded pool
-- `POST /api/withdraw` — Private withdrawal to any address
-- `GET /api/balance` — Check shielded balance
+This is not a feature. This is the point.
 
 ---
 
-# Slide 5: Three Privacy Layers
+# Slide 4: Real-World Inspiration
 
-## 1. No Seed Phrase
-- Nothing to recover = Nothing to coerce
-- Private key exists only on device
-- Plausible deniability built-in
+## Why This Matters Now
 
-## 2. Offline Payments
+In January 2025, [Reuters reported](https://www.reuters.com/business/media-telecom/ugandans-iranians-turn-dorseys-messaging-app-bitchat-web-crackdowns-2026-01-14/) how Ugandans and Iranians turned to offline-capable tools during internet crackdowns.
+
+**The problem they faced:**
+- Government shuts down internet
+- Need to transact during blackout
+- When internet returns, government monitors everything
+- Your payment history becomes evidence
+
+**What they needed:**
+- Payments that work offline
+- History that can disappear
+- Wallets that can be denied
+
+**Fabcash is what they needed.**
+
+---
+
+# Slide 5: The Third Era
+
+## Where Crypto Is Going
+
+[Balaji Srinivasan](https://www.youtube.com/watch?v=u3B8xqsf66w) argues crypto is entering its third era:
+
+| Era | Focus | Philosophy |
+|-----|-------|------------|
+| Era 1 | Decentralized money | "Not your keys, not your coins" |
+| Era 2 | Decentralized compute | "Code is law" |
+| **Era 3** | **Decentralized privacy** | **"Nothing to hide = Nothing to reveal"** |
+
+Previous eras treated privacy as optional — something encrypted on top.
+
+**Era 3 makes privacy the foundation.**
+
+Not "add encryption." Design so **there's nothing to encrypt.**
+
+Fabcash is an Era 3 wallet.
+
+---
+
+# Slide 6: True Burner Wallet
+
+## A New Category
+
+**Fabcash is a true burner wallet.** We're defining the category.
+
+| Property | Traditional Wallet | Fabcash |
+|----------|-------------------|---------|
+| Seed phrase | Required | **None** |
+| Private key backup | Encouraged | **Impossible** |
+| Recovery | From any device | **Never** |
+| Longevity | Permanent | **Expendable** |
+| Coercion resistance | Weak | **Strong** |
+
+**The scenario:**
+
+```
+Traditional wallet under coercion:
+  "Where is your seed phrase?"
+  → Must comply
+  → Adversary recovers ENTIRE wallet history
+
+Fabcash under coercion:
+  "Where is your seed phrase?"
+  → "There isn't one."
+  → Nothing to recover, even under torture
+```
+
+**No seed phrase is not a missing feature. It IS the privacy feature.**
+
+---
+
+# Slide 7: The Philosophy in Practice
+
+## Three Principles, Three Features
+
+### Principle 1: Nothing to Coerce
+**Feature:** No seed phrase architecture
+- Key exists only on device, only when needed
+- Lose device = lose funds (intentional)
+- Plausible deniability by design
+
+### Principle 2: Nothing to Monitor
+**Feature:** Offline payments
 - Bluetooth/QR signed transaction transfer
 - No network activity at payment time
-- Deferred settlement when online
+- Settlement happens later, elsewhere
 
-## 3. Privacy Cash Shielded Settlement
+### Principle 3: Nothing to Trace
+**Feature:** Privacy Cash shielded settlement
 - Ephemeral addresses per payment
 - Funds swept through Privacy Cash pool
 - Transaction graph cryptographically broken
 
 ---
 
-# Slide 6: Crackdown Mode
+# Slide 8: Privacy Cash Integration
 
-## Emergency Privacy Protection
+## The Privacy Layer
 
-One-tap button shields all funds instantly:
+Fabcash uses **Privacy Cash SDK** as its core privacy infrastructure:
+
+```
+┌─────────────────────────────────────────────────────────┐
+│  FABCASH PHILOSOPHY                                     │
+│  "An empty wallet reveals nothing"                      │
+├─────────────────────────────────────────────────────────┤
+│  FABCASH APP                                            │
+│  ├─ No Seed Phrase (nothing to coerce)                 │
+│  ├─ Offline Payments (nothing to monitor)              │
+│  └─ Crackdown Mode (emergency disappear)               │
+├─────────────────────────────────────────────────────────┤
+│  PRIVACY CASH SDK                                       │
+│  ├─ shield() — Move funds to private pool              │
+│  ├─ withdraw() — Private withdrawal anywhere           │
+│  └─ ZK proofs — Break transaction graph                │
+├─────────────────────────────────────────────────────────┤
+│  SOLANA                                                 │
+│  └─ $0.0002/tx makes this economically possible        │
+└─────────────────────────────────────────────────────────┘
+```
+
+**Privacy Cash makes our philosophy technically achievable.**
+
+---
+
+# Slide 9: Crackdown Mode
+
+## The Emergency Button
+
+**Scenario:** Border crossing. Protest. Device seizure imminent.
+
+**One tap:**
 
 ```
 [Activate Crackdown Mode]
         │
         ▼
 ┌─────────────────────────────┐
-│ 1. Shield all SOL           │ ← Privacy Cash SDK
+│ 1. Shield ALL SOL           │ ← Privacy Cash
 │ 2. Clear ephemeral keys     │
 │ 3. Clear transaction history│
 │ 4. Delete wallet            │
@@ -123,39 +220,26 @@ One-tap button shields all funds instantly:
         │
         ▼
 [App appears freshly installed]
+[Funds safe in Privacy Cash pool]
+[Nothing to reveal under coercion]
 ```
 
-**Use case:** Border crossing, protest, device seizure imminent
+**This is what "true burner wallet" means in practice.**
 
-**Result:** Empty wallet with no history, funds safe in Privacy Cash pool
-
----
-
-# Slide 7: Demo Flow
-
-## 1. Home Screen
-- View balances (Public SOL + Shielded SOL)
-- Shield SOL button → Privacy Cash deposit
-
-## 2. Send Payment
-- Enter recipient address
-- Select privacy mode (Standard/Compressed/Shielded)
-- Send via Privacy Cash for maximum privacy
-
-## 3. Receive Payment
-- Generate ephemeral address
-- Display QR code
-- Funds automatically swept to shielded pool
-
-## 4. Crackdown Mode
-- Settings → Emergency → Activate
-- All funds shielded, history cleared
+The philosophy made real: An empty wallet that reveals nothing.
 
 ---
 
-# Slide 8: Why Only Solana?
+# Slide 10: Why Only Solana?
 
-## Economics of True Privacy
+## The Economics of Philosophy
+
+Our philosophy requires many small transactions:
+- New address per payment (privacy)
+- Privacy sweeps through pools (unlinkability)
+- Instant settlement when online (usability)
+
+**Only Solana makes this economically viable:**
 
 | Chain | Fee/Tx | Monthly (10 tx/day) |
 |-------|--------|---------------------|
@@ -163,132 +247,105 @@ One-tap button shields all funds instantly:
 | Bitcoin | $3.00 | $900 |
 | Ethereum | $5.00 | $1,500 |
 
-**This privacy model requires many small transactions:**
-- New ephemeral address per payment
-- Privacy sweeps through shielded pools
-- ZK compression operations
+On Bitcoin or Ethereum, our philosophy would cost users $1,000+/month.
 
-**Economically impossible on any other L1.**
+**True burner wallets are economically impossible elsewhere.**
 
----
-
-# Slide 9: Technical Stack
-
-| Component | Technology |
-|-----------|------------|
-| **App** | React Native + Expo |
-| **Privacy** | Privacy Cash SDK |
-| **Compression** | Light Protocol |
-| **Blockchain** | Solana Devnet |
-| **Offline** | BLE + QR Code |
-| **Storage** | expo-secure-store |
-
-### Key Files
-- `lib/solana/privacy-cash.ts` — Privacy Cash integration
-- `lib/solana/crackdown.ts` — Emergency shield logic
-- `lib/bluetooth/` — Offline payment protocol
+Solana's fees don't just enable our tech. They enable our philosophy.
 
 ---
 
-# Slide 10: What We Built
+# Slide 11: Demo Summary
 
-## Completed Features
+## The Philosophy in Action
 
-- [x] **Privacy Cash Integration** — Shield/withdraw SOL
-- [x] **No Seed Phrase** — True burner wallet architecture
-- [x] **Offline Payments** — BLE and QR code transfer
-- [x] **Crackdown Mode** — One-tap emergency shield
-- [x] **Ephemeral Addresses** — New address per receive
-- [x] **Demo Mode** — Full app demonstration
+| Feature | Philosophy | Implementation |
+|---------|------------|----------------|
+| **Home Screen** | See what matters | Public + Shielded balance |
+| **Shield SOL** | Funds can disappear | Privacy Cash deposit |
+| **Send** | Choice of privacy | Standard/Compressed/Shielded modes |
+| **Receive** | No persistent identity | Fresh ephemeral address each time |
+| **Crackdown Mode** | Nothing to reveal | One-tap emergency shield |
 
-## Deployed
-
-- App: iOS Simulator (dev client)
-- Backend: Vercel (Privacy Cash API relay)
-- Network: Solana Devnet
+**Watch the demo video to see each principle in action.**
 
 ---
 
-# Slide 11: Target Users
+# Slide 12: What We Built
 
-## Who Needs Fabcash?
+## Philosophy → Code → Working App
 
-1. **Activists & Journalists**
-   - Operating in surveillance states
-   - Need deniable payment history
+### Completed
+- [x] Privacy Cash SDK integration (shield, withdraw, balance)
+- [x] No seed phrase architecture (true burner)
+- [x] Offline payment protocol (BLE + QR)
+- [x] Crackdown Mode (emergency shield)
+- [x] Ephemeral addresses (per-payment unlinkability)
+- [x] iOS development build (working demo)
 
-2. **Travelers**
-   - Border crossing privacy
-   - Device inspection scenarios
-
-3. **Privacy-Conscious Users**
-   - Don't want permanent financial history
-   - Prefer cash-like digital payments
-
-4. **Crackdown Regions**
-   - Internet blackouts (offline payments)
-   - Post-crackdown forensic protection
-
----
-
-# Slide 12: Roadmap
-
-| Phase | Status |
-|-------|--------|
-| Privacy Cash SDK integration | ✅ Complete |
-| Offline BLE/QR payments | ✅ Complete |
-| Crackdown Mode | ✅ Complete |
-| Light Protocol (ZK Compression) | ✅ Complete |
-| iOS Development Build | ✅ Complete |
-| Mainnet deployment | 🔜 Next |
-| Android build | 🔜 Next |
-| Solana dApp Store | 🔜 Planned |
+### Deployed
+- **App:** iOS Simulator (dev client)
+- **Backend:** Vercel (Privacy Cash relay)
+- **Network:** Solana Devnet
+- **Source:** Open source (MIT)
 
 ---
 
 # Slide 13: Why Fabcash Wins
 
-## Unique Value Proposition
+## Not Just Another Wallet
 
-1. **Only true burner wallet** — No seed phrase by design
-2. **Privacy Cash native** — Not bolted on, architecturally integrated
-3. **Offline-first** — Works during internet crackdowns
-4. **Crackdown Mode** — Unique emergency feature
-5. **Real-world tested concept** — Inspired by Uganda/Iran needs
+| Other Projects | Fabcash |
+|----------------|---------|
+| "We added privacy features" | "We removed the need for them" |
+| "Encrypt your seed phrase" | "Don't create one" |
+| "Hide your transactions" | "Have nothing to hide" |
+| "Privacy is an option" | "Privacy is the architecture" |
 
-## Perfect for Privacy Cash Bounty
+### For Privacy Cash Bounty
 
-- Uses Privacy Cash SDK as core privacy layer
-- Demonstrates practical use case
-- Full working app, not just a concept
+We don't just *use* Privacy Cash. We built an entire wallet philosophy around what Privacy Cash makes possible.
+
+**Privacy Cash enables:**
+- Crackdown Mode (instant shield)
+- Shielded settlement (unlinkable receives)
+- Private sends (break transaction graph)
+
+**Without Privacy Cash, Fabcash's philosophy is impossible.**
 
 ---
 
-# Slide 14: Team & Links
+# Slide 14: The Vision
 
-## Fabcash
+## What We're Really Building
 
-**GitHub:** [github.com/psyto/fabcash](https://github.com/psyto/fabcash)
+Fabcash is a proof of concept for **Era 3 wallets**.
 
-**Documentation:**
-- [README.md](https://github.com/psyto/fabcash/blob/main/README.md) — Philosophy & overview
-- [PRIVACY.md](https://github.com/psyto/fabcash/blob/main/PRIVACY.md) — Technical privacy architecture
-- [SECURITY.md](https://github.com/psyto/fabcash/blob/main/SECURITY.md) — Security implementation
-- [API.md](https://github.com/psyto/fabcash/blob/main/API.md) — Backend API reference
-- [GUIDE.md](https://github.com/psyto/fabcash/blob/main/GUIDE.md) — User guide
+A future where:
+- Empty wallets reveal nothing
+- Coercion yields nothing
+- Surveillance finds nothing
+- Privacy is the default, not the option
 
-**Network:** Solana Devnet
+> *"Privacy is necessary for an open society."*
 
-**License:** MIT (Open Source)
+We agree. So we built a wallet that actually delivers it.
 
 ---
 
 # Thank You
 
 ## Fabcash
+
 ### An empty wallet that reveals nothing about its past.
+
+**GitHub:** [github.com/psyto/fabcash](https://github.com/psyto/fabcash)
 
 **Track:** Private Payments
 **Bounty:** Privacy Cash — Best Overall App
 
-*Built for Solana Privacy Hack 2026*
+---
+
+*"A wallet you can lose. A wallet you can deny. A wallet that works like cash."*
+
+**Built for Solana Privacy Hack 2026**

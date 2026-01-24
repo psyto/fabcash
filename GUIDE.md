@@ -22,8 +22,8 @@ A complete guide to using Fabcash for private, offline P2P payments.
 
 ```bash
 # Clone the repository
-git clone https://github.com/fabrknt/cash.git
-cd cash
+git clone https://github.com/psyto/fabcash.git
+cd fabcash
 
 # Install dependencies
 npm install

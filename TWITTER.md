@@ -11,7 +11,7 @@ Fabcash — true burner wallet for @solana
 
 No seed phrase. No recovery. That's the point.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 #Solana #Privacy
 ```
@@ -24,7 +24,7 @@ github.com/fabrknt/cash
 "Where's your seed phrase?"
 "There isn't one."
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana #BurnerWallet
 ```
@@ -36,7 +36,7 @@ github.com/fabrknt/cash
 ```
 Internet crackdown? Fabcash works via Bluetooth.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana #OfflinePayments
 ```
@@ -48,7 +48,7 @@ github.com/fabrknt/cash
 ```
 ZK Compression + No seed phrase = true privacy.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana @LightProtocol
 ```
@@ -60,7 +60,7 @@ github.com/fabrknt/cash
 ```
 Lose it. Deny it. Discard it.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana
 ```
@@ -75,7 +75,7 @@ github.com/fabrknt/cash
 Every wallet: "NEVER lose your seed phrase!"
 Fabcash: "There is no seed phrase."
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana
 ```
@@ -85,7 +85,7 @@ Lose phone → lose funds.
 
 Bug? No. Feature.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana
 ```
@@ -93,7 +93,7 @@ github.com/fabrknt/cash
 ```
 Privacy > Recovery
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana @LightProtocol @PrivacyCash
 ```
@@ -101,7 +101,7 @@ github.com/fabrknt/cash
 ```
 Best privacy = nothing to reveal.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana #Privacy
 ```
@@ -111,7 +111,7 @@ github.com/fabrknt/cash
 ```
 For activists. For journalists. For deniability.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana
 ```
@@ -120,7 +120,7 @@ github.com/fabrknt/cash
 "Unlock your wallet"
 "Nothing to recover."
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana #Privacy
 ```
@@ -132,7 +132,7 @@ Phones close → Bluetooth → Tx signed → Done.
 
 No internet.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana
 ```
@@ -142,7 +142,7 @@ github.com/fabrknt/cash
 vs
 "We don't create one"
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana
 ```
@@ -152,13 +152,13 @@ github.com/fabrknt/cash
 ```
 Fabcash = cash, but @solana
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 ```
 
 ```
 True burner wallet. No asterisks.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana
 ```
@@ -166,7 +166,7 @@ github.com/fabrknt/cash
 ```
 "I forgot my seed phrase" is intended behavior.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana
 ```
@@ -174,7 +174,7 @@ github.com/fabrknt/cash
 ```
 Threat model: governments, not hackers.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solana
 ```
@@ -186,7 +186,7 @@ Fabcash + @solonamobile
 
 Offline wallet for offline users.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 #SolanaMobile
 ```
@@ -194,7 +194,7 @@ github.com/fabrknt/cash
 ```
 No Seed Vault = no proof wallet exists.
 
-github.com/fabrknt/cash
+github.com/psyto/fabcash
 
 @solonamobile
 ```

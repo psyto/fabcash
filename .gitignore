@@ -49,3 +49,6 @@ backend/.vercel
 backend/node_modules
 backend-server/node_modules
 backend-server/cache
+
+# demo videos
+demo-videos/

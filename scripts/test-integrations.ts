@@ -15,7 +15,7 @@ import {
 } from '@lightprotocol/stateless.js';
 import { ComputeBudgetProgram } from '@solana/web3.js';
 
-const RPC_URL = 'https://api.devnet.solana.com';
+const RPC_URL = process.env.SOLANA_RPC_URL || 'https://api.devnet.solana.com';
 
 // Test wallet - generate a new one for testing
 const testKeypair = Keypair.generate();

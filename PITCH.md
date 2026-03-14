@@ -163,6 +163,6 @@ Emergency detected → One tap → All funds shielded instantly
 
 ---
 
-**GitHub:** [psyto/fabcash](https://github.com/psyto/fabcash)
+**GitHub:** [fabrknt/fabcash](https://github.com/fabrknt/fabcash)
 **Built with:** Light Protocol | Privacy Cash | Solana
 

@@ -345,7 +345,7 @@ We agree. So we built a wallet that actually delivers it.
 
 ### An empty wallet that reveals nothing about its past.
 
-**GitHub:** [github.com/psyto/fabcash](https://github.com/psyto/fabcash)
+**GitHub:** [github.com/fabrknt/fabcash](https://github.com/fabrknt/fabcash)
 
 **Track:** Private Payments
 **Bounty:** Privacy Cash — Best Overall App

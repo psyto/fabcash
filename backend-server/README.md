@@ -35,7 +35,7 @@ sudo apt-get install -y nodejs
 ### 4. Clone and Setup
 
 ```bash
-git clone https://github.com/psyto/fabcash.git
+git clone https://github.com/fabrknt/fabcash.git
 cd fabcash/backend-server
 npm install
 ```

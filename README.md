@@ -275,4 +275,4 @@ MIT
 
 ---
 
-**GitHub:** [psyto/fabcash](https://github.com/psyto/fabcash)
+**GitHub:** [fabrknt/fabcash](https://github.com/fabrknt/fabcash)

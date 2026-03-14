@@ -78,7 +78,7 @@ Funds? Safe. Recoverable later.
 
 Open source on @solana
 
-github.com/psyto/fabcash
+github.com/fabrknt/fabcash
 
 @solaboratory @superaboratory #SolanaPrivacyHack
 ```
@@ -173,7 +173,7 @@ No seed phrase. No history. No trace.
 
 Built with @PrivacyCashApp + @LightProtocol on @solana
 
-github.com/psyto/fabcash
+github.com/fabrknt/fabcash
 
 #Web3
 ```
@@ -219,7 +219,7 @@ Bounty: @PrivacyCashApp Best Overall App
 
 Built with @LightProtocol
 
-github.com/psyto/fabcash
+github.com/fabrknt/fabcash
 
 #SolanaPrivacyHack
 ```
@@ -369,7 +369,7 @@ Your funds? Safe in Privacy Cash. Recoverable later.
 
 🔗 LINKS
 
-GitHub: https://github.com/psyto/fabcash
+GitHub: https://github.com/fabrknt/fabcash
 Privacy Cash: https://privacy.cash
 Light Protocol: https://lightprotocol.com
 Solana: https://solana.com

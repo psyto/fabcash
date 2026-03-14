@@ -196,7 +196,7 @@ Today, we built a wallet that finally delivers it.
 
 Fabcash. An empty wallet that reveals nothing about its past.
 
-github.com/psyto/fabcash
+github.com/fabrknt/fabcash
 
 Thank you.
 
@@ -259,7 +259,7 @@ Use these for maximum impact:
 ## Submission Checklist
 
 - [ ] Demo video (max 3 minutes) — Philosophy-first structure
-- [ ] GitHub repository (open source) — github.com/psyto/fabcash
+- [ ] GitHub repository (open source) — github.com/fabrknt/fabcash
 - [ ] README with documentation
 - [ ] Deployed to Solana devnet
 - [ ] Privacy Cash SDK integration documented
